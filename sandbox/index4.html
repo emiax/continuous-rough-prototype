@@ -141,19 +141,11 @@
     function initBuffers() {
         triangleVertexPositionBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, triangleVertexPositionBuffer);
-        /*var vertices = [
-             0.0,  1.0,  0.0,
-            -1.0, -1.0,  0.0,
-             1.0, -1.0,  0.0
-        ];*/
+        
         var quad = [0, 0.03, 0,
                     -0.02, -0.2, 0,
                     0, 0, 1];
         var vertices = quadratic.tesselate(quad, [-5, -5, 5, 5], 0.2);
-
-
-
-
 
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
         triangleVertexPositionBuffer.itemSize = 3;
@@ -178,7 +170,6 @@
         colors.push((vertices[i+2]-minZ)/(maxZ-minZ));
         colors.push(1);
     }
-
 
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
     triangleVertexColorBuffer.itemSize = 4;
