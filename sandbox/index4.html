@@ -177,6 +177,7 @@
 
     }
 
+    var t = 0;
 
     function drawScene() {
         gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
@@ -185,7 +186,7 @@
         mat4.perspective(45, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0, pMatrix);
 
         //mat4.identity(mvMatrix);
-        mat4.lookAt([10, 10, 10], [0, 0, 0], [0, 0, 1], mvMatrix); // from, at, up
+        mat4.lookAt([Math.cos(t/40)*12, Math.sin(t/40)*12, 10], [0, 0, 0], [0, 0, 1], mvMatrix); // from, at, up
 
         //mat4.translate(mvMatrix, [-1.5, 0.0, -7.0]);
         gl.bindBuffer(gl.ARRAY_BUFFER, triangleVertexPositionBuffer);
@@ -208,8 +209,13 @@
 
         gl.clearColor(0.0, 0.0, 0.0, 1.0);
         gl.enable(gl.DEPTH_TEST);
+        var fps = 60;
+        setInterval(tick, 1000/fps);
+    }
 
+    function tick() {
         drawScene();
+        t ++
     }
 
 
