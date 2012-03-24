@@ -142,10 +142,16 @@
         triangleVertexPositionBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, triangleVertexPositionBuffer);
         
-        var quad = [0, 0.03, 0,
-                    -0.02, -0.2, 0,
-                    0, 0, 1];
-        var vertices = quadratic.tesselate(quad, [-5, -5, 5, 5], 0.2);
+        var quad = [0, 0, 0,
+                    0, 0.2, 1,
+                    0.1, 0, 1];
+        var vertices1 = quadratic.tesselate(quad, [-5, -5, 5, 5], 0.2);
+
+        var vertices2 = plane.tesselate(quadratic.tangentialPlane(quad, tangentX, tangentY), [-5, -5, 5, 5]);
+
+        var vertices = [];
+        for (i in vertices1) vertices.push(vertices1[i]);
+        for (i in vertices2) vertices.push(vertices2[i]);
 
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
         triangleVertexPositionBuffer.itemSize = 3;
@@ -164,12 +170,22 @@
         if (vertices[i] > maxZ) maxZ = vertices[i];
     }
 
-    for (var i = 0; i < vertices.length; i+=3) {
-        colors.push(1-(vertices[i+2]-minZ)/(maxZ-minZ));
+    for (var i = 0; i < vertices1.length; i+=3) {
+        colors.push(1-(vertices1[i+2]-minZ)/(maxZ-minZ));
         colors.push(0.0);
-        colors.push((vertices[i+2]-minZ)/(maxZ-minZ));
+        colors.push((vertices1[i+2]-minZ)/(maxZ-minZ));
         colors.push(1);
     }
+    for (var i = 0; i < vertices2.length; i+=3) {
+        colors.push(0.2);
+        colors.push(0.2);
+        colors.push(0.2);
+        colors.push(1);
+    }
+
+
+
+
 
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
     triangleVertexColorBuffer.itemSize = 4;
@@ -178,6 +194,8 @@
     }
 
     var t = 0;
+    var tangentX = 0;
+    var tangentY = 0;
 
     function drawScene() {
         gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
@@ -186,7 +204,7 @@
         mat4.perspective(45, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0, pMatrix);
 
         //mat4.identity(mvMatrix);
-        mat4.lookAt([Math.cos(t/40)*12, Math.sin(t/40)*12, 10], [0, 0, 0], [0, 0, 1], mvMatrix); // from, at, up
+        mat4.lookAt([Math.cos(t/150)*12, Math.sin(t/150)*12, 10], [0, 0, 0], [0, 0, 1], mvMatrix); // from, at, up
 
         //mat4.translate(mvMatrix, [-1.5, 0.0, -7.0]);
         gl.bindBuffer(gl.ARRAY_BUFFER, triangleVertexPositionBuffer);
@@ -218,6 +236,11 @@
         t ++
     }
 
+    function updateTangent() {
+        tangentX = document.getElementById("tangentX").value;
+        tangentY = document.getElementById("tangentY").value;
+        initBuffers();
+    }
 
 </script>
 
@@ -228,6 +251,8 @@
 <body onload="webGLStart();">
     <canvas id="lesson01-canvas" style="border: none;" width="500" height="500"></canvas>
     <pre id="console"></pre>
+    <input id="tangentX" onchange="updateTangent();" value="0.0">
+    <input id="tangentY" onchange="updateTangent();" value="0.0">
 </body>
 
 </html>

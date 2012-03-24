@@ -52,26 +52,48 @@ quadratic.tesselate = function(mat, boundingRect, res) {
 
 
 quadratic.tangentialPlane = function(mat, x, y) {
-	var n = vec3.cross(dzdx(mat, x, y), dzdy(mat, x, y));
 
-
+	var dzdx = quadratic.dzdx(mat, x, y),
+		dzdy = quadratic.dzdy(mat, x, y);
+	var n = vec3.cross([1, 0, dzdx], [0, 1, dzdy]);
+	var a = n[0], b = n[1], c = n[2];
+	var d = - a*x - b*y - c*quadratic.z(mat, x, y);
+	return [-a/c, -b/c, -d/c];
 };
 
 
 var plane = {}
 
-plane.z = function(vec, x, y) {
-	return vec[0]*x + vec[1]*y + vec[2];
+plane.z = function(p, x, y) {
+	return p[0]*x + p[1]*y + p[2];
 }
 
-plane.dzdx = function(vec) {
-	return vec[0];
+plane.dzdx = function(p) {
+	return p[0];
 }
 
-plane.dzdy = function(vec) {
-	return vec[1];
+plane.dzdy = function(p) {
+	return p[1];
 }
 
+plane.tesselate = function(p, boundingRect) {
+	var vertices = [];
+	var pushVertex = function(a, vertex) {
+		for(i in vertex) {
+			a.push(vertex[i]);
+		}
+	};
+	var x1 = boundingRect[0], y1 = boundingRect[1], x2 = boundingRect[2], y2 = boundingRect[3];
+
+	pushVertex(vertices, [x1, y1, plane.z(p, x1, y1)]);
+	pushVertex(vertices, [x2, y1, plane.z(p, x2, y1)]);
+	pushVertex(vertices, [x1, y2, plane.z(p, x1, y2)]);
+	pushVertex(vertices, [x2, y1, plane.z(p, x2, y1)]);
+	pushVertex(vertices, [x1, y2, plane.z(p, x1, y2)]);
+	pushVertex(vertices, [x2, y2, plane.z(p, x2, y2)]);
+	
+	return vertices;
+};
 
 
 
