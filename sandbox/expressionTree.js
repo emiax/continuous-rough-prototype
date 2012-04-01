@@ -165,6 +165,10 @@ var createDivision = function(spec) {
 		that.setLeft(that.getLeft().simplify());
 		that.setRight(that.getRight().simplify());
 
+		if (that.getLeft().isConstant && that.getLeft().evaluate() === 0) {
+			return that.getLeft();
+		}
+
 		if (that.getRight().isConstant && that.getRight().evaluate() === 1) {
 			return that.getLeft();
 		}
