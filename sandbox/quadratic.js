@@ -41,8 +41,8 @@ quadratic.tesselate = function(mat, boundingRect, res) {
 			pushVertex(vertices, [x+xRes, y, quadratic.z(mat, x+xRes, y)]);
 			pushVertex(vertices, [x, y+yRes, quadratic.z(mat, x, y+yRes)]);
 			//second triangle of square
-			pushVertex(vertices, [x+xRes, y, quadratic.z(mat, x+xRes, y)]);
-			pushVertex(vertices, [x, y+yRes, quadratic.z(mat, x, y+yRes)]);
+			//pushVertex(vertices, [x+xRes, y, quadratic.z(mat, x+xRes, y)]);
+			//pushVertex(vertices, [x, y+yRes, quadratic.z(mat, x, y+yRes)]);
 			pushVertex(vertices, [x+xRes, y+yRes, quadratic.z(mat, x+xRes, y+yRes)]);
 		}
 	}
