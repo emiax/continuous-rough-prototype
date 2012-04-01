@@ -524,7 +524,7 @@ var createVariable = function(spec) {
 	that.isVariable = function () {return true; };
 
 	that.toS = function(n) {
-		return symbol;
+		return '<span style="color: #00d">' + symbol + '</span>';
 	}
 
 	that.deepCopy = function() {
