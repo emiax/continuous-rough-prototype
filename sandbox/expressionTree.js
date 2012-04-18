@@ -165,6 +165,10 @@ var createDivision = function(spec) {
 		that.setLeft(that.getLeft().simplify());
 		that.setRight(that.getRight().simplify());
 
+		if (that.getLeft().isConstant && that.getLeft().evaluate() === 0) {
+			return that.getLeft();
+		}
+
 		if (that.getRight().isConstant && that.getRight().evaluate() === 1) {
 			return that.getLeft();
 		}
@@ -293,8 +297,8 @@ var createLn = function(spec) {
 
 	that.differentiate = function(symbol) {
 		return createDivision({
-				left: that.getLeft().differentiate(symbol),
-				right: that.getRight().deepCopy()
+				left: that.getArg().differentiate(symbol),
+				right: that.getArg().deepCopy()
 			});
 	}
 	
@@ -520,7 +524,7 @@ var createVariable = function(spec) {
 	that.isVariable = function () {return true; };
 
 	that.toS = function(n) {
-		return symbol;
+		return '<span style="color: #00d">' + symbol + '</span>';
 	}
 
 	that.deepCopy = function() {
@@ -599,9 +603,9 @@ var createVariable = function(spec) {
 			'/': {precedence: 5, callback: createDivision, requiresEsc: true, args: 2},
 			'+': {precedence: 6, callback: createAddition, requiresEsc: true, args: 2},
 			'-': {precedence: 6, callback: createSubtraction, requiresEsc: true, args: 2},
-			'sin': {precedence: 7, callback: createSin, requiresEsc: false, args: 1},
-			'cos': {precedence: 7, callback: createCos, requiresEsc: false, args: 1},
-			'ln': {precedence: 7, callback: createLn, requiresEsc: false, args: 1}
+			'sin': {precedence: 3, callback: createSin, requiresEsc: false, args: 1},
+			'cos': {precedence: 3, callback: createCos, requiresEsc: false, args: 1},
+			'ln': {precedence: 3, callback: createLn, requiresEsc: false, args: 1}
 		};
 
 		var pattern = "(";
@@ -654,7 +658,7 @@ var createVariable = function(spec) {
 
 			var nodes = [];
 			for(i in postfix) {
-				//pln(postfix[i]);
+				pln(postfix[i]);
 
 				token = postfix[i];
 				var operator = operators[token];
@@ -724,7 +728,8 @@ var expression = {
 		//pln('dzdx: ' + dzdx);
 		//pln('dzdy: ' + dzdy);
 
-		plc();		
+		//plc();		
+		pln("z = " + expr.toS());		
 		pln("dzdx = " + expr.differentiate('x').simplify().toS());
 		pln("dzdy = " + expr.differentiate('y').simplify().toS());
 		
