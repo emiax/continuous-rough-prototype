@@ -161,8 +161,74 @@
         //var vertices2 = expression.tesselate(expr, [-5, -5, 5, 5], 0.2);
         var vertices2 = plane.tesselate(expression.tangentialPlane(expr, tangentX, tangentY), [-5, -5, 5, 5]);
 
+		var qVertices = [], tVertices = [];
+		
+		/*
+        for (i in vertices1) qVertices.push(vertices1[i]);
 
-        var vertices = [];
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(qVertices), gl.STATIC_DRAW);
+        triangleVertexPositionBuffer.itemSize = 3;
+        triangleVertexPositionBuffer.numItems = Math.floor(qVertices.length/triangleVertexPositionBuffer.itemSize);
+		
+		triangleVertexColorBuffer = gl.createBuffer();
+		gl.bindBuffer(gl.ARRAY_BUFFER, triangleVertexColorBuffer);
+		
+		var colors = [];
+
+		var minZ = qVertices[2];
+		var maxZ = qVertices[2];
+		for (var i = 2; i < qVertices.length; i+=3) {
+			if (qVertices[i] < minZ) minZ = qVertices[i];
+			if (qVertices[i] > maxZ) maxZ = qVertices[i];
+		}
+
+		for (var i = 0; i < vertices1.length; i+=3) {
+			colors.push(1-(vertices1[i+2]-minZ)/(maxZ-minZ));
+			colors.push(0.0);
+			colors.push((vertices1[i+2]-minZ)/(maxZ-minZ));
+			colors.push(1);
+		}
+
+		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
+		triangleVertexColorBuffer.itemSize = 4;
+		triangleVertexColorBuffer.numItems = Math.floor(colors.length/triangleVertexColorBuffer.itemSize);
+		*/
+		
+		
+        for (i in vertices2) tVertices.push(vertices2[i]);
+
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(tVertices), gl.STATIC_DRAW);
+        triangleVertexPositionBuffer.itemSize = 3;
+        triangleVertexPositionBuffer.numItems = Math.floor(tVertices.length/triangleVertexPositionBuffer.itemSize);
+		
+		triangleVertexColorBuffer = gl.createBuffer();
+		gl.bindBuffer(gl.ARRAY_BUFFER, triangleVertexColorBuffer);
+		
+		var colors = [];
+
+		var minZ = tVertices[2];
+		var maxZ = tVertices[2];
+		for (var i = 2; i < tVertices.length; i+=3) {
+			if (tVertices[i] < minZ) minZ = tVertices[i];
+			if (tVertices[i] > maxZ) maxZ = tVertices[i];
+		}
+
+		for (var i = 0; i < vertices2.length; i+=3) {
+			colors.push(1-(vertices2[i+2]-minZ)/(maxZ-minZ));
+			colors.push(0.0);
+			colors.push((vertices2[i+2]-minZ)/(maxZ-minZ));
+			colors.push(1);
+		}
+
+		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
+		triangleVertexColorBuffer.itemSize = 4;
+		triangleVertexColorBuffer.numItems = Math.floor(colors.length/triangleVertexColorBuffer.itemSize);
+		
+		
+		
+		
+		/*
+		var vertices = [];
         for (i in vertices1) vertices.push(vertices1[i]);
         for (i in vertices2) vertices.push(vertices2[i]);
 
@@ -171,38 +237,35 @@
         triangleVertexPositionBuffer.numItems = Math.floor(vertices.length/triangleVertexPositionBuffer.itemSize);
 
 
-         triangleVertexColorBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, triangleVertexColorBuffer);
-    
-    var colors = [];
+		triangleVertexColorBuffer = gl.createBuffer();
+		gl.bindBuffer(gl.ARRAY_BUFFER, triangleVertexColorBuffer);
+		
+		var colors = [];
 
-    var minZ = vertices[2];
-    var maxZ = vertices[2];
-    for (var i = 2; i < vertices.length; i+=3) {
-        if (vertices[i] < minZ) minZ = vertices[i];
-        if (vertices[i] > maxZ) maxZ = vertices[i];
-    }
+		var minZ = vertices[2];
+		var maxZ = vertices[2];
+		for (var i = 2; i < vertices.length; i+=3) {
+			if (vertices[i] < minZ) minZ = vertices[i];
+			if (vertices[i] > maxZ) maxZ = vertices[i];
+		}
 
-    for (var i = 0; i < vertices1.length; i+=3) {
-        colors.push(1-(vertices1[i+2]-minZ)/(maxZ-minZ));
-        colors.push(0.0);
-        colors.push((vertices1[i+2]-minZ)/(maxZ-minZ));
-        colors.push(1);
-    }
-    for (var i = 0; i < vertices2.length; i+=3) {
-        colors.push(0.2);
-        colors.push(0.2);
-        colors.push(0.2);
-        colors.push(1);
-    }
+		for (var i = 0; i < vertices1.length; i+=3) {
+			colors.push(1-(vertices1[i+2]-minZ)/(maxZ-minZ));
+			colors.push(0.0);
+			colors.push((vertices1[i+2]-minZ)/(maxZ-minZ));
+			colors.push(1);
+		}
+		for (var i = 0; i < vertices2.length; i+=3) {
+			colors.push(0.2);
+			colors.push(0.2);
+			colors.push(0.2);
+			colors.push(1);
+		}
 
-
-
-
-
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
-    triangleVertexColorBuffer.itemSize = 4;
-    triangleVertexColorBuffer.numItems = Math.floor(colors.length/triangleVertexColorBuffer.itemSize);
+		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
+		triangleVertexColorBuffer.itemSize = 4;
+		triangleVertexColorBuffer.numItems = Math.floor(colors.length/triangleVertexColorBuffer.itemSize);
+		*/
 
     }
 
