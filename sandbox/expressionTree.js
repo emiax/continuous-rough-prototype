@@ -658,7 +658,7 @@ var createVariable = function(spec) {
 
 			var nodes = [];
 			for(i in postfix) {
-				pln(postfix[i]);
+				//pln(postfix[i]);
 
 				token = postfix[i];
 				var operator = operators[token];
@@ -729,9 +729,9 @@ var expression = {
 		//pln('dzdy: ' + dzdy);
 
 		//plc();		
-		pln("z = " + expr.toS());		
-		pln("dzdx = " + expr.differentiate('x').simplify().toS());
-		pln("dzdy = " + expr.differentiate('y').simplify().toS());
+		//pln("z = " + expr.toS());		
+		//pln("dzdx = " + expr.differentiate('x').simplify().toS());
+		//pln("dzdy = " + expr.differentiate('y').simplify().toS());
 		
 		
 		var n = vec3.cross([1, 0, dzdx], [0, 1, dzdy]);
