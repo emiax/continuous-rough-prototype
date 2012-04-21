@@ -712,8 +712,8 @@ var expression = {
 			//second triangle of square
 			//pushVertex(vertices, [x+xRes, y, quadratic.z(mat, x+xRes, y)]);
 			//pushVertex(vertices, [x, y+yRes, quadratic.z(mat, x, y+yRes)]);
-			pushVertex(vertices, [x+xRes, y, expr.evaluate({x: x+xRes, y: y})]);
 			pushVertex(vertices, [x, y+yRes, expr.evaluate({x: x, y: y+yRes})]);			
+			pushVertex(vertices, [x+xRes, y, expr.evaluate({x: x+xRes, y: y})]);
 			pushVertex(vertices, [x+xRes, y+yRes, expr.evaluate({x: x+xRes, y: y+yRes})]);
 		}
 	}
