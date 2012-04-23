@@ -694,31 +694,31 @@ var expression = {
 	tesselate: function(expr, boundingRect, res) {
 		var vertices = [];
 
-	var pushVertex = function(a, vertex) {
-		for(i in vertex) {
-			a.push(vertex[i]);
+		var pushVertex = function(a, vertex) {
+			for(i in vertex) {
+				a.push(vertex[i]);
+			}
+		};
+
+		var xRes = res, yRes = res;
+
+		for (var y = boundingRect[1]; y<boundingRect[2]-yRes; y+=yRes) {
+			for (var x = boundingRect[0]; x<boundingRect[3]-xRes; x+=xRes) {
+				//first triangle of square
+				pushVertex(vertices, [x, y, expr.evaluate({x: x, y: y})]);
+				pushVertex(vertices, [x+xRes, y, expr.evaluate({x: x+xRes, y: y})]);
+				pushVertex(vertices, [x, y+yRes, expr.evaluate({x: x, y: y+yRes})]);
+				//pln(expr.evaluate({x: x, y: y+yRes}));
+				//second triangle of square
+				//pushVertex(vertices, [x+xRes, y, quadratic.z(mat, x+xRes, y)]);
+				//pushVertex(vertices, [x, y+yRes, quadratic.z(mat, x, y+yRes)]);
+				pushVertex(vertices, [x+xRes, y, expr.evaluate({x: x+xRes, y: y})]);
+				pushVertex(vertices, [x+xRes, y+yRes, expr.evaluate({x: x+xRes, y: y+yRes})]);	
+				pushVertex(vertices, [x, y+yRes, expr.evaluate({x: x, y: y+yRes})]);		
+			}
 		}
-	};
 
-	var xRes = res, yRes = res;
-
-	for (var y = boundingRect[1]; y<boundingRect[2]-yRes; y+=yRes) {
-		for (var x = boundingRect[0]; x<boundingRect[3]-xRes; x+=xRes) {
-			//first triangle of square
-			pushVertex(vertices, [x, y, expr.evaluate({x: x, y: y})]);
-			pushVertex(vertices, [x+xRes, y, expr.evaluate({x: x+xRes, y: y})]);
-			pushVertex(vertices, [x, y+yRes, expr.evaluate({x: x, y: y+yRes})]);
-			//pln(expr.evaluate({x: x, y: y+yRes}));
-			//second triangle of square
-			//pushVertex(vertices, [x+xRes, y, quadratic.z(mat, x+xRes, y)]);
-			//pushVertex(vertices, [x, y+yRes, quadratic.z(mat, x, y+yRes)]);
-			pushVertex(vertices, [x+xRes, y, expr.evaluate({x: x+xRes, y: y})]);
-			pushVertex(vertices, [x, y+yRes, expr.evaluate({x: x, y: y+yRes})]);			
-			pushVertex(vertices, [x+xRes, y+yRes, expr.evaluate({x: x+xRes, y: y+yRes})]);
-		}
-	}
-
-    return vertices;
+		return vertices;
 	},
 
 	tangentialPlane: function(expr, x, y) {

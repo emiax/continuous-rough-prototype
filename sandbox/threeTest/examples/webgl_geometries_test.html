@@ -41,6 +41,9 @@
 			
 			var texture_placeholder,
 			isUserInteracting = false,
+			wasUserInteracting = false,
+			spinZ = 0, spinX = 0, stepZ = 0, stepX = 0, curX = 0, curY = 0,
+			recX = [0,0,0,0,0,0,0,0,0,0,0], recY = [0,0,0,0,0,0,0,0,0,0,0], rec = 0,
 			onMouseDownMouseX = 0, onMouseDownMouseY = 0,
 			lon = 0, onMouseDownLon = 0,
 			lat = 0, onMouseDownLat = 0,
@@ -79,6 +82,7 @@
 
 				materials = [
 					//new THREE.MeshLambertMaterial( { ambient: 0xbbbbbb, map: THREE.ImageUtils.loadTexture( 'textures/ash_uvgrid01.jpg' ) } ),
+					new THREE.MeshBasicMaterial( { color: 0xbbbbff, wireframe: false, transparent: true, opacity: 0.5 } ),
 					new THREE.MeshBasicMaterial( { color: 0xffffff, wireframe: true, transparent: true, opacity: 0.1 } )
 
 				];
@@ -88,10 +92,14 @@
 				objectsBranch.position.set( 0, 0, 0 );
 				scene.add(objectsBranch);
 
-				var expr = parseExpression('30*cos(x/30)*sin(y/300)');
+				var expr = parseExpression('30*sin(x/30)*sin(y/300)');
+				expr = parseExpression('x^2/1000-y^2/1000+60*sin(x*y/30000)');
+				//var expr = parseExpression('60*cos(x/120)');
 				object = THREE.SceneUtils.createMultiMaterialObject( new THREE.FunctionGeometry(expr, [-500, -500, 500, 500]), materials);
 				object.position.set( 0, 0, 0 );
-				object.rotation.y = Math.PI;
+				console.log((object.doubleSided ? "yes" : "no"));
+				object.doubleSided = true;
+				console.log((object.doubleSided ? "yes" : "no"));
 				objectsBranch.add(object);
 
 				object = new THREE.AxisHelper();
@@ -149,22 +157,13 @@
 
 			function render() {
 				var timer = Date.now() * 0.0001;
-
-				/*for ( var i = 0, l = objectScene.children.length; i < l; i ++ ) {
-
-					var object = objectScene.children[ i ];
-
-					object.rotation.z = lon * 0.1;
-					//object.rotation.y = lat * 0.1;
-					//object.rotation.x += 0.01;
-					//object.rotation.y += 0.005;
-
-				}*/
-				objectsBranch.rotation.z = lon * (-0.1);
-				objectsBranch.rotation.x = lat * (-0.1);
+				
+				calcSpin();
+				
+				objectsBranch.rotation.z = lon * (-0.1) + spinZ;
+				objectsBranch.rotation.x = lat * (-0.1) + spinX;
 				
 				renderer.render( scene, camera );
-
 			}
 			
 			function onDocumentMouseDown( event ) {
@@ -172,6 +171,8 @@
 				event.preventDefault();
 
 				isUserInteracting = true;
+				stepZ = 0;
+				stepX = 0;
 
 				onPointerDownPointerX = event.clientX;
 				onPointerDownPointerY = event.clientY;
@@ -182,13 +183,12 @@
 			}
 
 			function onDocumentMouseMove( event ) {
-
+				curX = event.clientX;
+				curY = event.clientY;
 				if ( isUserInteracting ) {
-
 					lon = ( onPointerDownPointerX - event.clientX ) * 0.1 + onPointerDownLon;
 					lat = ( event.clientY - onPointerDownPointerY ) * 0.1 + onPointerDownLat;
 					render();
-
 				}
 			}
 
@@ -196,6 +196,7 @@
 
 				isUserInteracting = false;
 				render();
+				wasUserInteracting = true;
 
 			}
 
@@ -204,13 +205,29 @@
 				camera.fov -= event.wheelDeltaY * 0.05;
 				camera.fov = camera.fov > 170 ? 170 : (camera.fov < 5 ? 5 : camera.fov);
 				
-				console.log ("fov = " + camera.fov);
 				camera.updateProjectionMatrix();
 
 				render();
 
 			}
-
+			
+			function calcSpin() {
+				var output = "";
+				rec %= 10;
+				recX[rec] = curX;
+				recY[rec] = curY;
+				if (wasUserInteracting) {
+					var firstRec = (rec + 1) % 10;
+					var avX = (recX[rec] - recX[firstRec]) / 10;
+					var avY = (recY[rec] - recY[firstRec]) / 10;
+					stepZ = (avX > 1 || avX < -1 ? avX*0.01 : 0);
+					stepX = (avY > 1 || avY < -1 ? -avY*0.01 : 0);
+				}
+				spinZ += stepZ;
+				spinX += stepX;
+				rec++;
+				wasUserInteracting = false;
+			}
 
 			function onDocumentTouchStart( event ) {
 
