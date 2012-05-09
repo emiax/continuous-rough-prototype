@@ -115,7 +115,7 @@ CALC.animate = function(object, args, duration, interpolate, delay, callback) {
 		step();
 	};
 
-	CALC.scheduler.attach(start, null, delay);
+	CALC.scheduler.attach(start, delay);
 }
 
 
