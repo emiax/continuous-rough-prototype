@@ -21,6 +21,13 @@ CALC.scheduler = function() {
 				that.reassign = function() {
 					evtId = nextId;	
 				};
+				that.pause = function() {
+					CALC.scheduler.pause(evtId);
+				}
+				that.resume = function() {
+					CALC.scheduler.resume(evtId);
+				}
+
 				return that;
 			}();
 		}
@@ -29,10 +36,23 @@ CALC.scheduler = function() {
 		events[nextId] = {
 			fun: fun,
 			delay: delay,
-			evtHandle: evtHandle
+			evtHandle: evtHandle,
+			paused: false
 		};
 		return evtHandle;
 	};
+
+	that.pause = function(id) {
+		if (events[id]) {
+			events[id].paused = true;
+		}
+	}
+
+	that.resume = function(id) {
+		if (events[id]) {
+			events[id].paused = false;
+		}
+	}
 
 	that.detach = function(id) {
 		if (events[id] !== undefined) {
@@ -49,7 +69,7 @@ CALC.scheduler = function() {
 		//Copy all events, to prevent events queued in current event loop to be executed
 		var currentEvents = [];
 		for (e in events) {
-			if (events.hasOwnProperty(e)) {
+			if (events.hasOwnProperty(e) && !events[e].paused) {
 				currentEvents[e] = events[e];
 			}
 		}
