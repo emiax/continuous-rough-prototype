@@ -6,14 +6,32 @@ CALC.scheduler = function() {
 	var events = [];
 	var that = {};
 
-	that.attach = function(fun, delay) {
+	that.attach = function(fun, delay, evtHandle) {
+		nextId++;
+
+		if (evtHandle) {
+			evtHandle.reassign();
+		} else {
+			evtHandle = function() {
+				var that = {};
+				var evtId = nextId;
+				that.stop = function() {
+					CALC.scheduler.detach(evtId);
+				};
+				that.reassign = function() {
+					evtId = nextId;	
+				};
+				return that;
+			}();
+		}
 
 		delay = delay || 0;
 		events[nextId] = {
 			fun: fun,
-			delay: delay
+			delay: delay,
+			evtHandle: evtHandle
 		};
-		return nextId++;
+		return evtHandle;
 	};
 
 	that.detach = function(id) {
@@ -75,7 +93,7 @@ CALC.interpolations = {
 
 
 
-CALC.animate = function(object, args, duration, interpolate, delay, callback) {
+CALC.animate = function(object, args, duration, interpolate, delay, callback, evtHandle) {
 
 	for (a in args) {
 		if (args[a] === undefined) delete args[a];
@@ -98,10 +116,10 @@ CALC.animate = function(object, args, duration, interpolate, delay, callback) {
 			}
 		}
 		if (t < 1) {
-			CALC.scheduler.attach(step);
+			CALC.scheduler.attach(step, 0, evtHandle);
 		}
 		else {
-			callback();
+			CALC.scheduler.attach(callback, 0, evtHandle);
 		}
 	};
 
@@ -115,36 +133,36 @@ CALC.animate = function(object, args, duration, interpolate, delay, callback) {
 		step();
 	};
 
-	CALC.scheduler.attach(start, delay);
+	var evtHandle = CALC.scheduler.attach(start, delay, evtHandle);
 }
 
 
-CALC.rotate = function(object, args, timing, callback) {
+CALC.rotate = function(object, args, timing, callback, evtHandle) {
 	timing = timing || {};
 	CALC.animate(object.rotation, {
 		x: args.x,
 		y: args.y,
 		z: args.z
-	}, timing.duration, timing.interpolation, timing.delay, callback);
-	return this;
+	}, timing.duration, timing.interpolation, timing.delay, callback, evtHandle);
+	return evtHandle;
 };
 
-CALC.translate = function(object, args, timing, callback) {
+CALC.translate = function(object, args, timing, callback, evtHandle) {
 	timing = timing || {};
 	CALC.animate(object.position, {
 		x: args.x,
 		y: args.y,
 		z: args.z
-	}, timing.duration, timing.interpolation, timing.delay, callback);
-	return this;
+	}, timing.duration, timing.interpolation, timing.delay, callback, evtHandle);
+	return evtHandle;
 };
 
-CALC.fade = function(material, args, timing, callback) {
+CALC.fade = function(material, args, timing, callback, evtHandle) {
 	timing = timing || {};
 	CALC.animate(material, {
 		opacity: args.opacity
-	}, timing.duration, timing.interpolation, timing.delay, callback);
-	return this;
+	}, timing.duration, timing.interpolation, timing.delay, callback, evtHandle);
+	return evtHandle;
 };
 
 
