@@ -6,12 +6,11 @@ CALC.scheduler = function() {
 	var events = [];
 	var that = {};
 
-	that.attach = function(fun, args, delay) {
+	that.attach = function(fun, delay) {
 
 		delay = delay || 0;
 		events[nextId] = {
 			fun: fun,
-			args: args,
 			delay: delay
 		};
 		return nextId++;
@@ -41,7 +40,7 @@ CALC.scheduler = function() {
 			if (currentEvents.hasOwnProperty(e)) {
 				ev =  currentEvents[e];
 				if (ev.delay-- <= 0)  {
-					ev.fun(ev.args);
+					ev.fun();
 					that.detach(e);
 				}
 			}
@@ -116,7 +115,7 @@ CALC.animate = function(object, args, duration, interpolate, delay, callback) {
 		step();
 	};
 
-	CALC.scheduler.attach(start, null, delay);
+	CALC.scheduler.attach(start, delay);
 }
 
 
