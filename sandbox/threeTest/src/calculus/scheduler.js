@@ -139,30 +139,27 @@ CALC.animate = function(object, args, duration, interpolate, delay, callback, ev
 
 CALC.rotate = function(object, args, timing, callback, evtHandle) {
 	timing = timing || {};
-	CALC.animate(object.rotation, {
+	return CALC.animate(object.rotation, {
 		x: args.x,
 		y: args.y,
 		z: args.z
 	}, timing.duration, timing.interpolation, timing.delay, callback, evtHandle);
-	return evtHandle;
 };
 
 CALC.translate = function(object, args, timing, callback, evtHandle) {
 	timing = timing || {};
-	CALC.animate(object.position, {
+	return CALC.animate(object.position, {
 		x: args.x,
 		y: args.y,
 		z: args.z
 	}, timing.duration, timing.interpolation, timing.delay, callback, evtHandle);
-	return evtHandle;
 };
 
 CALC.fade = function(material, args, timing, callback, evtHandle) {
 	timing = timing || {};
-	CALC.animate(material, {
+	return CALC.animate(material, {
 		opacity: args.opacity
 	}, timing.duration, timing.interpolation, timing.delay, callback, evtHandle);
-	return evtHandle;
 };
 
 
