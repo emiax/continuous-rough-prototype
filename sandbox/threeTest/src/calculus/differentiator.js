@@ -1,4 +1,4 @@
-SYM.Node.prototype.differentiate =  function(symbol) {
+SYM.Node.prototype.differentiate = function(symbol) {
 		return SYM.differentiate({node: this, symbol: symbol});
 };
 
@@ -6,7 +6,7 @@ SYM.Node.prototype.differentiate =  function(symbol) {
 SYM.Differentiator = function(spec) {
 	spec = spec || {};
 	this.node = spec.node || null;
-	this.symbol = spec.sybol || 'x';
+	this.symbol = spec.symbol || 'x';
 
 }.inheritsFrom(SYM.NodeVisitor);
 
@@ -58,7 +58,7 @@ SYM.Differentiator.prototype.visitMultiplication = function(node) {
 		}),
 		right: new SYM.Multiplication({
 			left: node.left.clone(),
-			right: node.right.differentiate()
+			right: node.right.differentiate(this.symbol)
 		})
 	});	
 };

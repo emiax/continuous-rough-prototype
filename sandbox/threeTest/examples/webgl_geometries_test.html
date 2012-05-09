@@ -105,14 +105,18 @@
 				objectsBranch.position.set( 0, 0, 0 );
 				scene.add(objectsBranch);
 
-				var expr = SYM.parse('50*cos(x/150)*sin(y/150)');
-				//var expr = SYM.parse('(x/50)^2*(0-y/50)^2');
+				//var expr = SYM.parse('0');
+				var expr = SYM.parse('(x/100)^2*(0-y/100)^2');
 				var dfdx = expr.tangentialPlane(-120, -280);
 				//console.log(dfdx);
 
 				var fn = new THREE.FunctionGeometry(expr, [-500, -500, 500, 500]);
 
-				object = THREE.SceneUtils.createMultiMaterialObject( fn.clip() , materials);
+				//object = THREE.SceneUtils.createMultiMaterialObject( fn, materials);
+				object = new THREE.Mesh(fn, wireframe1);
+
+				object.doubleSided = true;
+
 				object.position.set( 0, 0, 0 );
 				objectsBranch.add(object);
 
@@ -123,9 +127,12 @@
 				];
 
 
-				object = THREE.SceneUtils.createMultiMaterialObject( new THREE.FunctionGeometry(dfdx, [-500, -500, 500, 500]), materials2);
+				//object = THREE.SceneUtils.createMultiMaterialObject( new THREE.FunctionGeometry(dfdx, [-500, -500, 500, 500]), materials2);
+				var fn2 = new THREE.FunctionGeometry(dfdx, [-500, -500, 500, 500]);
+				object = new THREE.Mesh(fn2, surface1);
 				object.position.set( 0, 0, 0 );
-				object.rotation.y = Math.PI;
+				object.doubleSided = true;
+
 				objectsBranch.add(object);
 
 
@@ -137,7 +144,7 @@
 				
 				scene.add(objectsBranch);
 				
-				evtHandler = CALC.rotate(objectsBranch, {
+				var evtHandle = CALC.rotate(objectsBranch, {
 					y: Math.PI
 				}, {
 					duration: 120,
@@ -150,9 +157,7 @@
 						duration: 30,
 						interpolation: CALC.interpolations.quintic
 					}, function() {
-					
-						evtHandler.stop();
-					
+				
 						CALC.rotate(objectsBranch,{
 							z: Math.PI
 						}, {
@@ -182,7 +187,7 @@
 						});
 						
 						CALC.fade(wireframe1,{
-							opacity: 0
+							opacity: 0.2
 						}, {
 							duration: 50,
 							interpolation: CALC.interpolations.quintic
@@ -197,6 +202,14 @@
 					});
 				});
 
+				/*setTimeout(function() {
+					console.log("stopping!");
+					evtHandle.pause();
+					setTimeout(function() {
+						evtHandle.resume();
+					}, 2000);
+				}, 4000);
+	
 
 				var points = [];
 
