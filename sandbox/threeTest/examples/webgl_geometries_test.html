@@ -26,7 +26,14 @@
 		<script src="../build/Three.js"></script>
 		
 		<script src="../src/calculus/expressionTree.js"></script>
+		<script src="../src/calculus/nodeVisitor.js"></script>
+		<script src="../src/calculus/evaluator.js"></script>
+		<script src="../src/calculus/simplifier.js"></script>
+		<script src="../src/calculus/differentiator.js"></script>
+		<script src="../src/calculus/parser.js"></script>
+		<script src="../src/calculus/tangent.js"></script>
 		<script src="../src/calculus/FunctionGeometry.js"></script>
+
 
 		<script src="js/Detector.js"></script>
 		<script src="js/Stats.js"></script>
@@ -79,7 +86,7 @@
 
 				materials = [
 					//new THREE.MeshLambertMaterial( { ambient: 0xbbbbbb, map: THREE.ImageUtils.loadTexture( 'textures/ash_uvgrid01.jpg' ) } ),
-					new THREE.MeshBasicMaterial( { color: 0xffffff, wireframe: true, transparent: true, opacity: 0.1 } )
+					new THREE.MeshBasicMaterial( { color: 0xffffff, wireframe: true, transparent: true, opacity: 0.5 } )
 
 				];
 
@@ -88,11 +95,30 @@
 				objectsBranch.position.set( 0, 0, 0 );
 				scene.add(objectsBranch);
 
-				var expr = parseExpression('30*cos(x/30)*sin(y/300)');
-				object = THREE.SceneUtils.createMultiMaterialObject( new THREE.FunctionGeometry(expr, [-500, -500, 500, 500]), materials);
+				var expr = SYM.parse('50*cos(x/150)*sin(y/150)');
+				//var expr = SYM.parse('(x/50)^2*(0-y/50)^2');
+				var dfdx = expr.tangentialPlane(-120, -280);
+				console.log(dfdx);
+
+				var fn = new THREE.FunctionGeometry(expr, [-500, -500, 500, 500]);
+
+				object = THREE.SceneUtils.createMultiMaterialObject( fn.clip() , materials);
 				object.position.set( 0, 0, 0 );
 				object.rotation.y = Math.PI;
 				objectsBranch.add(object);
+
+					var materials2 = [
+					//new THREE.MeshLambertMaterial( { ambient: 0xbbbbbb, map: THREE.ImageUtils.loadTexture( 'textures/ash_uvgrid01.jpg' ) } ),
+					new THREE.MeshBasicMaterial( { color: 0x6688ff, wireframe: false, transparent: true, opacity: 0.5 } )
+
+				];
+
+
+				object = THREE.SceneUtils.createMultiMaterialObject( new THREE.FunctionGeometry(dfdx, [-500, -500, 500, 500]), materials2);
+				object.position.set( 0, 0, 0 );
+				object.rotation.y = Math.PI;
+				objectsBranch.add(object);
+
 
 				object = new THREE.AxisHelper();
 				object.position.set( 0, 0, 0 );
