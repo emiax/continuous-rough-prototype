@@ -33,6 +33,7 @@
 		<script src="../src/calculus/parser.js"></script>
 		<script src="../src/calculus/tangent.js"></script>
 		<script src="../src/calculus/FunctionGeometry.js"></script>
+		<script src="../src/calculus/scheduler.js"></script>
 
 
 		<script src="js/Detector.js"></script>
@@ -59,7 +60,8 @@
 			origin = new THREE.Vector3(0,0,0);
 
 			init();
-			animate();
+			//animate();
+			CALC.scheduler.animate();
 
 			function init() {
 
@@ -87,10 +89,14 @@
 					new THREE.MeshBasicMaterial( { color: 0xffffff, wireframe: true, transparent: true, opacity: 0.1 } )
 				];*/
 
+				surface1 = new THREE.MeshBasicMaterial( { color: 0xbbbbff, wireframe: false, transparent: true, opacity: 0.5 } );
+				
+				wireframe1 = new THREE.MeshBasicMaterial( { color: 0xffffff, wireframe: true, transparent: true, opacity: 0.1 } );
+				
 				materials = [
 					//new THREE.MeshLambertMaterial( { ambient: 0xbbbbbb, map: THREE.ImageUtils.loadTexture( 'textures/ash_uvgrid01.jpg' ) } ),
-					new THREE.MeshBasicMaterial( { color: 0xbbbbff, wireframe: false, transparent: true, opacity: 0.5 } ),
-					new THREE.MeshBasicMaterial( { color: 0xffffff, wireframe: true, transparent: true, opacity: 0.1 } )
+					surface1,
+					wireframe1
 
 				];
 
@@ -102,15 +108,12 @@
 				var expr = SYM.parse('50*cos(x/150)*sin(y/150)');
 				//var expr = SYM.parse('(x/50)^2*(0-y/50)^2');
 				var dfdx = expr.tangentialPlane(-120, -280);
-				console.log(dfdx);
+				//console.log(dfdx);
 
 				var fn = new THREE.FunctionGeometry(expr, [-500, -500, 500, 500]);
 
 				object = THREE.SceneUtils.createMultiMaterialObject( fn.clip() , materials);
 				object.position.set( 0, 0, 0 );
-				console.log((object.doubleSided ? "yes" : "no"));
-				object.doubleSided = true;
-				console.log((object.doubleSided ? "yes" : "no"));
 				objectsBranch.add(object);
 
 					var materials2 = [
@@ -133,6 +136,63 @@
 				
 				
 				scene.add(objectsBranch);
+				
+				CALC.rotate(objectsBranch, {
+					y: Math.PI
+				}, {
+					duration: 120,
+					interpolation: CALC.interpolations.quintic,
+					delay: 120
+				}, function() {
+					CALC.translate(objectsBranch,{
+						z: 200
+					}, {
+						duration: 30,
+						interpolation: CALC.interpolations.quintic
+					}, function() {
+						CALC.rotate(objectsBranch,{
+							z: Math.PI
+						}, {
+							duration: 30,
+							interpolation: CALC.interpolations.quintic
+						});
+						
+						CALC.translate(objectsBranch,{
+							z: 0
+						}, {
+							duration: 15,
+							interpolation: CALC.interpolations.quintic
+						});
+						
+						CALC.fade(surface1,{
+							opacity: 0
+						}, {
+							duration: 50,
+							interpolation: CALC.interpolations.quintic
+						}, function() {
+							CALC.fade(surface1,{
+								opacity: 0.5
+							}, {
+								duration: 15,
+								interpolation: CALC.interpolations.quintic
+							});
+						});
+						
+						CALC.fade(wireframe1,{
+							opacity: 0
+						}, {
+							duration: 50,
+							interpolation: CALC.interpolations.quintic
+						}, function() {
+							CALC.fade(wireframe1,{
+								opacity: 0.1
+							}, {
+								duration: 15,
+								interpolation: CALC.interpolations.quintic
+							});
+						});
+					});
+				});
 
 
 				var points = [];
@@ -182,10 +242,10 @@
 			function render() {
 				var timer = Date.now() * 0.0001;
 				
-				calcSpin();
+				//calcSpin();
 				
-				objectsBranch.rotation.z = lon * (-0.1) + spinZ;
-				objectsBranch.rotation.x = lat * (-0.1) + spinX;
+				//objectsBranch.rotation.z = lon * (-0.1) + spinZ;
+				//objectsBranch.rotation.x = lat * (-0.1) + spinX;
 				
 				renderer.render( scene, camera );
 			}
