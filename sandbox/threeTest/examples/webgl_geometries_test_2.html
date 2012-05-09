@@ -89,8 +89,12 @@
 
 				materials = [
 					//new THREE.MeshLambertMaterial( { ambient: 0xbbbbbb, map: THREE.ImageUtils.loadTexture( 'textures/ash_uvgrid01.jpg' ) } ),
+<<<<<<< HEAD
+					new THREE.MeshBasicMaterial( { color: 0xffffff, wireframe: true, transparent: true, opacity: 0.5 } )
+=======
 					new THREE.MeshBasicMaterial( { color: 0xbbbbff, wireframe: false, transparent: true, opacity: 0.5 } ),
 					new THREE.MeshBasicMaterial( { color: 0xffffff, wireframe: true, transparent: true, opacity: 0.1 } )
+>>>>>>> c25893a58585ca34135a45490be4882a68f09154
 
 				];
 
@@ -99,6 +103,7 @@
 				objectsBranch.position.set( 0, 0, 0 );
 				scene.add(objectsBranch);
 
+<<<<<<< HEAD
 				var expr = SYM.parse('50*cos(x/150)*sin(y/150)');
 				//var expr = SYM.parse('(x/50)^2*(0-y/50)^2');
 				var dfdx = expr.tangentialPlane(-120, -280);
@@ -108,9 +113,7 @@
 
 				object = THREE.SceneUtils.createMultiMaterialObject( fn.clip() , materials);
 				object.position.set( 0, 0, 0 );
-				console.log((object.doubleSided ? "yes" : "no"));
-				object.doubleSided = true;
-				console.log((object.doubleSided ? "yes" : "no"));
+				object.rotation.y = Math.PI;
 				objectsBranch.add(object);
 
 					var materials2 = [
@@ -121,8 +124,16 @@
 
 
 				object = THREE.SceneUtils.createMultiMaterialObject( new THREE.FunctionGeometry(dfdx, [-500, -500, 500, 500]), materials2);
+=======
+				var expr = parseExpression('30*sin(x/30)*sin(y/300)');
+				expr = parseExpression('x^2/1000-y^2/1000+60*sin(x*y/30000)');
+				//var expr = parseExpression('60*cos(x/120)');
+				object = THREE.SceneUtils.createMultiMaterialObject( new THREE.FunctionGeometry(expr, [-500, -500, 500, 500]), materials);
+>>>>>>> c25893a58585ca34135a45490be4882a68f09154
 				object.position.set( 0, 0, 0 );
-				object.rotation.y = Math.PI;
+				console.log((object.doubleSided ? "yes" : "no"));
+				object.doubleSided = true;
+				console.log((object.doubleSided ? "yes" : "no"));
 				objectsBranch.add(object);
 
 
