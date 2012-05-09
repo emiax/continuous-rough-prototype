@@ -56,8 +56,14 @@ CALC.interpolations = {
 	linear: function(t) {
 		return t;
 	},
-	sinusodial: function() {
+	sinusodial: function(t) {
 		return (Math.sin((t-1/2) * Math.PI) + 1)/2;
+	},
+	cubic: function(t) {
+		return -2*(t^3)+3*(t^2);
+	},
+	quintic: function(t) {
+		return 6*(t^5)-15*(t^4)+10*(t^3);
 	}
 };
 
@@ -115,9 +121,15 @@ THREE.Object3D.prototype.rotate = function(args, timing) {
 
 
 
-
-
-
-//CALC.schduler.attach(object.rotate, )
+/*
+object.rotate({
+	x: Math.PI/2,
+	y: Math.PI
+}, {
+	duration: 120,
+	interpolation: CALC.interpolations.quintic,
+	delay: 120
+});
+*/
 
 
