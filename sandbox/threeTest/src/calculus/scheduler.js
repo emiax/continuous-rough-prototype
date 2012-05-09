@@ -6,12 +6,11 @@ CALC.scheduler = function() {
 	var events = [];
 	var that = {};
 
-	that.attach = function(fun, args, delay) {
+	that.attach = function(fun, delay) {
 
 		delay = delay || 0;
 		events[nextId] = {
 			fun: fun,
-			args: args,
 			delay: delay
 		};
 		return nextId++;
