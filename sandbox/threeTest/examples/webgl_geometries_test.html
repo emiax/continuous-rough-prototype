@@ -137,7 +137,7 @@
 				
 				scene.add(objectsBranch);
 				
-				CALC.rotate(objectsBranch, {
+				evtHandler = CALC.rotate(objectsBranch, {
 					y: Math.PI
 				}, {
 					duration: 120,
@@ -150,6 +150,9 @@
 						duration: 30,
 						interpolation: CALC.interpolations.quintic
 					}, function() {
+					
+						evtHandler.stop();
+					
 						CALC.rotate(objectsBranch,{
 							z: Math.PI
 						}, {
