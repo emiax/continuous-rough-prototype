@@ -40,7 +40,7 @@ CALC.scheduler = function() {
 			if (currentEvents.hasOwnProperty(e)) {
 				ev =  currentEvents[e];
 				if (ev.delay-- <= 0)  {
-					ev.fun(ev.args);
+					ev.fun();
 					that.detach(e);
 				}
 			}
