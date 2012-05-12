@@ -33,6 +33,7 @@
 		<script src="../src/calculus/parser.js"></script>
 		<script src="../src/calculus/tangent.js"></script>
 		<script src="../src/calculus/FunctionGeometry.js"></script>
+		<script src="../src/calculus/ParametricGeometry.js"></script>
 		<script src="../src/calculus/scheduler.js"></script>
 
 
@@ -90,8 +91,8 @@
 				];*/
 
 				surface1 = new THREE.MeshBasicMaterial( { color: 0xbbbbff, wireframe: false, transparent: true, opacity: 0.5 } );
-				
 				wireframe1 = new THREE.MeshBasicMaterial( { color: 0xffffff, wireframe: true, transparent: true, opacity: 0.1 } );
+				wireframe2 = new THREE.MeshBasicMaterial( { color: 0x557799, wireframe: true, transparent: true, opacity: 0.6 } );
 				
 				materials = [
 					//new THREE.MeshLambertMaterial( { ambient: 0xbbbbbb, map: THREE.ImageUtils.loadTexture( 'textures/ash_uvgrid01.jpg' ) } ),
@@ -109,6 +110,18 @@
 				var expr = SYM.parse('(x/100)^2*(0-y/100)^2');
 				var dfdx = expr.tangentialPlane(-120, -280);
 				//console.log(dfdx);
+
+				//var expr = SYM.parse('0');
+				var pz = SYM.parse('100*cos(s+t/2) + 250');
+				var py = SYM.parse('100*sin(s+t/3)');
+				var px = SYM.parse('t*200');
+				
+				//console.log(dfdx);
+				var fn = new THREE.ParametricGeometry(px, py, pz, {s: [0, 3*Math.PI/2], t: [-2, 2]}, null, 0.2);
+				object = new THREE.Mesh(fn, wireframe2);
+				object.doubleSided = true;
+				object.position.set( 0, 0, 0 );
+				objectsBranch.add(object);
 
 				var fn = new THREE.FunctionGeometry(expr, [-500, -500, 500, 500]);
 
@@ -187,16 +200,37 @@
 						});
 						
 						CALC.fade(wireframe1,{
-							opacity: 0.2
+							opacity: 0.4
 						}, {
 							duration: 50,
 							interpolation: CALC.interpolations.quintic
 						}, function() {
-							CALC.fade(wireframe1,{
-								opacity: 0.1
+							CALC.fade(surface1,{
+								opacity: 0
 							}, {
 								duration: 15,
 								interpolation: CALC.interpolations.quintic
+							});
+							CALC.fade(wireframe1,{
+								opacity: 0
+							}, {
+								duration: 15,
+								interpolation: CALC.interpolations.quintic
+							}, function() {
+
+								CALC.translate(objectsBranch,{
+									z: 200
+								}, {
+									duration: 500,
+									interpolation: CALC.interpolations.cubic
+								});
+
+								CALC.rotate(objectsBranch,{
+									z: Math.PI*8
+								}, {
+									duration: 500,
+									interpolation: CALC.interpolations.cubic
+								});
 							});
 						});
 					});
