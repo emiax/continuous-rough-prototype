@@ -125,6 +125,8 @@ CALC.animate = function(object, args, duration, interpolate, delay, callback, ev
 	}
 	
 	callback = callback || function(){};
+	interpolate = interpolate || CALC.interpolations.linear;
+	delay = delay || 0;
 
 	// object[key] ska bli value på duration frames
 	var t = 0;

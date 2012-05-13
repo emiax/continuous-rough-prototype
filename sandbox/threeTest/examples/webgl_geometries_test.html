@@ -54,8 +54,8 @@
 			spinZ = 0, spinX = 0, stepZ = 0, stepX = 0, curX = 0, curY = 0,
 			recX = [0,0,0,0,0,0,0,0,0,0,0], recY = [0,0,0,0,0,0,0,0,0,0,0], rec = 0,
 			onMouseDownMouseX = 0, onMouseDownMouseY = 0,
-			lon = 0, onMouseDownLon = 0,
-			lat = 0, onMouseDownLat = 0,
+			lon = 0, lastLon = 0, onMouseDownLon = 0,
+			lat = 0, lastLat = 0, onMouseDownLat = 0,
 			phi = 0, theta = 0,
 			target = new THREE.Vector3();
 			origin = new THREE.Vector3(0,0,0);
@@ -133,7 +133,7 @@
 				object.position.set( 0, 0, 0 );
 				objectsBranch.add(object);
 
-					var materials2 = [
+				var materials2 = [
 					//new THREE.MeshLambertMaterial( { ambient: 0xbbbbbb, map: THREE.ImageUtils.loadTexture( 'textures/ash_uvgrid01.jpg' ) } ),
 					new THREE.MeshBasicMaterial( { color: 0x6688ff, wireframe: false, transparent: true, opacity: 0.5 } )
 
@@ -235,7 +235,7 @@
 						});
 					});
 				});
-
+				
 				/*setTimeout(function() {
 					console.log("stopping!");
 					evtHandle.pause();
@@ -296,6 +296,10 @@
 				
 				//objectsBranch.rotation.z = lon * (-0.1) + spinZ;
 				//objectsBranch.rotation.x = lat * (-0.1) + spinX;
+				objectsBranch.rotation.z += (lon - lastLon) * (-0.1);
+				objectsBranch.rotation.x += (lat - lastLat) * (-0.1);
+				lastLon = lon;
+				lastLat = lat;
 				
 				renderer.render( scene, camera );
 			}
@@ -320,6 +324,8 @@
 				curX = event.clientX;
 				curY = event.clientY;
 				if ( isUserInteracting ) {
+					//lon = ( onPointerDownPointerX - event.clientX ) * 0.1 + onPointerDownLon;
+					//lat = ( event.clientY - onPointerDownPointerY ) * 0.1 + onPointerDownLat;
 					lon = ( onPointerDownPointerX - event.clientX ) * 0.1 + onPointerDownLon;
 					lat = ( event.clientY - onPointerDownPointerY ) * 0.1 + onPointerDownLat;
 					render();
