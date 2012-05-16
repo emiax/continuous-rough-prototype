@@ -1,21 +1,21 @@
-SYM.Node.prototype.differentiate = function(symbol) {
-		return SYM.differentiate({node: this, symbol: symbol});
+CALC.Node.prototype.differentiate = function(CALCbol) {
+		return CALC.differentiate({node: this, CALCbol: CALCbol});
 };
 
 
-SYM.Differentiator = function(spec) {
+CALC.Differentiator = function(spec) {
 	spec = spec || {};
 	this.node = spec.node || null;
-	this.symbol = spec.symbol || 'x';
+	this.CALCbol = spec.CALCbol || 'x';
 
-}.inheritsFrom(SYM.NodeVisitor);
+}.inheritsFrom(CALC.NodeVisitor);
 
-SYM.differentiate = function(spec) {
-	var d = new SYM.Differentiator(spec);
+CALC.differentiate = function(spec) {
+	var d = new CALC.Differentiator(spec);
 	return d.differentiate();
 }
 
-SYM.Differentiator.prototype.differentiate = function() {
+CALC.Differentiator.prototype.differentiate = function() {
 	var derivative = this.node.accept(this).simplify();
 	//console.log(derivative);
 	var s = derivative.simplify();
@@ -24,133 +24,133 @@ SYM.Differentiator.prototype.differentiate = function() {
 }
 
 
-SYM.Differentiator.prototype.visitConstant = function(node) {
-	return new SYM.Constant({value: 0});
+CALC.Differentiator.prototype.visitConstant = function(node) {
+	return new CALC.Constant({value: 0});
 };
 
-SYM.Differentiator.prototype.visitVariable = function(node) {
-	if (node.symbol === this.symbol) {
-		return new SYM.Constant({value: 1});
+CALC.Differentiator.prototype.visitVariable = function(node) {
+	if (node.CALCbol === this.CALCbol) {
+		return new CALC.Constant({value: 1});
 	} else {
-		return new SYM.Constant({value: 0});
+		return new CALC.Constant({value: 0});
 	}
 };
 
-SYM.Differentiator.prototype.visitAddition = function(node) {
-	return new SYM.Addition({
-		left: node.left.differentiate(this.symbol),
-		right: node.right.differentiate(this.symbol)
+CALC.Differentiator.prototype.visitAddition = function(node) {
+	return new CALC.Addition({
+		left: node.left.differentiate(this.CALCbol),
+		right: node.right.differentiate(this.CALCbol)
 	});
 };
 
-SYM.Differentiator.prototype.visitSubtraction = function(node) {
-	return new SYM.Subtraction({
-		left: node.left.differentiate(this.symbol),
-		right: node.right.differentiate(this.symbol)
+CALC.Differentiator.prototype.visitSubtraction = function(node) {
+	return new CALC.Subtraction({
+		left: node.left.differentiate(this.CALCbol),
+		right: node.right.differentiate(this.CALCbol)
 	});
 };
 
-SYM.Differentiator.prototype.visitMultiplication = function(node) {
-	return new SYM.Addition({
-		left: new SYM.Multiplication({
-			left: node.left.differentiate(this.symbol),
+CALC.Differentiator.prototype.visitMultiplication = function(node) {
+	return new CALC.Addition({
+		left: new CALC.Multiplication({
+			left: node.left.differentiate(this.CALCbol),
 			right: node.right.clone()
 		}),
-		right: new SYM.Multiplication({
+		right: new CALC.Multiplication({
 			left: node.left.clone(),
-			right: node.right.differentiate(this.symbol)
+			right: node.right.differentiate(this.CALCbol)
 		})
 	});	
 };
 
-SYM.Differentiator.prototype.visitDivision = function(node) {
-	return new SYM.Division({
-		left: new SYM.Subtraction({
-			left: new SYM.Multiplication({
-				left: node.left.differentiate(this.symbol),
+CALC.Differentiator.prototype.visitDivision = function(node) {
+	return new CALC.Division({
+		left: new CALC.Subtraction({
+			left: new CALC.Multiplication({
+				left: node.left.differentiate(this.CALCbol),
 				right: node.right.clone()
 			}),
-			right: new SYM.Multiplication({
+			right: new CALC.Multiplication({
 				left: node.left.clone(),
-				right: node.right.differentiate(this.symbol)
+				right: node.right.differentiate(this.CALCbol)
 			})
 		}),
-		right: new SYM.Power({
+		right: new CALC.Power({
 			left: node.right.clone(),
-			right: new SYM.Constant({value: 2})
+			right: new CALC.Constant({value: 2})
 		})
 	});
 };
 
-SYM.Differentiator.prototype.visitPower = function(node) {
-	return new SYM.Addition({
-		left: new SYM.Multiplication({
+CALC.Differentiator.prototype.visitPower = function(node) {
+	return new CALC.Addition({
+		left: new CALC.Multiplication({
 			left: node.right.clone(),
-			right: new SYM.Multiplication({
-				left: new SYM.Power({
+			right: new CALC.Multiplication({
+				left: new CALC.Power({
 					left: node.left.clone(),
-					right: new SYM.Subtraction({
+					right: new CALC.Subtraction({
 						left: node.right.clone(),
-						right: new SYM.Constant({value: 1})
+						right: new CALC.Constant({value: 1})
 					})
 				}),
-				right: node.left.differentiate(this.symbol)
+				right: node.left.differentiate(this.CALCbol)
 			})
 		}),
-		right: new SYM.Multiplication({
-			left: new SYM.Power({
+		right: new CALC.Multiplication({
+			left: new CALC.Power({
 				left: node.left.clone(),
 				right: node.right.clone()
 			}),
-			right: new SYM.Multiplication({
-				left: new SYM.Ln({
+			right: new CALC.Multiplication({
+				left: new CALC.Ln({
 					arg: node.left.clone()
 				}),
-				right: node.right.differentiate(this.symbol)
+				right: node.right.differentiate(this.CALCbol)
 			})
 		})
 	});
 };
 
-SYM.Differentiator.prototype.visitExp = function(node) {
-	return new SYM.Multiplication({
-		left: node.arg.differentiate(this.symbol),
+CALC.Differentiator.prototype.visitExp = function(node) {
+	return new CALC.Multiplication({
+		left: node.arg.differentiate(this.CALCbol),
 		right: node.clone()
 	});
 };
 
-SYM.Differentiator.prototype.visitLn = function(node) {
-	return new SYM.Division({
-		left: node.arg.differentiate(this.symbol),
+CALC.Differentiator.prototype.visitLn = function(node) {
+	return new CALC.Division({
+		left: node.arg.differentiate(this.CALCbol),
 		right: node.arg.clone()
 	});
 };
 
-SYM.Differentiator.prototype.visitSin = function(node) {
-	return new SYM.Multiplication({
-		left: node.arg.differentiate(this.symbol),
-		right: new SYM.Cos({arg: node.arg.clone()})
+CALC.Differentiator.prototype.visitSin = function(node) {
+	return new CALC.Multiplication({
+		left: node.arg.differentiate(this.CALCbol),
+		right: new CALC.Cos({arg: node.arg.clone()})
 	});
 };
 
-SYM.Differentiator.prototype.visitCos = function(node) {
-	return new SYM.Multiplication({
-		left: node.arg.differentiate(this.symbol),
-		right: new SYM.Multiplication({
-			left: new SYM.Constant({value: -1}),
-			right: new SYM.Sin({arg: node.arg.clone()})
+CALC.Differentiator.prototype.visitCos = function(node) {
+	return new CALC.Multiplication({
+		left: node.arg.differentiate(this.CALCbol),
+		right: new CALC.Multiplication({
+			left: new CALC.Constant({value: -1}),
+			right: new CALC.Sin({arg: node.arg.clone()})
 		})
 	});
 };
 
 /*
-SYM.Differentiator.prototype.visitFunction = function(node) {
+CALC.Differentiator.prototype.visitFunction = function(node) {
 	
-	return new SYM.Mutliplication({
-		left: node.arg.differentiate(this.symbol),
-		right: new SYM.Multiplication({
-			left: new SYM.Constant({value: -1}),
-			right: new SYM.Sin({arg: node.arg.clone()})
+	return new CALC.Mutliplication({
+		left: node.arg.differentiate(this.CALCbol),
+		right: new CALC.Multiplication({
+			left: new CALC.Constant({value: -1}),
+			right: new CALC.Sin({arg: node.arg.clone()})
 		})
 	});
 };*/

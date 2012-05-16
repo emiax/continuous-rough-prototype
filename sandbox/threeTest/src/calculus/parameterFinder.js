@@ -1,32 +1,32 @@
-SYM.Node.prototype.findParameters = function(symbol) {
-	return SYM.findParameters({node: this, symbol: symbol});
+CALC.Node.prototype.findParameters = function(symbol) {
+	return CALC.findParameters({node: this, symbol: symbol});
 };
 
 
-SYM.ParameterFinder = function(spec) {
+CALC.ParameterFinder = function(spec) {
 	spec = spec || {};
 	this.node = spec.node || null;
-}.inheritsFrom(SYM.NodeVisitor);
+}.inheritsFrom(CALC.NodeVisitor);
 
-SYM.findParameters = function(spec) {
-	var f = new SYM.ParameterFinder(spec);
+CALC.findParameters = function(spec) {
+	var f = new CALC.ParameterFinder(spec);
 	return f.findParamters();
 }
 
-SYM.Differentiator.prototype.findParameters = function() {
+CALC.Differentiator.prototype.findParameters = function() {
 	return this.node.accept(this);
 }
 
 
-SYM.Differentiator.prototype.visitConstant = function(node) {
+CALC.Differentiator.prototype.visitConstant = function(node) {
 	return [];
 };
 
-SYM.Differentiator.prototype.visitVariable = function(node) {
+CALC.Differentiator.prototype.visitVariable = function(node) {
 	return [node.symbol];
 };
 
-SYM.Differentiator.prototype.visitBinaryOperation = function(node) {
+CALC.Differentiator.prototype.visitBinaryOperation = function(node) {
 	var left = node.left.findParameters();
 	var right = node.right.findParameters()
 
@@ -45,6 +45,6 @@ SYM.Differentiator.prototype.visitBinaryOperation = function(node) {
 	return a;
 };
 
-SYM.Differentiator.prototype.visitUnaryOperation = function(node) {
+CALC.Differentiator.prototype.visitUnaryOperation = function(node) {
 	return node.arg.findParameters();
 }

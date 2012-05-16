@@ -11,22 +11,17 @@ Function.method('inheritsFrom', function(Parent) {
 });
 
 
-var SYM = function() {
+var CALC = function() {
 	var that = {};
-	
-	that.getAnynomousFunctionName = function() {
-		return 'f'
-	} // todo: return unique name!
-
 	return that;
 }();
 
 // General Node
 
-SYM.Node = function() {};
+CALC.Node = function() {};
 
-SYM.Node.prototype = {
-	constructor: SYM.Node,
+CALC.Node.prototype = {
+	constructor: CALC.Node,
 	clone: function() {
 		return this.constructor();
 	},
@@ -37,24 +32,24 @@ SYM.Node.prototype = {
 
 // Basic Node types
 
-SYM.Operation = function() {}.inheritsFrom(SYM.Node);
+CALC.Operation = function() {}.inheritsFrom(CALC.Node);
 
 // Constant
 
-SYM.Constant = function(parameters) {
+CALC.Constant = function(parameters) {
 	parameters = parameters || {};
 	this.value = parameters.value || 0;
-}.inheritsFrom(SYM.Node);
+}.inheritsFrom(CALC.Node);
 
-SYM.Constant.prototype.accept = function(visitor) {
+CALC.Constant.prototype.accept = function(visitor) {
 	return visitor.visitConstant(this);
 }
 
-SYM.Constant.prototype.toString = function() {
+CALC.Constant.prototype.toString = function() {
 	return this.value;
 };
 
-SYM.Constant.prototype.clone = function() {
+CALC.Constant.prototype.clone = function() {
 	return new this.constructor({
 		value: this.value
 	});j
@@ -63,20 +58,20 @@ SYM.Constant.prototype.clone = function() {
 
 // Variable
 
-SYM.Variable = function(parameters) {
+CALC.Variable = function(parameters) {
 	parameters = parameters || {};
 	this.symbol = parameters.symbol || 'x';
-}.inheritsFrom(SYM.Node);
+}.inheritsFrom(CALC.Node);
 
-SYM.Variable.prototype.accept = function(visitor) {
+CALC.Variable.prototype.accept = function(visitor) {
 	return visitor.visitVariable(this);
 };
 
-SYM.Variable.prototype.toString = function() {
+CALC.Variable.prototype.toString = function() {
 	return this.symbol;
 };
 
-SYM.Variable.prototype.clone = function() {
+CALC.Variable.prototype.clone = function() {
 	return new this.constructor({
 		symbol: this.symbol
 	});
@@ -86,17 +81,17 @@ SYM.Variable.prototype.clone = function() {
 
 // Binary operation
 
-SYM.BinaryOperation = function(parameters) {
+CALC.BinaryOperation = function(parameters) {
 	parameters = parameters || {};
 	this.left = parameters.left || null;
 	this.right = parameters.right || null;
-}.inheritsFrom(SYM.Operation);
+}.inheritsFrom(CALC.Operation);
 
-SYM.BinaryOperation.prototype.accept = function(visitor) {
+CALC.BinaryOperation.prototype.accept = function(visitor) {
 	return visitor.visitBinaryOperation(this);
 }
 
-SYM.BinaryOperation.prototype.clone = function() {
+CALC.BinaryOperation.prototype.clone = function() {
 	return new this.constructor({
 		left: this.left.clone(),
 		right: this.right.clone()
@@ -105,13 +100,13 @@ SYM.BinaryOperation.prototype.clone = function() {
 
 // Unary operation
 
-SYM.UnaryOperation = function(parameters) {
+CALC.UnaryOperation = function(parameters) {
 	parameters = parameters || {};
 	this.arg = parameters.arg;
-}.inheritsFrom(SYM.Operation);
+}.inheritsFrom(CALC.Operation);
 
 
-SYM.UnaryOperation.prototype.clone = function() {
+CALC.UnaryOperation.prototype.clone = function() {
 	return new this.constructor({
 		arg: this.arg.clone()
 	});
@@ -120,33 +115,33 @@ SYM.UnaryOperation.prototype.clone = function() {
 
 // Power
 
-SYM.Power = function(parameters) {
+CALC.Power = function(parameters) {
 	parameters = parameters || {};
-	this.left = parameters.left || new SYM.Constant({value: 0});
-	this.right = parameters.right || new SYM.Constant({value: 1});
-}.inheritsFrom(SYM.BinaryOperation);
+	this.left = parameters.left || new CALC.Constant({value: 0});
+	this.right = parameters.right || new CALC.Constant({value: 1});
+}.inheritsFrom(CALC.BinaryOperation);
 
-SYM.Power.prototype.accept = function(visitor) {
+CALC.Power.prototype.accept = function(visitor) {
 	return visitor.visitPower(this);
 }
 
-SYM.Power.prototype.toString = function() {
+CALC.Power.prototype.toString = function() {
 	return '(' + this.left.toString() + ' ^ ' + this.right.toString() + ')';
 };
 
 // Multiplication
 
-SYM.Multiplication = function(parameters) {
+CALC.Multiplication = function(parameters) {
 	parameters = parameters || {};
-	this.left = parameters.left || new SYM.Constant({value: 1});
-	this.right = parameters.right || new SYM.Constant({value: 1});
-}.inheritsFrom(SYM.BinaryOperation);
+	this.left = parameters.left || new CALC.Constant({value: 1});
+	this.right = parameters.right || new CALC.Constant({value: 1});
+}.inheritsFrom(CALC.BinaryOperation);
 
-SYM.Multiplication.prototype.accept = function(visitor) {
+CALC.Multiplication.prototype.accept = function(visitor) {
 	return visitor.visitMultiplication(this);
 };
 
-SYM.Multiplication.prototype.toString = function() {
+CALC.Multiplication.prototype.toString = function() {
 	return '(' + this.left.toString() + ' * ' + this.right.toString() + ')';
 };
 
@@ -154,132 +149,132 @@ SYM.Multiplication.prototype.toString = function() {
 // Division
 
 
-SYM.Division = function(parameters) {
+CALC.Division = function(parameters) {
 	parameters = parameters || {};
-	this.left = parameters.left || new SYM.Constant({value: 0});
-	this.right = parameters.right || new SYM.Constant({value: 1});
-}.inheritsFrom(SYM.BinaryOperation);
+	this.left = parameters.left || new CALC.Constant({value: 0});
+	this.right = parameters.right || new CALC.Constant({value: 1});
+}.inheritsFrom(CALC.BinaryOperation);
 
-SYM.Division.prototype.accept = function(visitor) {
+CALC.Division.prototype.accept = function(visitor) {
 	return visitor.visitDivision(this);
 }
 
-SYM.Division.prototype.toString = function() {
+CALC.Division.prototype.toString = function() {
 	return '(' + this.left.toString() + ' / ' + this.right.toString() + ')';
 };
 
 // Addition
 
-SYM.Addition = function(parameters) {
+CALC.Addition = function(parameters) {
 	parameters = parameters || {};
-	this.left = parameters.left || new SYM.Constant({value: 0});
-	this.right = parameters.right || new SYM.Constant({value: 0});
-}.inheritsFrom(SYM.BinaryOperation);
+	this.left = parameters.left || new CALC.Constant({value: 0});
+	this.right = parameters.right || new CALC.Constant({value: 0});
+}.inheritsFrom(CALC.BinaryOperation);
 
-SYM.Addition.prototype.accept = function(visitor) {
+CALC.Addition.prototype.accept = function(visitor) {
 	return visitor.visitAddition(this);
 }
 
-SYM.Addition.prototype.toString = function() {
+CALC.Addition.prototype.toString = function() {
 	return '(' + this.left.toString() + ' + ' + this.right.toString() + ')';
 };
 
 // Subtraction
 
-SYM.Subtraction = function(parameters) {
+CALC.Subtraction = function(parameters) {
 	parameters = parameters || {};
-	this.left = parameters.left || new SYM.Constant({value: 0});
-	this.right = parameters.right || new SYM.Constant({value: 0});
-}.inheritsFrom(SYM.BinaryOperation);
+	this.left = parameters.left || new CALC.Constant({value: 0});
+	this.right = parameters.right || new CALC.Constant({value: 0});
+}.inheritsFrom(CALC.BinaryOperation);
 
-SYM.Subtraction.prototype.accept = function(visitor) {
+CALC.Subtraction.prototype.accept = function(visitor) {
 	return visitor.visitSubtraction(this);
 }
 
-SYM.Subtraction.prototype.toString = function() {
+CALC.Subtraction.prototype.toString = function() {
 	return '(' + this.left.toString() + ' - ' + this.right.toString() + ')';
 };
 
 // Natural Logarithm
 
-SYM.Ln = function(parameters) {
+CALC.Ln = function(parameters) {
 	parameters = parameters || {};
-	this.arg = parameters.arg || new SYM.Constant({value: 1});
-}.inheritsFrom(SYM.UnaryOperation);
+	this.arg = parameters.arg || new CALC.Constant({value: 1});
+}.inheritsFrom(CALC.UnaryOperation);
 
 
-SYM.Ln.prototype.accept = function(visitor) {
+CALC.Ln.prototype.accept = function(visitor) {
 	return visitor.visitLn(this);
 }
 
-SYM.Ln.prototype.toString = function() {
+CALC.Ln.prototype.toString = function() {
 	return 'ln(' + this.arg.toString() + ')';
 };
 
 // Exponential function
 
-SYM.Exp = function(parameters) {
+CALC.Exp = function(parameters) {
 	parameters = parameters || {};
-	this.arg = parameters.arg || new SYM.Constant({value: 0});
-}.inheritsFrom(SYM.UnaryOperation);
+	this.arg = parameters.arg || new CALC.Constant({value: 0});
+}.inheritsFrom(CALC.UnaryOperation);
 
 
-SYM.Exp.prototype.accept = function(visitor) {
+CALC.Exp.prototype.accept = function(visitor) {
 	return visitor.visitExp(this);
 }
 
-SYM.Exp.prototype.toString = function() {
+CALC.Exp.prototype.toString = function() {
 	return 'e^(' + this.arg.toString() + ')';
 };
 
 
 // Sine
 
-SYM.Sin = function(parameters) {
+CALC.Sin = function(parameters) {
 	parameters = parameters || {};
-	this.arg = parameters.arg || new SYM.Constant({value: 0});
-}.inheritsFrom(SYM.UnaryOperation);
+	this.arg = parameters.arg || new CALC.Constant({value: 0});
+}.inheritsFrom(CALC.UnaryOperation);
 
 
-SYM.Sin.prototype.accept = function(visitor) {
+CALC.Sin.prototype.accept = function(visitor) {
 	return visitor.visitSin(this);
 }
 
-SYM.Sin.prototype.toString = function() {
+CALC.Sin.prototype.toString = function() {
 	return 'sin(' + this.arg.toString() + ')';
 };
 
 
 // Cosine
 
-SYM.Cos = function(parameters) {
+CALC.Cos = function(parameters) {
 	parameters = parameters || {};
-	this.arg = parameters.arg || new SYM.Constant({value: 0});
-}.inheritsFrom(SYM.UnaryOperation);
+	this.arg = parameters.arg || new CALC.Constant({value: 0});
+}.inheritsFrom(CALC.UnaryOperation);
 
 
-SYM.Cos.prototype.accept = function(visitor) {
+CALC.Cos.prototype.accept = function(visitor) {
 	return visitor.visitCos(this);
 }
 
-SYM.Cos.prototype.toString = function() {
+CALC.Cos.prototype.toString = function() {
 	return 'cos(' + this.arg.toString() + ')';
 };
 
 /*
 
-SYM.Function = function(parameters) {
+CALC.Function = function(parameters) {
 	parameters = parameters || {};
-	this.name = parameters.name || SYM.getAnonymousFunctionName();
+	this.name = parameters.name || CALC.getAnonymousFunctionName();
 	this.args = parameters.args || {};
-}.inheritsFrom(SYM.Node);
+}.inheritsFrom(CALC.Node);
 
 
-SYM.Function.prototype.accept = function(visitor) {
+CALC.Function.prototype.accept = function(visitor) {
 	return visitor.visitFunction(this);
 }
 
-SYM.Ln.prototype.toString = function() {
+CALC.Ln.prototype.toString = function() {
 	return this.name + '(' + this.arg.toString() + ')';
 };
 

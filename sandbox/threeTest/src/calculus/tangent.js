@@ -1,8 +1,8 @@
-SYM.Node.prototype.tangentialPlane = function(x, y) {
-	return SYM.tangentialPlane(this, x, y);
+CALC.Node.prototype.tangentialPlane = function(x, y) {
+	return CALC.tangentialPlane(this, x, y);
 }
 
-SYM.tangentialPlane = function(expr, x, y) {
+CALC.tangentialPlane = function(expr, x, y) {
 		
 	var dzdx = expr.differentiate('x').evaluate({x: x, y: y});
 	var dzdy = expr.differentiate('y').evaluate({x: x, y: y});
@@ -23,17 +23,17 @@ SYM.tangentialPlane = function(expr, x, y) {
 	var d = - n.x*x - n.y*y - n.z*expr.evaluate({x: x, y: y});
 	
 	// => z = 
-	return new SYM.Addition({	
-		left: new SYM.Addition({
-			left: new SYM.Multiplication({
-				left: new SYM.Constant({value: -n.x/n.z}),
-				right: new SYM.Variable({symbol: 'x'})
+	return new CALC.Addition({	
+		left: new CALC.Addition({
+			left: new CALC.Multiplication({
+				left: new CALC.Constant({value: -n.x/n.z}),
+				right: new CALC.Variable({symbol: 'x'})
 			}),
-			right: new SYM.Multiplication({
-				left: new SYM.Constant({value: -n.y/n.z}),
-				right: new SYM.Variable({symbol: 'y'})
+			right: new CALC.Multiplication({
+				left: new CALC.Constant({value: -n.y/n.z}),
+				right: new CALC.Variable({symbol: 'y'})
 			})
 		}),
-		right: new SYM.Constant({value: -d/n.z})
+		right: new CALC.Constant({value: -d/n.z})
 	});
 };

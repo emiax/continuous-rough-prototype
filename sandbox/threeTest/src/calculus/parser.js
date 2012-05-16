@@ -1,15 +1,15 @@
-SYM.parse = function(str) {
-	var parser = new SYM.Parser(str);
+CALC.parse = function(str) {
+	var parser = new CALC.Parser(str);
 	return parser.parse();
 }
 
 
-SYM.Parser = function(str) {
+CALC.Parser = function(str) {
 	this.str = str;
 }
 
 
-SYM.Parser.prototype.parse = function() {
+CALC.Parser.prototype.parse = function() {
 
 	var tokens = this.tokenize();
 	//todo: add multiplications between duplicate operand tokens.
@@ -22,22 +22,22 @@ SYM.Parser.prototype.parse = function() {
 	return tree;
 }
 
-SYM.Parser.prototype.operators = {
-	'^': {precedence: 4, Node: SYM.Power, requiresEsc: true, args: 2},
-	'*': {precedence: 5, Node: SYM.Multiplication, requiresEsc: true, args: 2},
-	'/': {precedence: 5, Node: SYM.Division, requiresEsc: true, args: 2},
-	'+': {precedence: 6, Node: SYM.Addition, requiresEsc: true, args: 2},
-	'-': {precedence: 6, Node: SYM.Subtraction, requiresEsc: true, args: 2},
-	'sin': {precedence: 3, Node: SYM.Sin, requiresEsc: false, args: 1},
-	'cos': {precedence: 3, Node: SYM.Cos, requiresEsc: false, args: 1},
-	'ln': {precedence: 3, Node: SYM.Ln, requiresEsc: false, args: 1}
+CALC.Parser.prototype.operators = {
+	'^': {precedence: 4, Node: CALC.Power, requiresEsc: true, args: 2},
+	'*': {precedence: 5, Node: CALC.Multiplication, requiresEsc: true, args: 2},
+	'/': {precedence: 5, Node: CALC.Division, requiresEsc: true, args: 2},
+	'+': {precedence: 6, Node: CALC.Addition, requiresEsc: true, args: 2},
+	'-': {precedence: 6, Node: CALC.Subtraction, requiresEsc: true, args: 2},
+	'sin': {precedence: 3, Node: CALC.Sin, requiresEsc: false, args: 1},
+	'cos': {precedence: 3, Node: CALC.Cos, requiresEsc: false, args: 1},
+	'ln': {precedence: 3, Node: CALC.Ln, requiresEsc: false, args: 1}
 };
 
-SYM.Parser.prototype.tokenize = function() {
+CALC.Parser.prototype.tokenize = function() {
 	var pattern = "(";
 		
-	for (i in SYM.Parser.prototype.operators) {
-		pattern += ((SYM.Parser.prototype.operators[i].requiresEsc) ? '\\' : '') + i  + '|';
+	for (i in CALC.Parser.prototype.operators) {
+		pattern += ((CALC.Parser.prototype.operators[i].requiresEsc) ? '\\' : '') + i  + '|';
 	}
 	
 	pattern += '\\(|\\)|(\\d+(?:\\.\\d*)?(?:e[+\\-]?\\d+)?|[a-zA-Z]))';
@@ -52,7 +52,7 @@ SYM.Parser.prototype.tokenize = function() {
 	};
 }();
 
-SYM.Parser.prototype.infixToPostfix = function(tokens) {
+CALC.Parser.prototype.infixToPostfix = function(tokens) {
 	//Dijstra's shunting yard algorithm
 	var token;
 	var stack = [];
@@ -96,7 +96,7 @@ SYM.Parser.prototype.infixToPostfix = function(tokens) {
 }
 
 
-SYM.Parser.prototype.buildExpressionTree = function(tokens) {
+CALC.Parser.prototype.buildExpressionTree = function(tokens) {
 	//tokens is an array with postfix notation
 	var nodes = [];
 	for (var i = 0; i < tokens.length; i++) {
@@ -115,9 +115,9 @@ SYM.Parser.prototype.buildExpressionTree = function(tokens) {
 			}
 		} else {
 			if (token == 0 || parseFloat(token)) {
-				nodes.push(new SYM.Constant({value: parseFloat(token)}));
+				nodes.push(new CALC.Constant({value: parseFloat(token)}));
 			} else {
-				nodes.push(new SYM.Variable({symbol: token}));
+				nodes.push(new CALC.Variable({symbol: token}));
 			}
 		}
 	}

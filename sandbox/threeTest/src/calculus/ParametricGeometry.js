@@ -1,7 +1,7 @@
 	/*
 		Example: of x
 		
-		var x = SYM.parse('t^2 - 2');
+		var x = CALC.parse('t^2 - 2');
 
 		Example of domain and range (temporary?)
 
