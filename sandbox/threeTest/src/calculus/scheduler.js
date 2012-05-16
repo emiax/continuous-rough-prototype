@@ -1,5 +1,3 @@
-CALC = {};
-
 CALC.NotImplementedYetException = function() {
 	this.name = "NotImplementedYet";
 	this.message = "This feature it not yet implemented";

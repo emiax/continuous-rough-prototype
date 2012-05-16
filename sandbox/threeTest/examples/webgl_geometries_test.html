@@ -106,15 +106,15 @@
 				objectsBranch.position.set( 0, 0, 0 );
 				scene.add(objectsBranch);
 
-				//var expr = SYM.parse('0');
-				var expr = SYM.parse('sin(x)*cos(y/2)');
+				//var expr = CALC.parse('0');
+				var expr = CALC.parse('sin(x)*cos(y/2)');
 				var dfdx = expr.tangentialPlane(-1.2, -2.8);
 				//console.log(dfdx);
 
-				//var expr = SYM.parse('0');
-				var pz = SYM.parse('cos(s+t/2) + 2.5');
-				var py = SYM.parse('sin(s+t/3)');
-				var px = SYM.parse('t*2');
+				//var expr = CALC.parse('0');
+				var pz = CALC.parse('cos(s+t/2) + 2.5');
+				var py = CALC.parse('sin(s+t/3)');
+				var px = CALC.parse('t*2');
 				
 				//console.log(dfdx);
 				var fn = new THREE.ParametricGeometry(px, py, pz, {s: [0, 3*Math.PI/2], t: [-2, 2]}, null, 0.2);

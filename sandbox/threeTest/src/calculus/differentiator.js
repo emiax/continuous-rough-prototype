@@ -1,12 +1,12 @@
-CALC.Node.prototype.differentiate = function(CALCbol) {
-		return CALC.differentiate({node: this, CALCbol: CALCbol});
+CALC.Node.prototype.differentiate = function(symbol) {
+		return CALC.differentiate({node: this, symbol: symbol});
 };
 
 
 CALC.Differentiator = function(spec) {
 	spec = spec || {};
 	this.node = spec.node || null;
-	this.CALCbol = spec.CALCbol || 'x';
+	this.symbol = spec.symbol || 'x';
 
 }.inheritsFrom(CALC.NodeVisitor);
 
@@ -29,7 +29,7 @@ CALC.Differentiator.prototype.visitConstant = function(node) {
 };
 
 CALC.Differentiator.prototype.visitVariable = function(node) {
-	if (node.CALCbol === this.CALCbol) {
+	if (node.symbol === this.symbol) {
 		return new CALC.Constant({value: 1});
 	} else {
 		return new CALC.Constant({value: 0});
@@ -38,27 +38,27 @@ CALC.Differentiator.prototype.visitVariable = function(node) {
 
 CALC.Differentiator.prototype.visitAddition = function(node) {
 	return new CALC.Addition({
-		left: node.left.differentiate(this.CALCbol),
-		right: node.right.differentiate(this.CALCbol)
+		left: node.left.differentiate(this.symbol),
+		right: node.right.differentiate(this.symbol)
 	});
 };
 
 CALC.Differentiator.prototype.visitSubtraction = function(node) {
 	return new CALC.Subtraction({
-		left: node.left.differentiate(this.CALCbol),
-		right: node.right.differentiate(this.CALCbol)
+		left: node.left.differentiate(this.symbol),
+		right: node.right.differentiate(this.symbol)
 	});
 };
 
 CALC.Differentiator.prototype.visitMultiplication = function(node) {
 	return new CALC.Addition({
 		left: new CALC.Multiplication({
-			left: node.left.differentiate(this.CALCbol),
+			left: node.left.differentiate(this.symbol),
 			right: node.right.clone()
 		}),
 		right: new CALC.Multiplication({
 			left: node.left.clone(),
-			right: node.right.differentiate(this.CALCbol)
+			right: node.right.differentiate(this.symbol)
 		})
 	});	
 };
@@ -67,12 +67,12 @@ CALC.Differentiator.prototype.visitDivision = function(node) {
 	return new CALC.Division({
 		left: new CALC.Subtraction({
 			left: new CALC.Multiplication({
-				left: node.left.differentiate(this.CALCbol),
+				left: node.left.differentiate(this.symbol),
 				right: node.right.clone()
 			}),
 			right: new CALC.Multiplication({
 				left: node.left.clone(),
-				right: node.right.differentiate(this.CALCbol)
+				right: node.right.differentiate(this.symbol)
 			})
 		}),
 		right: new CALC.Power({
@@ -94,7 +94,7 @@ CALC.Differentiator.prototype.visitPower = function(node) {
 						right: new CALC.Constant({value: 1})
 					})
 				}),
-				right: node.left.differentiate(this.CALCbol)
+				right: node.left.differentiate(this.symbol)
 			})
 		}),
 		right: new CALC.Multiplication({
@@ -106,7 +106,7 @@ CALC.Differentiator.prototype.visitPower = function(node) {
 				left: new CALC.Ln({
 					arg: node.left.clone()
 				}),
-				right: node.right.differentiate(this.CALCbol)
+				right: node.right.differentiate(this.symbol)
 			})
 		})
 	});
@@ -114,28 +114,28 @@ CALC.Differentiator.prototype.visitPower = function(node) {
 
 CALC.Differentiator.prototype.visitExp = function(node) {
 	return new CALC.Multiplication({
-		left: node.arg.differentiate(this.CALCbol),
+		left: node.arg.differentiate(this.symbol),
 		right: node.clone()
 	});
 };
 
 CALC.Differentiator.prototype.visitLn = function(node) {
 	return new CALC.Division({
-		left: node.arg.differentiate(this.CALCbol),
+		left: node.arg.differentiate(this.symbol),
 		right: node.arg.clone()
 	});
 };
 
 CALC.Differentiator.prototype.visitSin = function(node) {
 	return new CALC.Multiplication({
-		left: node.arg.differentiate(this.CALCbol),
+		left: node.arg.differentiate(this.symbol),
 		right: new CALC.Cos({arg: node.arg.clone()})
 	});
 };
 
 CALC.Differentiator.prototype.visitCos = function(node) {
 	return new CALC.Multiplication({
-		left: node.arg.differentiate(this.CALCbol),
+		left: node.arg.differentiate(this.symbol),
 		right: new CALC.Multiplication({
 			left: new CALC.Constant({value: -1}),
 			right: new CALC.Sin({arg: node.arg.clone()})
@@ -147,7 +147,7 @@ CALC.Differentiator.prototype.visitCos = function(node) {
 CALC.Differentiator.prototype.visitFunction = function(node) {
 	
 	return new CALC.Mutliplication({
-		left: node.arg.differentiate(this.CALCbol),
+		left: node.arg.differentiate(this.symbol),
 		right: new CALC.Multiplication({
 			left: new CALC.Constant({value: -1}),
 			right: new CALC.Sin({arg: node.arg.clone()})

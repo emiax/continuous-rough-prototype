@@ -24,12 +24,12 @@ CALC.Evaluator.prototype.visitConstant = function(node) {
 };
 
 CALC.Evaluator.prototype.visitVariable = function(node) {
-	if (typeof this.variables[node.CALCbol] === 'number') {
-		return this.variables[node.CALCbol];
+	if (typeof this.variables[node.symbol] === 'number') {
+		return this.variables[node.symbol];
 	} else {
 		throw {
 			name: 'Missing variable',
-			message: 'Cannot evaluate expresison. ' + node.CALCbol + ' is ' + this.variables[node.CALCbol] + '.'
+			message: 'Cannot evaluate expresison. ' + node.symbol + ' is ' + this.variables[node.symbol] + '.'
 		}
 	}
 };
