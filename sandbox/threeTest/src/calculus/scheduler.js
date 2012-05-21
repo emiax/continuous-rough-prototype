@@ -1,7 +1,4 @@
-CALC.NotImplementedYetException = function() {
-	this.name = "NotImplementedYet";
-	this.message = "This feature it not yet implemented";
-}
+
 
 CALC.scheduler = function() {
 	
@@ -65,7 +62,7 @@ CALC.scheduler = function() {
 		return false;
 	};
 
-	that.animate = function() {
+	that.tick = function() {
 	
 		var ev;
 		
@@ -86,9 +83,7 @@ CALC.scheduler = function() {
 				}
 			}
 		}
-		requestAnimationFrame(that.animate);
-		render();
-		stats.update();
+		
 	};
 
 

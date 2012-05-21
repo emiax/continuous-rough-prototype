@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<title>Visualisering, analys i flera variabler</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	</head>
+	<body>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script> 
+        <!--<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js" type="text/javascript"></script>-->
+
+        <script type="text/javascript"
+		  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+		</script>
+
+		<script src="../build/Three.js"></script>
+		<script src="../src/calculus/calc.js"></script>
+
+		<script src="../src/calculus/expressionTree.js"></script>
+		<script src="../src/calculus/nodeVisitor.js"></script>
+		<script src="../src/calculus/evaluator.js"></script>
+		<script src="../src/calculus/simplifier.js"></script>
+		<script src="../src/calculus/differentiator.js"></script>
+		<script src="../src/calculus/mathMLFormatter.js"></script>
+		<script src="../src/calculus/parser.js"></script>
+		<script src="../src/calculus/tangent.js"></script>
+		<script src="../src/calculus/scheduler.js"></script>
+
+
+		<script src="../src/calculus/FunctionSurfaceGeometry.js"></script>
+		<script src="../src/calculus/ParametricSurfaceGeometry.js"></script>
+		
+		<script src="js/Detector.js"></script>
+		<script src="js/Stats.js"></script>
+
+		<script>
+			//var application = new CALC.Application();
+			//var visualization = new CALC.visualizations.TangentialPlane;
+			//application.setVisualization(visualization);	
+
+			$(document).ready( function() {
+				var expr = CALC.parse('sin(x^3)/2');
+				$("#math").append(expr.mathMLElement());
+			});
+		</script>
+		<div style="font-size: 200%" id="math"></div>
+		
+
+	</body>
+	
+	 
+
+
+</html>
+
+
+

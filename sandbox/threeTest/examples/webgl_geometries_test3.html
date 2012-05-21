@@ -24,8 +24,7 @@
 
 		</script>
 		<script src="../build/Three.js"></script>
-		<script src="../src/calculus/calc.js"></script>
-
+		
 		<script src="../src/calculus/expressionTree.js"></script>
 		<script src="../src/calculus/nodeVisitor.js"></script>
 		<script src="../src/calculus/evaluator.js"></script>
@@ -33,12 +32,9 @@
 		<script src="../src/calculus/differentiator.js"></script>
 		<script src="../src/calculus/parser.js"></script>
 		<script src="../src/calculus/tangent.js"></script>
-		<script src="../src/calculus/scheduler.js"></script>
-
-
-		<script src="../src/calculus/FunctionSurfaceGeometry.js"></script>
-		<script src="../src/calculus/ParametricSurfaceGeometry.js"></script>
 		
+		<script src="../src/calculus/ParametricGeometry.js"></script>
+		<script src="../src/calculus/scheduler.js"></script>
 
 
 		<script src="js/Detector.js"></script>
@@ -58,8 +54,8 @@
 			spinZ = 0, spinX = 0, stepZ = 0, stepX = 0, curX = 0, curY = 0,
 			recX = [0,0,0,0,0,0,0,0,0,0,0], recY = [0,0,0,0,0,0,0,0,0,0,0], rec = 0,
 			onMouseDownMouseX = 0, onMouseDownMouseY = 0,
-			lon = 0, lastLon = 0, onMouseDownLon = 0,
-			lat = 0, lastLat = 0, onMouseDownLat = 0,
+			lon = 0, onMouseDownLon = 0,
+			lat = 0, onMouseDownLat = 0,
 			phi = 0, theta = 0,
 			target = new THREE.Vector3();
 			origin = new THREE.Vector3(0,0,0);
@@ -76,8 +72,8 @@
 				scene = new THREE.Scene();
 
 				camera = new THREE.ScreenCamera( 45, window.innerWidth / window.innerHeight, 1, 2000 );
-				camera.position.y = 10;
-				camera.position.z = 2;
+				camera.position.y = 1000;
+				camera.position.z = 200;
 				camera.lookAt(origin);
 				scene.add(camera);
 
@@ -89,73 +85,30 @@
 				light.position.set( 0, 1000, 400 );
 				scene.add( light );
 
-				/*materials = [
-					new THREE.MeshLambertMaterial( { ambient: 0xbbbbbb, map: THREE.ImageUtils.loadTexture( 'textures/ash_uvgrid01.jpg' ) } ),
-					new THREE.MeshBasicMaterial( { color: 0xffffff, wireframe: true, transparent: true, opacity: 0.1 } )
-				];*/
-
 				surface1 = new THREE.MeshBasicMaterial( { color: 0xbbbbff, wireframe: false, transparent: true, opacity: 0.5 } );
 				wireframe1 = new THREE.MeshBasicMaterial( { color: 0xffffff, wireframe: true, transparent: true, opacity: 0.1 } );
-				wireframe2 = new THREE.MeshBasicMaterial( { color: 0x557799, wireframe: true, transparent: true, opacity: 0.6 } );
-				
-				materials = [
-					//new THREE.MeshLambertMaterial( { ambient: 0xbbbbbb, map: THREE.ImageUtils.loadTexture( 'textures/ash_uvgrid01.jpg' ) } ),
-					surface1,
-					wireframe1
-
-				];
-
 				
 				objectsBranch = new THREE.Branch();
 				objectsBranch.position.set( 0, 0, 0 );
 				scene.add(objectsBranch);
 
-				//var expr = CALC.parse('0');
-				var expr = CALC.parse('sin(x)*cos(y/2)');
-				var dfdx = expr.tangentialPlane(-1.2, -2.8);
-				//console.log(dfdx);
-
-				//var expr = CALC.parse('0');
-				var pz = CALC.parse('cos(s+t/2) + 2.5');
-				var py = CALC.parse('sin(s+t/3)');
-				var px = CALC.parse('t*2');
+				//var expr = SYM.parse('0');
+				var px = SYM.parse('200*cos(s+t/2)');
+				var py = SYM.parse('200*sin(s+t/3)');
+				var pz = SYM.parse('t*200');
 				
 				//console.log(dfdx);
-				var fn = new THREE.ParametricSurfaceGeometry(px, py, pz, {s: [0, 3*Math.PI/2], t: [-2, 2]}, null, 0.2);
-				object = new THREE.Mesh(fn, wireframe2);
-				object.doubleSided = true;
-				object.position.set( 0, 0, 0 );
-				objectsBranch.add(object);
-
-				var fn = new THREE.FunctionSurfaceGeometry(expr, [-5, -5, 5, 5], 0.1);
-
-				//object = THREE.SceneUtils.createMultiMaterialObject( fn, materials);
+				var fn = new THREE.ParametricGeometry(px, py, pz, {s: [0, Math.PI], t: [0, 2]}, null, 0.2);
 				object = new THREE.Mesh(fn, wireframe1);
 
 				object.doubleSided = true;
-
-				object.position.set( 0, 0, 0 );
+				object.position.set(0, 0, 0);
 				objectsBranch.add(object);
 
-				var materials2 = [
-					//new THREE.MeshLambertMaterial( { ambient: 0xbbbbbb, map: THREE.ImageUtils.loadTexture( 'textures/ash_uvgrid01.jpg' ) } ),
-					new THREE.MeshBasicMaterial( { color: 0x6688ff, wireframe: false, transparent: true, opacity: 0.5 } )
-
-				];
-
-
-				//object = THREE.SceneUtils.createMultiMaterialObject( new THREE.FunctionSurfaceGeometry(dfdx, [-500, -500, 500, 500]), materials2);
-				var fn2 = new THREE.FunctionSurfaceGeometry(dfdx, [-5, -5, 5, 5], 0.1);
-				object = new THREE.Mesh(fn2, surface1);
-				object.position.set( 0, 0, 0 );
-				object.doubleSided = true;
-
-				objectsBranch.add(object);
-
-
+		
 				object = new THREE.AxisHelper();
 				object.position.set( 0, 0, 0 );
-				object.scale.x = object.scale.y = object.scale.z = 0.004;
+				object.scale.x = object.scale.y = object.scale.z = 0.2;
 				objectsBranch.add(object);
 				
 				
@@ -169,7 +122,7 @@
 					delay: 120
 				}, function() {
 					CALC.translate(objectsBranch,{
-						z: 2
+						z: 200
 					}, {
 						duration: 30,
 						interpolation: CALC.interpolations.quintic
@@ -204,42 +157,21 @@
 						});
 						
 						CALC.fade(wireframe1,{
-							opacity: 0.4
+							opacity: 0.2
 						}, {
 							duration: 50,
 							interpolation: CALC.interpolations.quintic
 						}, function() {
-							CALC.fade(surface1,{
-								opacity: 0
-							}, {
-								duration: 15,
-								interpolation: CALC.interpolations.quintic
-							});
 							CALC.fade(wireframe1,{
-								opacity: 0
+								opacity: 0.1
 							}, {
 								duration: 15,
 								interpolation: CALC.interpolations.quintic
-							}, function() {
-
-								CALC.translate(objectsBranch,{
-									z: 2
-								}, {
-									duration: 500,
-									interpolation: CALC.interpolations.cubic
-								});
-
-								CALC.rotate(objectsBranch,{
-									z: Math.PI*8
-								}, {
-									duration: 500,
-									interpolation: CALC.interpolations.cubic
-								});
 							});
 						});
 					});
 				});
-				
+
 				/*setTimeout(function() {
 					console.log("stopping!");
 					evtHandle.pause();
@@ -300,10 +232,6 @@
 				
 				//objectsBranch.rotation.z = lon * (-0.1) + spinZ;
 				//objectsBranch.rotation.x = lat * (-0.1) + spinX;
-				objectsBranch.rotation.z += (lon - lastLon) * (-0.1);
-				objectsBranch.rotation.x += (lat - lastLat) * (-0.1);
-				lastLon = lon;
-				lastLat = lat;
 				
 				renderer.render( scene, camera );
 			}
@@ -328,8 +256,6 @@
 				curX = event.clientX;
 				curY = event.clientY;
 				if ( isUserInteracting ) {
-					//lon = ( onPointerDownPointerX - event.clientX ) * 0.1 + onPointerDownLon;
-					//lat = ( event.clientY - onPointerDownPointerY ) * 0.1 + onPointerDownLat;
 					lon = ( onPointerDownPointerX - event.clientX ) * 0.1 + onPointerDownLon;
 					lat = ( event.clientY - onPointerDownPointerY ) * 0.1 + onPointerDownLat;
 					render();
