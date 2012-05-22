@@ -1,5 +1,5 @@
 
-THREE.FunctionSurfaceGeometry = function (expr, boundingRect, resolution) {
+CALC.FunctionSurfaceGeometry = function (expr, boundingRect, resolution) {
 
 	//var data = expression.tesselate(expr, boundingRect, 10);
 	//console.log(vertices[5]);
@@ -9,7 +9,7 @@ THREE.FunctionSurfaceGeometry = function (expr, boundingRect, resolution) {
 	var scope = this;
 	this.materials = [];
 
-	resolution = resolution || 10;
+	resolution = resolution || 1;
 
 	var xRes = resolution, yRes = resolution;
 
@@ -42,12 +42,12 @@ THREE.FunctionSurfaceGeometry = function (expr, boundingRect, resolution) {
 
 
 
-THREE.FunctionSurfaceGeometry.prototype = new THREE.Geometry();
-THREE.FunctionSurfaceGeometry.prototype.constructor = THREE.FunctionSurfaceGeometry;
+CALC.FunctionSurfaceGeometry.prototype = new THREE.Geometry();
+CALC.FunctionSurfaceGeometry.prototype.constructor = CALC.FunctionSurfaceGeometry;
 
-THREE.FunctionSurfaceGeometry.prototype.clip = function(plane, orientation) {
+CALC.FunctionSurfaceGeometry.prototype.clip = function(plane, orientation) {
 
-	var geo = new THREE.FunctionSurfaceGeometry();
+	var geo = new CALC.FunctionSurfaceGeometry();
 	for(var i = 0; i < this.vertices.length; i++) {
 		geo.vertices.push(this.vertices[i]);
 	}

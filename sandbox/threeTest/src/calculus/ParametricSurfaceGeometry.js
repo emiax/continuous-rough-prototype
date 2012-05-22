@@ -28,7 +28,7 @@
 
 	*/
 
-THREE.ParametricSurfaceGeometry = function (x, y, z, domain, range, resolution) {
+CALC.ParametricSurfaceGeometry = function (x, y, z, domain, range, resolution) {
 
 	THREE.Geometry.call(this);
 	this.xExpr = x;
@@ -38,7 +38,7 @@ THREE.ParametricSurfaceGeometry = function (x, y, z, domain, range, resolution) 
 	var scope = this;
 	this.materials = [];
 
-	resolution = resolution || 10;
+	resolution = resolution || 1;
 
 	
 
@@ -105,6 +105,6 @@ THREE.ParametricSurfaceGeometry = function (x, y, z, domain, range, resolution) 
 
 
 
-THREE.ParametricSurfaceGeometry.prototype = new THREE.Geometry();
-THREE.ParametricSurfaceGeometry.prototype.constructor = THREE.ParametricSurfaceGeometry;
+CALC.ParametricSurfaceGeometry.prototype = new THREE.Geometry();
+CALC.ParametricSurfaceGeometry.prototype.constructor = CALC.ParametricSurfaceGeometry;
 

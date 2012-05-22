@@ -38,6 +38,8 @@
 
 		<script src="../src/calculus/FunctionSurfaceGeometry.js"></script>
 		<script src="../src/calculus/ParametricSurfaceGeometry.js"></script>
+		<script src="../src/calculus/FunctionCurveGeometry.js"></script>
+		<script src="../src/calculus/ParametricCurveGeometry.js"></script>
 		
 
 
@@ -66,7 +68,7 @@
 
 			init();
 			//animate();
-			CALC.scheduler.animate();
+			CALC.scheduler.tick();
 
 			function init() {
 
@@ -109,6 +111,14 @@
 				objectsBranch = new THREE.Branch();
 				objectsBranch.position.set( 0, 0, 0 );
 				scene.add(objectsBranch);
+				
+				//torus test
+				var xExpr = CALC.parse('cos(2*s)');
+				var yExpr = CALC.parse('sin(2*s)');
+				var zExpr = CALC.parse('sin((0-3)*s)');
+				var pcg = new CALC.ParametricCurveGeometry(xExpr, yExpr, zExpr, {s:[0, 2*Math.PI]}, null, 0.05);
+				object = new THREE.Line(pcg, wireframe2);
+				objectsBranch.add(object);
 
 				//var expr = CALC.parse('0');
 				var expr = CALC.parse('sin(x)*cos(y/2)');
@@ -121,13 +131,13 @@
 				var px = CALC.parse('t*2');
 				
 				//console.log(dfdx);
-				var fn = new THREE.ParametricSurfaceGeometry(px, py, pz, {s: [0, 3*Math.PI/2], t: [-2, 2]}, null, 0.2);
+				var fn = new CALC.ParametricSurfaceGeometry(px, py, pz, {s: [0, 3*Math.PI/2], t: [-2, 2]}, null, 0.2);
 				object = new THREE.Mesh(fn, wireframe2);
 				object.doubleSided = true;
 				object.position.set( 0, 0, 0 );
-				objectsBranch.add(object);
+				//objectsBranch.add(object);
 
-				var fn = new THREE.FunctionSurfaceGeometry(expr, [-5, -5, 5, 5], 0.1);
+				var fn = new CALC.FunctionSurfaceGeometry(expr, [-5, -5, 5, 5], 0.1);
 
 				//object = THREE.SceneUtils.createMultiMaterialObject( fn, materials);
 				object = new THREE.Mesh(fn, wireframe1);
@@ -135,7 +145,7 @@
 				object.doubleSided = true;
 
 				object.position.set( 0, 0, 0 );
-				objectsBranch.add(object);
+				//objectsBranch.add(object);
 
 				var materials2 = [
 					//new THREE.MeshLambertMaterial( { ambient: 0xbbbbbb, map: THREE.ImageUtils.loadTexture( 'textures/ash_uvgrid01.jpg' ) } ),
@@ -145,12 +155,12 @@
 
 
 				//object = THREE.SceneUtils.createMultiMaterialObject( new THREE.FunctionSurfaceGeometry(dfdx, [-500, -500, 500, 500]), materials2);
-				var fn2 = new THREE.FunctionSurfaceGeometry(dfdx, [-5, -5, 5, 5], 0.1);
+				var fn2 = new CALC.FunctionSurfaceGeometry(dfdx, [-5, -5, 5, 5], 0.1);
 				object = new THREE.Mesh(fn2, surface1);
 				object.position.set( 0, 0, 0 );
 				object.doubleSided = true;
 
-				objectsBranch.add(object);
+				//objectsBranch.add(object);
 
 
 				object = new THREE.AxisHelper();
