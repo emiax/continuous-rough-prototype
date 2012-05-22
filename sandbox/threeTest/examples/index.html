@@ -34,19 +34,21 @@
 		<script src="js/Stats.js"></script>
 
 		<script>
-			//var application = new CALC.Application();
-			//var visualization = new CALC.visualizations.TangentialPlane;
-			//application.setVisualization(visualization);	
+			var application = new CALC.Application();
+			var visualization = new CALC.visualizations.TangentialPlane;
+			application.setVisualization(visualization);
+			application.setContainer($("#application"));
 
-			$(document).ready( function() {
-				var expr = CALC.parse('sin(x^3)/2');
-				$("#math").append(expr.mathMLElement());
-			});
+			//$(document).ready( function() {
+			//	var expr = CALC.parse('sin(x^3)/2');
+			//	$("#math").append(expr.mathMLElement());
+			//});
 		</script>
-		<div style="font-size: 200%" id="math"></div>
 		
-
+		<div id="application"></div>
+	
 	</body>
+
 	
 	 
 
