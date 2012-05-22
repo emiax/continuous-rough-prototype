@@ -1,0 +1,99 @@
+@import url(http://reset5.googlecode.com/hg/reset.min.css);
+@import url(http://fonts.googleapis.com/css?family=Asap:400,400italic,700,700italic);
+
+body, html {
+	padding : 0;
+	margin: 0;
+	height: 100%;
+	width: 100%;
+	overflow: hidden;
+}
+sup {font-size:xx-small; vertical-align:top;} 
+
+#application {
+	font-family: 'Asap';
+	padding : 0;
+	margin: 0;
+	height: 100%;
+	width: 100%;
+
+  	display : -moz-box;
+	display : -webkit-box;
+	display : box;
+
+	-moz-box-orient : vertical;
+	-moz-box-flex : 1;
+	
+	-webkit-box-orient : vertical;
+	-webkit-box-flex : 1;
+	
+	box-orient : vertical;
+	box-flex : 1;
+}
+
+#visualization {
+	width: 100%;
+
+  	display : -moz-box;
+	display : -webkit-box;
+	display : box;
+	
+	-moz-box-orient : horizontal;
+	-moz-box-flex : 1;
+	
+	-webkit-box-orient : horizontal;
+	-webkit-box-flex : 1;
+	
+	box-orient : horizontal;
+	box-flex : 1;
+}
+
+
+
+header {
+	background-color: #91948e;
+	
+	position: relative;
+
+	font-size: 1em;
+	color: #3a3c38;
+	font-weight: bold;
+	padding: 10px;
+
+
+	box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.7);
+    -moz-box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.7);
+    -webkit-box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.7);
+
+}
+
+
+#graphics-panel {
+	background-color: #252525;
+		-moz-box-flex : 1;
+		-webkit-box-flex : 1;
+	box-flex: 1;
+	overflow: hidden;
+}
+
+canvas {
+	position: absolute;
+}
+
+#text-panel {
+	padding-top: 5px;
+	background-color: #202020;
+	width: 400px;
+}
+
+.text-box {
+	border-radius: 2px;
+	line-height: 1.3em;
+	font-size: 0.9em;
+	background-color: #fff;
+	margin: 10px;
+	padding: 20px;
+	box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.7);
+    -moz-box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.7);
+    -webkit-box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.7);
+}
