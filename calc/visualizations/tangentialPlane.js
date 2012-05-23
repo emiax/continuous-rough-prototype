@@ -26,39 +26,17 @@ CALC.CheckerMaterial = function(parameters) {
 	THREE.ShaderMaterial.call( this, parameters );
 
 	this.vertexShader = [
-
-			THREE.ShaderChunk[ "map_pars_vertex" ],
-			THREE.ShaderChunk[ "lightmap_pars_vertex" ],
-			THREE.ShaderChunk[ "envmap_pars_vertex" ],
-			THREE.ShaderChunk[ "color_pars_vertex" ],
-			THREE.ShaderChunk[ "skinning_pars_vertex" ],
-			THREE.ShaderChunk[ "morphtarget_pars_vertex" ],
-			THREE.ShaderChunk[ "shadowmap_pars_vertex" ],
-			
-			'varying vec3 pos;',
-
-			"void main() {",
-
-				"vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );",
-				"pos = position;",
-
-				THREE.ShaderChunk[ "map_vertex" ],
-				THREE.ShaderChunk[ "lightmap_vertex" ],
-				THREE.ShaderChunk[ "envmap_vertex" ],
-				THREE.ShaderChunk[ "color_vertex" ],
-				THREE.ShaderChunk[ "skinning_vertex" ],
-				THREE.ShaderChunk[ "morphtarget_vertex" ],
-				THREE.ShaderChunk[ "default_vertex" ],
-				THREE.ShaderChunk[ "shadowmap_vertex" ],
-
-			"}"
+	'varying vec3 vColor;',
+	'varying vec3 pos;',
+	'void main() {',
+		'vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );',
+		'pos = position;',
+		'gl_Position = projectionMatrix * mvPosition;',
+	'}',
 
 		].join("\n");
 
-		console.log(this.vertexShader);
-
-
-		this.fragmentShader = [
+	this.fragmentShader = [
 		'varying vec3 pos;',
 		'float checker() {',
 			'vec3 dist = fract(pos);',
@@ -73,8 +51,8 @@ CALC.CheckerMaterial = function(parameters) {
 			'return smoothstep(-width, width, min(dist.z, min(dist.x, dist.y)));',
 		'}',
 		'void main() {',
-			'vec4 c1 = vec4(0.1, 0.1, 0.1, 1.0);',
-			'vec4 c2 = vec4(0.8, 0.8, 0.8, 1.0);',
+			'vec4 c1 = vec4(0.9, 0.9, 0.9, 1.0);',
+			'vec4 c2 = vec4(0.9, 0.0, 0.0, 1.0);',
 			'gl_FragColor = mix(c1, c2, checker());',
 		'}'
 	].join("\n");
@@ -90,9 +68,11 @@ CALC.visualizations.TangentialPlane = function() {
 
 	this.standardVisualizationSetup();
 
-	var pz = CALC.parse('4.2*cos(s)*sin(t)');
-	var py = CALC.parse('2.1*sin(s)*sin(t)');
-	var px = CALC.parse('2.2*cos(t)');
+	var pz = CALC.parse('2*cos(s)*sin(t)');
+	var py = CALC.parse('2*sin(s)*sin(t)');
+	var px = CALC.parse('2*cos(t)');
+
+
 	
 	//var material = new THREE.MeshBasicMaterial( { color: 0x557799, wireframe: true, transparent: true, opacity: 0.6 } );
 	//var material = new THREE.MeshLambertMaterial( { color: 0x557799, wireframe: false, transparent: true, opacity: 0.6 } );
@@ -108,7 +88,7 @@ CALC.visualizations.TangentialPlane = function() {
 	scene.add(object);
 
 
-	
+
 	this.steps = [
 		// Step 1: show expression and surface
 		new CALC.VisualizationStep("Ytan", [
