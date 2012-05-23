@@ -1,5 +1,5 @@
 CALC.Application = function ($container) {
-	console.log("doing init");
+	
 
 	this.visualization = null;
 	this.$container = $container;
@@ -22,6 +22,8 @@ CALC.Application.prototype = {
 
 		if ( !Detector.webgl ) Detector.addGetWebGLMessage();
 	
+
+		this.$container.html('<header>TNA006: Analys III<sup>PREVIEW</sup></header><div id="visualization"></div>');
 
 		var scope = this;
 		$(window).resize(function (){

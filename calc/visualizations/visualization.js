@@ -75,8 +75,56 @@ CALC.visualizations.Visualization.prototype.clearPanel = function($panel, $conte
 	$panel.html($content);
 }
 
+CALC.visualizations.Visualization.prototype.standardVisualizationSetup = function() {
+	this.dom = $('<div id="visualization">' + 
+					'<div id="main-row">' + 
+						'<div id="graphics-panel"></div>' +
+						'<div id="text-panel"></div>' +
+					'</div>' + 
+					'<div id="navigation-panel"></div>' +
+				'</div>');
+
+	this.panels = {
+		graphics: $("#graphics-panel", this.dom),
+		text: $("#text-panel", this.dom),
+		navigation: $("#navigation-panel", this.dom)
+	};
+		
+	var renderer = new THREE.WebGLRenderer({ antialias: true });
+	var camera = new THREE.ScreenCamera( 45, /* Temporary aspect ratio is set to 1, but will be set in updateRenderers */ 1, 1, 2000 );
+	var scene = new THREE.Scene();
+
+	var origin = new THREE.Vector3(0, 0, 0);
+	camera.position.y = 10;
+	camera.position.z = 10;
+	camera.lookAt(origin);
+
+	scene.add(camera);
 
 
+	var light = new THREE.AmbientLight(0x282828);
+	scene.add(light);
+
+	light = new THREE.PointLight(0xFFFFFF);
+	light.position = new THREE.Vector3(4, -2, 1);
+	scene.add(light);
+
+
+	this.cameras["std"] = camera;
+	this.scenes["std"] = scene;
+	this.renderers["std"] = this.attachRenderer(this.panels.graphics, renderer, scene, camera);
+}
+
+
+CALC.visualizations.Visualization.prototype.populateNavigationPanel = function() {
+	var text = "";
+	for(var i = 0; i < this.steps.length; i++) {
+		text += '<a class="navigation-step">' + this.steps[i].getTitle() + '</a> ';
+	}
+
+
+	this.panels["navigation"].html(text);
+}
 
 /*
 CALC.visualizations.Visualization.prototype.setInteractionStrategy: function (s) {

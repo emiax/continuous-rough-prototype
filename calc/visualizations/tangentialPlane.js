@@ -1,60 +1,145 @@
+/**
+ * @author alteredq / http://alteredqualia.com/
+ *
+ * parameters = {
+ *  fragmentShader: <string>,
+ *  vertexShader: <string>,
+
+ *  uniforms: { "parameter1": { type: "f", value: 1.0 }, "parameter2": { type: "i" value2: 2 } },
+
+ *  shading: THREE.SmoothShading,
+ *  blending: THREE.NormalBlending,
+ *  depthTest: <bool>,
+
+ *  wireframe: <boolean>,
+ *  wireframeLinewidth: <float>,
+
+ *  lights: <bool>,
+ *  vertexColors: <bool>,
+ *  skinning: <bool>,
+ *  morphTargets: <bool>,
+ * }
+ */
+
+
+CALC.CheckerMaterial = function(parameters) {
+	THREE.ShaderMaterial.call( this, parameters );
+
+	this.vertexShader = [
+
+			THREE.ShaderChunk[ "map_pars_vertex" ],
+			THREE.ShaderChunk[ "lightmap_pars_vertex" ],
+			THREE.ShaderChunk[ "envmap_pars_vertex" ],
+			THREE.ShaderChunk[ "color_pars_vertex" ],
+			THREE.ShaderChunk[ "skinning_pars_vertex" ],
+			THREE.ShaderChunk[ "morphtarget_pars_vertex" ],
+			THREE.ShaderChunk[ "shadowmap_pars_vertex" ],
+			
+			'varying vec3 pos;',
+
+			"void main() {",
+
+				"vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );",
+				"pos = position;",
+
+				THREE.ShaderChunk[ "map_vertex" ],
+				THREE.ShaderChunk[ "lightmap_vertex" ],
+				THREE.ShaderChunk[ "envmap_vertex" ],
+				THREE.ShaderChunk[ "color_vertex" ],
+				THREE.ShaderChunk[ "skinning_vertex" ],
+				THREE.ShaderChunk[ "morphtarget_vertex" ],
+				THREE.ShaderChunk[ "default_vertex" ],
+				THREE.ShaderChunk[ "shadowmap_vertex" ],
+
+			"}"
+
+		].join("\n");
+
+		console.log(this.vertexShader);
+
+
+		this.fragmentShader = [
+		'varying vec3 pos;',
+		'float checker() {',
+			'vec3 dist = fract(pos);',
+			'dist = min(dist, vec3(1.0, 1.0, 1.0) - dist);',
+			//'return step(0.01, min(dist.z, min(dist.x, dist.y)));',
+			'#ifdef GL_OES_standard_derivatives',
+				'float width = 0.7 * length(vec2(dFdx(dist), dFdy(dist)));',
+			'#else',
+				'float width = 0.05;',
+			'#endif',
+			
+			'return smoothstep(-width, width, min(dist.z, min(dist.x, dist.y)));',
+		'}',
+		'void main() {',
+			'vec4 c1 = vec4(0.1, 0.1, 0.1, 1.0);',
+			'vec4 c2 = vec4(0.8, 0.8, 0.8, 1.0);',
+			'gl_FragColor = mix(c1, c2, checker());',
+		'}'
+	].join("\n");
+}
+
+CALC.CheckerMaterial.prototype = new THREE.ShaderMaterial();
+CALC.CheckerMaterial.prototype.constructor = CALC.CheckerMaterial;
+
+
 CALC.visualizations.TangentialPlane = function() {
-
 	CALC.visualizations.Visualization.call( this );
-
-	this.dom = $('<div id="visualization"><div id="graphics-panel"></div><div id="text-panel"></div>');
-
-	this.panels = {
-		graphics: $("#graphics-panel", this.dom),
-		text: $("#text-panel", this.dom)
-	};
-		
-	var renderer = new THREE.WebGLRenderer({ antialias: true });
-	var camera = new THREE.ScreenCamera( 45, /* Temporary aspect ratio is set to 1, but will be set in updateRenderers */ 1, 1, 2000 );
-	var scene = new THREE.Scene();
-
-	var origin = new THREE.Vector3(0, 0, 0);
-	camera.position.y = 10;
-	camera.position.z = 2;
-	camera.lookAt(origin);
-
-	scene.add(camera);
-
-
-	this.cameras["main"] = camera;
-	this.scenes["main"] = scene;
-	this.renderers["main"] = this.attachRenderer(this.panels.graphics, renderer, scene, camera);
-
-
-	var pz = CALC.parse('2*cos(s)*sin(t)');
-	var py = CALC.parse('2*sin(s)*sin(t)');
-	var px = CALC.parse('2*cos(t)');
-	
-	//console.log(dfdx);
-	var material = new THREE.MeshBasicMaterial( { color: 0x557799, wireframe: true, transparent: true, opacity: 0.6 } );
-	var geometry = new THREE.ParametricSurfaceGeometry(px, py, pz, {s: [0, 2*Math.PI], t: [0, Math.PI]}, null, 0.2);
-	object = new THREE.Mesh(geometry, material);
-	//object.doubleSided = true;
-	object.position.set( 0, 0, 0 );
-	scene.add(object);
-
 	var scope = this;
 
-	// visualization step 1, rotate sphere and display text
-	this.steps.push(function() {
-		var evtHandle = CALC.rotate(object, {
-			y: Math.PI
-		}, {
-			duration: 120,
-			interpolation: CALC.interpolations.quintic,
-			delay: 20
-		}, function() {
-			scope.appendTextBox(scope.panels.text,  'Betrakta lite utryck, typ: <math>' + pz.mathML() + "</math>. Även <math>" +
-							   px.mathML() + "</math> och <math>" + py.mathML() + '</math> är lite coola.');
-		});
-	});
+	this.standardVisualizationSetup();
+
+	var pz = CALC.parse('4.2*cos(s)*sin(t)');
+	var py = CALC.parse('2.1*sin(s)*sin(t)');
+	var px = CALC.parse('2.2*cos(t)');
+	
+	//var material = new THREE.MeshBasicMaterial( { color: 0x557799, wireframe: true, transparent: true, opacity: 0.6 } );
+	//var material = new THREE.MeshLambertMaterial( { color: 0x557799, wireframe: false, transparent: true, opacity: 0.6 } );
+	var material = new CALC.CheckerMaterial();
+	
+	var geometry = new THREE.ParametricSurfaceGeometry(px, py, pz, {s: [0, 2*Math.PI], t: [0, Math.PI]}, null, 0.2);
+	var object = new THREE.Mesh(geometry, material);
+	
+	object.doubleSided = true;
+	object.position.set( 0, 0, 0 );
+	
+	var scene = this.scenes["std"];
+	scene.add(object);
+
 
 	
+	this.steps = [
+		// Step 1: show expression and surface
+		new CALC.VisualizationStep("Ytan", [
+			new CALC.AbsoluteRotationAction({
+				object:  	null,
+				y: 			Math.PI,
+				duration: 	120,
+				delay: 		20
+			}),
+			new CALC.TextPanelAction({
+				panel: 		this.panels.text,
+				text: 		"Betrakta dessa uttryck..."
+			})
+		]),
+		// Step 2: show tangents
+		new CALC.VisualizationStep("Tangentvektorer", [
+			new CALC.AbsoluteRotationAction({
+				object:  	object,
+				y: 			Math.PI,
+				duration: 	120,
+				delay: 		20
+			}),
+			new CALC.TextPanelAction({
+				panel: 		this.panels.text,
+				text: 		"Betrakta dessa uttryck...",
+				clear: 		true
+			})
+		])
+	];
+
+	this.populateNavigationPanel();
 
 };
 

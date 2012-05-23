@@ -30,13 +30,12 @@
 
 		<script src="calc/FunctionSurfaceGeometry.js"></script>
 		<script src="calc/ParametricSurfaceGeometry.js"></script>
+		<script src="calc/ParametricCurveGeometry.js"></script>
 		
 		<script src="calc/application.js"></script>
+		<script src="calc/visualizationStep.js"></script>
 		<script src="calc/visualizations/visualization.js"></script>
 		<script src="calc/visualizations/tangentialPlane.js"></script>
-
-	</head>
-	<body>
 		<script>
 			$(document).ready(function() { 
 				var application = new CALC.Application($("#application"));
@@ -44,18 +43,10 @@
 				application.setVisualization(visualization);
 			});
 		</script>
-		
-		<div id="application">
-			<header>TNA006: Analys III<sup>PREVIEW</sup></header>
-			<div id="visualization"></div>
-		</div>
-	
+	</head>
+	<body>
+		<div id="application"></div>
 	</body>
-
-	
-	 
-
-
 </html>
 
 
