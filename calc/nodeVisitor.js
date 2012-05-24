@@ -28,7 +28,7 @@ CALC.NodeVisitor.prototype.visitAddition = function(node) {
 	return this.visitBinaryOperation(node);
 };
 
-CALC.NodeVisitor.prototype.visitSubstraction = function(node) {
+CALC.NodeVisitor.prototype.visitSubtraction = function(node) {
 	return this.visitBinaryOperation(node);
 };
 

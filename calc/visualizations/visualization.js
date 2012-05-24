@@ -88,6 +88,7 @@ CALC.visualizations.Visualization.prototype = {
 		};
 			
 		var renderer = new THREE.WebGLRenderer({ antialias: true });
+		//renderer.setFaceCulling(false);
 		var camera = new THREE.ScreenCamera( 45, /* Temporary aspect ratio is set to 1, but will be set in updateRenderers */ 1, 1, 2000 );
 		var scene = new THREE.Scene();
 
