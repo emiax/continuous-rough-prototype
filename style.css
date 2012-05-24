@@ -84,6 +84,16 @@ sup {
     -webkit-box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.7);
 }
 
+#navigation-panel .visualization-step {
+	padding: 0 20px;
+	border-right: 2px solid #000;
+}
+
+#navigation-panel .visualization-step.active {
+	color: #fff;
+}
+
+
 
 header {
 	background-color: #91948e;
@@ -130,3 +140,42 @@ canvas {
     -moz-box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.7);
     -webkit-box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.7);
 }
+
+
+.text-box p {
+	margin-bottom: 20px;
+}
+
+.action-button {
+	
+	border-radius: 2px;
+	margin-right: 10px;
+	text-decoration: none;
+	color: #fff;
+	padding: 10px;
+	background: #7db9e8;
+	background: -moz-linear-gradient(top, #7db9e8 0%, #1e5799 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#7db9e8), color-stop(100%,#1e5799));
+	background: -webkit-linear-gradient(top, #7db9e8 0%,#1e5799 100%);
+	background: -o-linear-gradient(top, #7db9e8 0%,#1e5799 100%);
+	background: -ms-linear-gradient(top, #7db9e8 0%,#1e5799 100%);
+	background: linear-gradient(top, #7db9e8 0%,#1e5799 100%);
+}
+
+.next-button {
+	
+	border-radius: 2px;
+	text-decoration: none;
+	color: #fff;
+	padding: 10px;
+	margin-right: 10px;
+	background: #c9de96;
+	background: -moz-linear-gradient(top, #c9de96 0%, #398235 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#c9de96), color-stop(100%,#398235));
+	background: -webkit-linear-gradient(top, #c9de96 0%,#398235 100%);
+	background: -o-linear-gradient(top, #c9de96 0%,#398235 100%);
+	background: -ms-linear-gradient(top, #c9de96 0%,#398235 100%);
+	background: linear-gradient(top, #c9de96 0%,#398235 100%);
+}
+
+

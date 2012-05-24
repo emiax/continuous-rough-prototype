@@ -1,6 +1,8 @@
 CALC.CheckerMaterial = function(parameters) {
 	THREE.ShaderMaterial.call( this, parameters );
 
+	this.uniforms = {opacity: {type: 'f', value: 1.0}};
+
 	this.vertexShader = [
 	'varying vec3 vColor;',
 	'varying vec3 pos;',
@@ -14,6 +16,7 @@ CALC.CheckerMaterial = function(parameters) {
 
 	this.fragmentShader = [
 		'varying vec3 pos;',
+		'uniform float opacity;',
 		'float checker() {',
 			'vec3 dist = fract(pos);',
 
@@ -30,8 +33,8 @@ CALC.CheckerMaterial = function(parameters) {
 			'return smoothstep(-width, width, min(distX, distY));',
 		'}',
 		'void main() {',
-			'vec4 c1 = vec4(0.9, 0.9, 0.9, 1.0);',
-			'vec4 c2 = vec4(0.9, 0.0, 0.0, 1.0);',
+			'vec4 c1 = vec4(0.9, 0.9, 0.9, opacity);',
+			'vec4 c2 = vec4(0.9, 0.0, 0.0, opacity);',
 			'gl_FragColor = mix(c1, c2, checker());',
 		'}'
 	].join("\n");

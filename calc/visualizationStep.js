@@ -12,6 +12,11 @@ CALC.VisualizationStep.prototype = {
 		for (var i = 0; i < this.actions.length; i++) {
 			this.actions[i].perform();
 		}
+	},
+	leave: function() {
+		for (var i = 0; i < this.actions.length; i++) {
+			this.actions[i].unperform();
+		}	
 	}
 }
 
@@ -25,6 +30,9 @@ CALC.VisualizationAction = function() {
 CALC.VisualizationAction.prototype = {
 	perform: function() {
 		throw new CALC.AbstractCallException();
+	},
+	unperform: function() {
+		throw new CALC.AbstractCallException();
 	}
 };
 
@@ -32,7 +40,15 @@ CALC.VisualizationAction.prototype = {
 
 
 // ABSOLUTE ROTATION - to be moved to a separate file.
-CALC.AbsoluteRotationAction = function() {
+CALC.AbsoluteRotationAction = function(spec) {
+	console.log(spec.object);
+	this.object = spec.object;
+	this.x = spec.x;
+	this.y = spec.y;
+	this.z = spec.z;
+	this.duration = spec.duration;
+	this.delay = spec.delay;
+	this.interpolation = spec.interpolation;
 
 }
 
@@ -40,8 +56,12 @@ CALC.AbsoluteRotationAction.prototype = new CALC.VisualizationAction();
 CALC.AbsoluteRotationAction.prototype.constructor = CALC.AbsoluteRotationAction;
 
 CALC.AbsoluteRotationAction.prototype.perform = function() {
-	//this.
-	//todo
+	CALC.rotate(this.object, {x: this.x, y: this.y, z: this.z}, {duration: this.duration, interpolation: this.interpolation});
+}
+
+
+CALC.AbsoluteRotationAction.prototype.unperform = function() {
+	// do nothing!
 }
 
 
@@ -54,6 +74,63 @@ CALC.TextPanelAction.prototype = new CALC.VisualizationAction();
 CALC.TextPanelAction.prototype.constructor = CALC.TextPanelAction;
 
 CALC.TextPanelAction.prototype.perform = function() {
-	console.log("appending to panel!");
+	//console.log("perform!");
 	this.panel.append(this.elem);
 }
+
+CALC.TextPanelAction.prototype.unperform = function() {
+	//console.log("unperform!");
+	console.log(this.elem);
+	this.elem.detach();
+}
+
+//FadeAction - to be moved to a separate file.
+CALC.FadeAction = function(spec) {
+	this.material = spec.material;
+	this.opacity = spec.opacity;
+	this.duration = spec.duration;
+}
+CALC.FadeAction.prototype = new CALC.VisualizationAction();
+CALC.FadeAction.prototype.constructor = CALC.FadeAction;
+
+CALC.FadeAction.prototype.perform = function() {
+	CALC.fade(this.material, {opacity: this.opacity }, {duration: this.duration, interpolation: this.interpolation});
+}
+
+CALC.FadeAction.prototype.unperform = function() {
+	//do nothing
+}
+
+
+//MaterialUniformAction - to be moved to a separate file.
+CALC.MaterialUniformAction = function(spec) {
+	this.material = spec.material;
+	delete spec.material;
+	this.duration = spec.duration;
+	delete spec.duration;
+	this.delay = spec.delay;
+	delete spec.delay;
+	this.interpolation = spec.interpolation;
+	delete spec.interpolation;
+	this.parameters = {};
+	for (v in spec) {
+		if (spec.hasOwnProperty(v)) {
+			this.parameters[v] = spec[v];
+		}
+	}
+}
+CALC.MaterialUniformAction.prototype = new CALC.VisualizationAction();
+CALC.MaterialUniformAction.prototype.constructor = CALC.MaterialUniformAction;
+
+CALC.MaterialUniformAction.prototype.perform = function() {
+	for (k in this.parameters) {
+		CALC.animate(this.material.uniforms[k], {
+			value: this.parameters[k],
+		}, this.duration, this.interpolation, this.delay, null, null);
+	}
+}
+
+CALC.MaterialUniformAction.prototype.unperform = function() {
+	//do nothing
+}
+

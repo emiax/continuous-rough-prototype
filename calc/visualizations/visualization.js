@@ -8,6 +8,8 @@ CALC.visualizations.Visualization = function() {
 	this.cameras = {};
 	this.application = null;
 	this.steps = [];
+	this.currentStep = -1;
+	this.stepLinks = [];
 
 };
 
@@ -91,7 +93,7 @@ CALC.visualizations.Visualization.prototype = {
 
 		var origin = new THREE.Vector3(0, 0, 0);
 		camera.position.y = 20;
-		camera.position.z = 15;
+		camera.up = new THREE.Vector3(0, 0, 1);
 		camera.lookAt(origin);
 
 		scene.add(camera);
@@ -109,16 +111,22 @@ CALC.visualizations.Visualization.prototype = {
 		this.scenes["std"] = scene;
 		this.renderers["std"] = this.attachRenderer(this.panels.graphics, renderer, scene, camera);
 	}, 
-	populateNavigationPanel: function() {
-		var text = "";
-		for(var i = 0; i < this.steps.length; i++) {
-			text += '<a class="navigation-step">' + this.steps[i].getTitle() + '</a> ';
-		}
-		this.panels["navigation"].html(text);
-	},
 
 	setSteps: function(steps) {
 		this.steps = steps;
+		var scope = this;
+		var text = "";
+
+		for(var i = 0; i < this.steps.length; i++) {
+			$a = $('<a class="visualization-step">' + this.steps[i].getTitle() + '</a> ');
+			this.stepLinks[i] = $a;
+			var f = function (i) {
+				$a.click(function() {
+					scope.visitStep(i);
+				})
+			}(i);
+			this.panels["navigation"].append($a);	
+		}
 		/*for(var i = 0; i < steps.length; i++) {
 			function() { 
 				var functions = 
@@ -130,12 +138,21 @@ CALC.visualizations.Visualization.prototype = {
 			}
 			}();  
 		}*/
-	}, 
+	},
+
 
 	visitStep: function(i) {
+		if (this.stepLinks[this.currentStep]) {
+			this.stepLinks[this.currentStep].removeClass("active");
+		}
+		if (i <= this.currentStep && this.steps[i]) {
+			this.steps[this.currentStep].leave();
+		}
 		var step = this.steps[i];
 		if (step) {
 			step.visit();
+			this.stepLinks[i].addClass("active");
+			this.currentStep = i;
 		}
 	}
 };

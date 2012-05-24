@@ -1,3 +1,9 @@
+CALC.Exception = function(message) {
+	this.name = "Unexpected Exception";
+	this.message = "Sorry!";
+}
+
+
 CALC.InvalidArgumentException = function(message) {
 	this.name = "Invalid argument";
 	this.message = "Invalid argument: " + message;
