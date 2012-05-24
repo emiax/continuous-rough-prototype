@@ -90,8 +90,8 @@ CALC.visualizations.Visualization.prototype = {
 		var scene = new THREE.Scene();
 
 		var origin = new THREE.Vector3(0, 0, 0);
-		camera.position.y = 10;
-		camera.position.z = 10;
+		camera.position.y = 20;
+		camera.position.z = 15;
 		camera.lookAt(origin);
 
 		scene.add(camera);

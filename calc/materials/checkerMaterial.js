@@ -24,7 +24,7 @@ CALC.CheckerMaterial = function(parameters) {
 			'//#ifdef GL_OES_standard_derivatives',
 				'//float width = 0.7 * length(vec2(dFdx(dist), dFdy(dist)));',
 			'//#else',
-				'float width = 0.05;',
+				'float width = 0.03;',
 			'//#endif',
 			
 			'return smoothstep(-width, width, min(distX, distY));',

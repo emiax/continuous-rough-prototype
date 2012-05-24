@@ -11,43 +11,35 @@ CALC.visualizations.TangentialPlane = function() {
 
 	var fnSurfMaterial = new CALC.CheckerMaterial();
 
-	/*
-		closure: 
-		remembers old surface object, so it can be removed from the scene when a new one is inserted
-	*/	
-	this.generateSurface = function () {
-		var oldSurfObject = null;
-
-		/* parsable expression string */
-		return function(input) {
-			try {
-				this.fnSurfExpr = CALC.parse(input);
-			} catch(e) {
-				console.log("Could not parse exception");
-				//todo: handle parse expressions properly
-				return;
-			}
-			if (this.fnSurfExpr) {
-				
-				var geometry = new CALC.FunctionSurfaceGeometry(this.fnSurfExpr, [-10, -10, 10, 10], 0.2);
-				var object = new THREE.Mesh(geometry, fnSurfMaterial);
-				object.doubleSided = true;
-				object.position.set( 0, 0, 0 );
-				
-				if (oldSurfObject) {
-					console.log("removing old object");
-					scene.remove(oldSurfObject);
-				}
-				console.log(scene);
-				console.log(object);
-
-				scene.add(object);
-				oldSurfObject = object;
-			} else {
-				console.log("Expression is undefined");
-			}
+	var fnSurfObject = null;
+	this.generateSurface = function (input) {
+		try {
+			this.fnSurfExpr = CALC.parse(input);
+		} catch(e) {
+			console.log("Could not parse exception");
+			//todo: handle parse expressions properly
+			return;
 		}
-	}();
+		if (this.fnSurfExpr) {
+			
+			var geometry = new CALC.FunctionSurfaceGeometry(this.fnSurfExpr, [-10, -10, 10, 10], 0.2);
+			var object = new THREE.Mesh(geometry, fnSurfMaterial);
+			object.doubleSided = true;
+			object.position.set( 0, 0, 0 );
+			
+			if (this.fnSurfObject) {
+				console.log("removing old object");
+				scene.remove(this.fnSurfObject);
+			}
+			console.log(scene);
+			console.log(object);
+
+			scene.add(object);
+			this.fnSurfObject = object;
+		} else {
+			console.log("Expression is undefined");
+		}
+	}
 
 
 	var $fnInputDiv = $('<div class="text-box"><p>Mata in en funktion av 2 variabler</p></div>');
@@ -55,6 +47,8 @@ CALC.visualizations.TangentialPlane = function() {
 	
 	
 	var $fnInput = $('<input type="text" value="sin(x)*cos(y)">');
+
+
 	$fnInput.change = function() {
 		$form.submit();
 	}
@@ -65,6 +59,16 @@ CALC.visualizations.TangentialPlane = function() {
 
 	$form.append($fnInput);
 	$fnInputDiv.append($form);
+
+	var $fnRotate = $('<a href="#">Rotera 360 grader</a>');
+	var n = 0;
+	$fnRotate.click(function() {
+		n++;
+		CALC.rotate(scope.fnSurfObject, {z: 2*Math.PI*n}, {duration: 100, interpolation: CALC.interpolations.quintic});
+		
+	});
+
+	$fnInputDiv.append($fnRotate);
 
 	var step0 = new CALC.VisualizationStep("Ytan", [
 			new CALC.TextPanelAction({
