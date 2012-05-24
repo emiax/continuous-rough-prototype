@@ -21,7 +21,7 @@ CALC.Replacer.prototype.replace = function() {
 
 
 CALC.Replacer.prototype.visitConstant = function(node) {
-	return new CALC.Constant({value: 0});
+	return new CALC.Constant({value: node.value});
 };
 
 CALC.Replacer.prototype.visitVariable = function(node) {
