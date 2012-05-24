@@ -54,7 +54,7 @@ CALC.visualizations.TangentialPlane = function() {
 	var $form = $('<form action="#"></form>');
 	
 	
-	var $fnInput = $('<input type="text"></input>');
+	var $fnInput = $('<input type="text" value="sin(x)*cos(y)">');
 	$fnInput.change = function() {
 		$form.submit();
 	}
@@ -75,6 +75,7 @@ CALC.visualizations.TangentialPlane = function() {
 
 	this.setSteps([step0]);
 	this.visitStep(0);
+	$form.submit();
 
 	this.populateNavigationPanel();
 
