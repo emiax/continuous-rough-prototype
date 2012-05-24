@@ -34,7 +34,7 @@ CALC.CheckerMaterial = function(parameters) {
 		'}',
 		'void main() {',
 			'vec4 c1 = vec4(0.9, 0.9, 0.9, opacity);',
-			'vec4 c2 = vec4(0.9, 0.0, 0.0, opacity);',
+			'vec4 c2 = vec4(0.9, fract(abs(pos.z))/3.0, 0.0, opacity);',
 			'gl_FragColor = mix(c1, c2, checker());',
 		'}'
 	].join("\n");
