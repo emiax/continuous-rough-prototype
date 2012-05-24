@@ -1,5 +1,5 @@
 
-THREE.FunctionGeometry = function (expr, boundingRect, resolution) {
+CALC.FunctionGeometry = function (expr, boundingRect, resolution) {
 
 	//var data = expression.tesselate(expr, boundingRect, 10);
 	//console.log(vertices[5]);
@@ -34,7 +34,7 @@ THREE.FunctionGeometry = function (expr, boundingRect, resolution) {
 			}
 		}
 	}
-
+	
 	this.computeCentroids();
 	this.mergeVertices();
 
@@ -42,25 +42,5 @@ THREE.FunctionGeometry = function (expr, boundingRect, resolution) {
 
 
 
-THREE.FunctionGeometry.prototype = new THREE.Geometry();
-THREE.FunctionGeometry.prototype.constructor = THREE.FunctionGeometry;
-
-THREE.FunctionGeometry.prototype.clip = function(plane, orientation) {
-
-	var geo = new THREE.FunctionGeometry();
-	for(var i = 0; i < this.vertices.length; i++) {
-		geo.vertices.push(this.vertices[i]);
-	}
-
-	for(var i = 0; i < this.faces.length; i++) {
-		geo.faces.push(this.faces[i]);
-	}
-
-
-	geo.computeCentroids();
-	geo.mergeVertices();
-	
-	return geo;
-
-}
-
+CALC.FunctionGeometry.prototype = new THREE.Geometry();
+CALC.FunctionGeometry.prototype.constructor = CALC.FunctionGeometry;

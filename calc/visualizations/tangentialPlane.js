@@ -1,63 +1,3 @@
-/**
- * @author alteredq / http://alteredqualia.com/
- *
- * parameters = {
- *  fragmentShader: <string>,
- *  vertexShader: <string>,
-
- *  uniforms: { "parameter1": { type: "f", value: 1.0 }, "parameter2": { type: "i" value2: 2 } },
-
- *  shading: THREE.SmoothShading,
- *  blending: THREE.NormalBlending,
- *  depthTest: <bool>,
-
- *  wireframe: <boolean>,
- *  wireframeLinewidth: <float>,
-
- *  lights: <bool>,
- *  vertexColors: <bool>,
- *  skinning: <bool>,
- *  morphTargets: <bool>,
- * }
- */
-
-
-CALC.CheckerMaterial = function(parameters) {
-	THREE.ShaderMaterial.call( this, parameters );
-
-	this.vertexShader = [
-	'varying vec3 vColor;',
-	'varying vec3 pos;',
-	'void main() {',
-		'vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );',
-		'pos = position;',
-		'gl_Position = projectionMatrix * mvPosition;',
-	'}',
-
-		].join("\n");
-
-	this.fragmentShader = [
-		'varying vec3 pos;',
-		'float checker() {',
-			'vec3 dist = fract(pos);',
-			'dist = min(dist, vec3(1.0, 1.0, 1.0) - dist);',
-			//'return step(0.01, min(dist.z, min(dist.x, dist.y)));',
-			'#ifdef GL_OES_standard_derivatives',
-				'float width = 0.7 * length(vec2(dFdx(dist), dFdy(dist)));',
-			'#else',
-				'float width = 0.05;',
-			'#endif',
-			
-			'return smoothstep(-width, width, min(dist.z, min(dist.x, dist.y)));',
-		'}',
-		'void main() {',
-			'vec4 c1 = vec4(0.9, 0.9, 0.9, 1.0);',
-			'vec4 c2 = vec4(0.9, 0.0, 0.0, 1.0);',
-			'gl_FragColor = mix(c1, c2, checker());',
-		'}'
-	].join("\n");
-}
-
 CALC.CheckerMaterial.prototype = new THREE.ShaderMaterial();
 CALC.CheckerMaterial.prototype.constructor = CALC.CheckerMaterial;
 
@@ -67,57 +7,74 @@ CALC.visualizations.TangentialPlane = function() {
 	var scope = this;
 
 	this.standardVisualizationSetup();
-
-	var pz = CALC.parse('2*cos(s)*sin(t)');
-	var py = CALC.parse('2*sin(s)*sin(t)');
-	var px = CALC.parse('2*cos(t)');
-
-
-	
-	//var material = new THREE.MeshBasicMaterial( { color: 0x557799, wireframe: true, transparent: true, opacity: 0.6 } );
-	//var material = new THREE.MeshLambertMaterial( { color: 0x557799, wireframe: false, transparent: true, opacity: 0.6 } );
-	var material = new CALC.CheckerMaterial();
-	
-	var geometry = new THREE.ParametricSurfaceGeometry(px, py, pz, {s: [0, 2*Math.PI], t: [0, Math.PI]}, null, 0.2);
-	var object = new THREE.Mesh(geometry, material);
-	
-	object.doubleSided = true;
-	object.position.set( 0, 0, 0 );
-	
 	var scene = this.scenes["std"];
-	scene.add(object);
+
+	var fnSurfMaterial = new CALC.CheckerMaterial();
+
+	/*
+		closure: 
+		remembers old surface object, so it can be removed from the scene when a new one is inserted
+	*/	
+	this.generateSurface = function () {
+		var oldSurfObject = null;
+
+		/* parsable expression string */
+		return function(input) {
+			try {
+				this.fnSurfExpr = CALC.parse(input);
+			} catch(e) {
+				console.log("Could not parse exception");
+				//todo: handle parse expressions properly
+				return;
+			}
+			if (this.fnSurfExpr) {
+				
+				var geometry = new CALC.FunctionSurfaceGeometry(this.fnSurfExpr, [-10, -10, 10, 10], 0.2);
+				var object = new THREE.Mesh(geometry, fnSurfMaterial);
+				object.doubleSided = true;
+				object.position.set( 0, 0, 0 );
+				
+				if (oldSurfObject) {
+					console.log("removing old object");
+					scene.remove(oldSurfObject);
+				}
+				console.log(scene);
+				console.log(object);
+
+				scene.add(object);
+				oldSurfObject = object;
+			} else {
+				console.log("Expression is undefined");
+			}
+		}
+	}();
 
 
+	var $fnInputDiv = $('<div class="text-box"><p>Mata in en funktion av 2 variabler</p></div>');
+	var $form = $('<form action="#"></form>');
+	
+	
+	var $fnInput = $('<input type="text"></input>');
+	$fnInput.change = function() {
+		$form.submit();
+	}
 
-	this.steps = [
-		// Step 1: show expression and surface
-		new CALC.VisualizationStep("Ytan", [
-			new CALC.AbsoluteRotationAction({
-				object:  	null,
-				y: 			Math.PI,
-				duration: 	120,
-				delay: 		20
-			}),
+	$form.submit(function() {
+		scope.generateSurface($fnInput.val());
+	});
+
+	$form.append($fnInput);
+	$fnInputDiv.append($form);
+
+	var step0 = new CALC.VisualizationStep("Ytan", [
 			new CALC.TextPanelAction({
 				panel: 		this.panels.text,
-				text: 		"Betrakta dessa uttryck..."
+				elem:		$fnInputDiv
 			})
-		]),
-		// Step 2: show tangents
-		new CALC.VisualizationStep("Tangentvektorer", [
-			new CALC.AbsoluteRotationAction({
-				object:  	object,
-				y: 			Math.PI,
-				duration: 	120,
-				delay: 		20
-			}),
-			new CALC.TextPanelAction({
-				panel: 		this.panels.text,
-				text: 		"Betrakta dessa uttryck...",
-				clear: 		true
-			})
-		])
-	];
+		]);
+
+	this.setSteps([step0]);
+	this.visitStep(0);
 
 	this.populateNavigationPanel();
 
