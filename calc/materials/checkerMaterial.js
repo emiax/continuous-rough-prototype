@@ -29,7 +29,7 @@ CALC.CheckerMaterial = function(parameters) {
 			'//#ifdef GL_OES_standard_derivatives',
 				'//float width = 0.7 * length(vec2(dFdx(dist), dFdy(dist)));',
 			'//#else',
-				'float width = 0.03;',
+				'float width = 0.0;',
 			'//#endif',
 			
 			'return smoothstep(-width, width, min(distX, distY));',
@@ -47,6 +47,8 @@ CALC.CheckerMaterial = function(parameters) {
 
 			'vec3 c7 = vec3(0.9, 0.9, 0.9);', // grid color
 			'gl_FragColor = vec4(mix(c7, c6, checker()), opacity);',
+			'float odd = mod(floor(pos.x) + floor(pos.y), float(2));',
+			'gl_FragColor -= odd * vec4(0.05,0.05,0.05,0);',
 		'}'
 	].join("\n");
 };
