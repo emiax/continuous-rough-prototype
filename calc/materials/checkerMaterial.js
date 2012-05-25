@@ -1,7 +1,7 @@
 CALC.CheckerMaterial = function(parameters) {
 	THREE.ShaderMaterial.call( this, parameters );
 
-	this.uniforms = {opacity: {type: 'f', value: 1.0}};
+	this.uniforms = {opacity: {type: 'f', value: 1.0}, zMin: {type: 'f', value: -10}, zMax: {type: 'f', value: 10}};
 
 	this.vertexShader = [
 	'varying vec3 vColor;',
@@ -17,6 +17,8 @@ CALC.CheckerMaterial = function(parameters) {
 	this.fragmentShader = [
 		'varying vec3 pos;',
 		'uniform float opacity;',
+		'uniform float zMin;',
+		'uniform float zMax;',
 		'float checker() {',
 			'vec3 dist = fract(pos);',
 
@@ -33,9 +35,27 @@ CALC.CheckerMaterial = function(parameters) {
 			'return smoothstep(-width, width, min(distX, distY));',
 		'}',
 		'void main() {',
-			'vec4 c1 = vec4(0.9, 0.9, 0.9, opacity);',
-			'vec4 c2 = vec4(0.9, fract(abs(pos.z))/3.0, 0.0, opacity);',
-			'gl_FragColor = mix(c1, c2, checker());',
+			
+			'vec3 c1 = vec3(0.75, 0.60, 0.00);',
+			'vec3 c2 = vec3(0.85, 0.50, 0.00);',
+			'vec3 c3 = vec3(0.65, 0.2, 0.0);',
+
+			'float zAvg = (zMin+zMax)/2.0;',
+			'vec3 c4 = mix(c1, c2, smoothstep(zMin, zAvg, pos.z));',
+			'vec3 c5 = mix(c2, c3, smoothstep(zAvg, zMax, pos.z));',
+			'vec3 c6 = mix(c4, c5, step(zAvg, pos.z));',
+
+			'vec3 c7 = vec3(0.9, 0.9, 0.9);', // grid color
+			'gl_FragColor = vec4(mix(c7, c6, checker()), opacity);',
 		'}'
 	].join("\n");
+};
+
+
+CALC.CheckerMaterial.prototype = new THREE.ShaderMaterial();
+CALC.CheckerMaterial.prototype.constructor = CALC.CheckerMaterial;
+
+CALC.CheckerMaterial.prototype.setZInterval = function (interval) {
+	this.uniforms.zMin.value = interval[0];
+	this.uniforms.zMax.value = interval[1];
 };
