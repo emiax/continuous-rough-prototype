@@ -122,17 +122,19 @@ CALC.ParametricSurfaceGeometry = function (x, y, z, domain, range, resolution) {
 				scope.vertices.push(new THREE.Vertex(u3));
 				
 				var face = new THREE.Face4(i*4, i*4 + 1, i*4 + 2, i*4 + 3);
-				face.normal = new THREE.Vector3(0, 0, 1); // todo: fix normals
 				scope.faces.push(face);
 
 				i++;
 			}
 		}
-
+		scope.mergeVertices();
+		scope.computeCentroids();
+		scope.computeFaceNormals();
+		scope.computeVertexNormals();		
 	}
 
-	this.computeCentroids();
-	this.mergeVertices();
+	
+	
 
 };
 
