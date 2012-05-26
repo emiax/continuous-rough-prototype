@@ -6,6 +6,8 @@ CALC.Application = function ($container) {
 	this.scheduler = CALC.scheduler;
 	this.stats = null; // todo
 	this.init();
+	this.t = 0;
+	
 };
 
 
@@ -23,7 +25,10 @@ CALC.Application.prototype = {
 		if ( !Detector.webgl ) Detector.addGetWebGLMessage();
 	
 
-		this.$container.html('<header>TNA006: Analys III<sup>PREVIEW</sup></header><div id="visualization"></div>');
+		this.$container.html('<header>TNA006: Analys III<sup>PREVIEW</sup></header><div id="visualization"></div><div id="animElement" style="color: #fff; position: absolute;">Animated DOM-element</div>');
+		this.$anim = $("#animElement", this.$container);
+		console.log("hej");
+		console.log(this.$anim);
 
 		var scope = this;
 		$(window).resize(function (){
@@ -54,6 +59,12 @@ CALC.Application.prototype = {
 			if (this.visualization) {
 				this.visualization.render();
 			}
+
+			this.t++;
+			if (this.t > 500) {
+				this.t = 0;
+			}
+			this.$anim.css({top: scope.t + 'px'});
 			//stats.update();
 		//}
 		
