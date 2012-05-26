@@ -120,10 +120,17 @@ CALC.visualizations.TangentialPlane = function() {
 	var $fnRotate = $('<a class="action-button" href="#">Rotera 90 grader</a>');
 	var $next = $('<a href="#" class="next-button">Gå vidare</a>');
 	
-	$fnRotate.click(function() {
+	/*$fnRotate.click(function() {
 		n++;
 		CALC.rotate(objectBranch, {z: Math.PI/2*n}, {duration: 100, interpolation: CALC.interpolations.quintic});
 		
+	});*/
+	
+	$fnRotate.click(function() {
+		n++;
+		CALC.rotate(objectBranch, {z: Math.PI/2*n}, {duration: 100, interpolation: CALC.interpolations.quintic});
+		CALC.translate(scope.cameras["std"], {y: 20*Math.pow(-1,n+1)}, {duration: 100, delay: 100, interpolation: CALC.interpolations.quintic});
+		CALC.rotate(scope.cameras["std"], {y: Math.PI*n}, {duration: 100, delay: 100, interpolation: CALC.interpolations.quintic});
 	});
 
 	$fnInputDiv.append($fnRotate);
@@ -141,7 +148,7 @@ CALC.visualizations.TangentialPlane = function() {
 			}),
 			new CALC.AbsoluteRotationAction({
 				object: 	objectBranch,
-				x: 			-0.5,
+				x: 			-0.1,
 				z:			0,
 				duration: 	100,
 				interpolation: CALC.interpolations.quintic
