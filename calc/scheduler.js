@@ -160,6 +160,30 @@ CALC.animate = function(object, args, duration, interpolate, delay, callback, ev
 
 CALC.rotate = function(object, args, timing, callback, evtHandle) {
 	timing = timing || {};
+	if (args.x !== undefined) {
+		object.rotation.x %= 2*Math.PI;
+		if (object.rotation.x < 0) object.rotation.x += 2*Math.PI;
+		args.x %= 2*Math.PI;
+		if (args.x < 0) args.x += 2*Math.PI;
+		if (object.rotation.x - args.x > Math.PI) object.rotation.x -= 2 * Math.PI;
+		else if (args.x - object.rotation.x > Math.PI) object.rotation.x += 2 * Math.PI;
+	}
+	if (args.y !== undefined) {
+		object.rotation.y %= 2*Math.PI;
+		if (object.rotation.y < 0) object.rotation.y += 2*Math.PI;
+		args.y %= 2*Math.PI;
+		if (args.y < 0) args.y += 2*Math.PI;
+		if (object.rotation.y - args.y > Math.PI) object.rotation.y -= 2 * Math.PI;
+		else if (args.y - object.rotation.y > Math.PI) object.rotation.y += 2 * Math.PI;
+	}
+	if (args.z !== undefined) {
+		object.rotation.z %= 2*Math.PI;
+		if (object.rotation.z < 0) object.rotation.z += 2*Math.PI;
+		args.z %= 2*Math.PI;
+		if (args.z < 0) args.z += 2*Math.PI;
+		if (object.rotation.z - args.z > Math.PI) object.rotation.z -= 2 * Math.PI;
+		else if (args.z - object.rotation.z > Math.PI) object.rotation.z += 2 * Math.PI;
+	}
 	return CALC.animate(object.rotation, {
 		x: args.x,
 		y: args.y,
