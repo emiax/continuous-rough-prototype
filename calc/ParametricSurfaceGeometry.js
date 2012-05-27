@@ -127,14 +127,41 @@ CALC.ParametricSurfaceGeometry = function (x, y, z, domain, range, resolution) {
 				i++;
 			}
 		}
+
+
 		scope.mergeVertices();
 		scope.computeCentroids();
 		scope.computeFaceNormals();
-		scope.computeVertexNormals();		
-	}
+		scope.computeVertexNormals();
 
-	
-	
+		this.facesXasc = scope.faces.slice(0);
+		this.facesYasc = scope.faces.slice(0);
+		this.facesZasc = scope.faces.slice(0);
+
+		this.computeCentroids();
+		this.mergeVertices();
+
+		var cmpFace = function (a, b, axis) {
+
+			return k = a.centroid[axis] === b.centroid[axis] ? 0 :
+				   a.centroid[axis] < b.centroid[axis] ? -1 :
+				   1;
+		}
+
+
+		
+		this.facesXasc.sort(function(a, b) { return cmpFace(a, b, 'x') });		
+		this.facesYasc.sort(function(a, b) { return cmpFace(a, b, 'y') });	
+		this.facesZasc.sort(function(a, b) { return cmpFace(a, b, 'z') });
+
+		this.facesXdesc = scope.facesXasc.slice(0).reverse().slice(0, 0);
+		this.facesYdesc = scope.facesYasc.slice(0).reverse().slice(0, 500);
+		this.facesZdesc = scope.facesZasc.slice(0).reverse().slice(0, 1000);
+
+		this.facesXasc = scope.facesXasc.slice(0, 0);
+		this.facesYasc = scope.facesYasc.slice(0, 500);
+		this.facesZasc = scope.facesZasc.slice(0, 1000);
+	}	
 
 };
 

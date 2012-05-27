@@ -27,8 +27,6 @@ CALC.Application.prototype = {
 
 		this.$container.html('<header>TNA006: Analys III<sup>PREVIEW</sup></header><div id="visualization"></div><div id="animElement" style="color: #fff; position: absolute;">Animated DOM-element</div>');
 		this.$anim = $("#animElement", this.$container);
-		console.log("hej");
-		console.log(this.$anim);
 
 		var scope = this;
 		$(window).resize(function (){

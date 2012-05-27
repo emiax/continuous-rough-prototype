@@ -98,8 +98,31 @@ THREE.ParametricGeometry = function (x, y, z, domain, range, resolution) {
 
 	}
 
+	this.facesXasc = scope.faces.slice(0);
+	this.facesYasc = scope.faces.slice(0);
+	this.facesZasc = scope.faces.slice(0);
+
 	this.computeCentroids();
 	this.mergeVertices();
+
+	var cmpFace = function (a, b, axis) {
+		return a.centroid[axis] === b.centroid[axis] ? 0 :
+			   a.centroid[axis] < b.centroid[axis] ? -1 :
+			   1;
+	}
+
+
+	this.facesXasc.sort(function(a, b) { cmpFace(a, b, 'x') });
+	this.facesXasc.sort(function(a, b) { cmpFace(a, b, 'y') });
+	this.facesXasc.sort(function(a, b) { cmpFace(a, b, 'z') });
+
+	this.facesXdesc = scope.facesXasc.slice(0).reverse();
+	this.facesYdesc = scope.facesYasc.slice(0).reverse();
+	this.facesZdesc = scope.facesZasc.slice(0).reverse();
+
+	console.log(this.facesXdesc);
+
+
 
 };
 

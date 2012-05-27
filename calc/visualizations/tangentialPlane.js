@@ -37,12 +37,17 @@ CALC.visualizations.TangentialPlane = function() {
 		}
 		if (this.fnSurfExpr) {
 			n = 0;
-			var geometry, object;
-			geometry = new CALC.FunctionSurfaceGeometry(this.fnSurfExpr, scope.boundingBox, scope.resolution);
+			var geometry, object, geometries;
+			//geometry = new CALC.FunctionSurfaceGeometry(this.fnSurfExpr, scope.boundingBox, scope.resolution);
+			geometries = CALC.buildFunctionSurfaceGeometries(this.fnSurfExpr, scope.boundingBox, scope.resolution);
+			console.log(geometries)
+			geometry = geometries[0];
+
 			fnSurfMaterial.setZInterval([geometry.boundingBox.min.z, geometry.boundingBox.max.z]);
 
-			object = new THREE.Mesh(geometry, fnSurfMaterial);
-			object.doubleSided = true;
+
+			object = new CALC.DepthMesh(geometries, fnSurfMaterial);
+			
 			object.position.set( 0, 0, 0 );
 			
 			if (this.fnSurfObject) {
@@ -148,7 +153,7 @@ CALC.visualizations.TangentialPlane = function() {
 			}),
 			new CALC.AbsoluteRotationAction({
 				object: 	objectBranch,
-				x: 			-0.1,
+				x: 			-0.4,
 				z:			0,
 				duration: 	100,
 				interpolation: CALC.interpolations.quintic

@@ -10,22 +10,117 @@ CALC.visualizations.Visualization = function() {
 	this.steps = [];
 	this.currentStep = -1;
 	this.stepLinks = [];
+	
+	this.lastRender = '';
 
 };
 
 CALC.visualizations.Visualization.prototype = {
 
 	render: function() {
-		var renderer;
+		var renderer, geo, geoPos, camPos;
+
+		THREE.Object3D.prototype.getAllChildren = function (scene) {
+			var children = [], c, cl, recusrseResult, d, dl;
+			for ( c = 0, cl = this.children.length; c < cl; c ++ ) {
+				children.push(this.children[c]);		
+				recurseResult = this.children[c].getAllChildren();
+				for ( d = 0, dl = recurseResult.length; d < dl; d ++ ) {
+					//console.log(recurseResult[d]);
+					children.push(recurseResult[d]);
+				}
+			}
+			return children;
+		}
+
+
 
 		for(r in this.renderers) {
 			if (this.renderers.hasOwnProperty(r)) {
 				renderer = this.renderers[r];
+				
+				renderer.camera.updateMatrix();
+				renderer.camera.updateMatrixWorld();
+
+				camPos = new THREE.Vector3();
+				camPos.copy(renderer.camera.matrix.getPosition());
+				var mesh;
+
+				var objs = renderer.scene.getAllChildren();
+				for (o in objs) {
+					if (objs[o] instanceof CALC.DepthMesh) {
+						mesh = objs[o];		
+
+						mesh.updateMatrix();
+						mesh.updateMatrixWorld();
+						
+						var inv = new THREE.Matrix4();
+						inv.getInverse(mesh.matrixWorld);			
+						var localCamPos = inv.multiplyVector3(camPos);
+													
+						var d = localCamPos;
+						
+						if (Math.abs(d.x) > Math.abs(d.y)) {
+							if (Math.abs(d.x) > Math.abs(d.z)) {
+								if (d.x > 0) {
+									mesh.replaceGeometry(0);
+									this.newRender = 'xdesc';
+								} else {
+									mesh.replaceGeometry(3);
+									this.newRender = 'xasc';
+								}
+							} else {
+								if (d.z > 0) {
+									mesh.replaceGeometry(2);
+									this.newRender = 'zdesc';
+								} else {
+									mesh.replaceGeometry(5);
+									this.newRender = 'zasc';
+								}
+							}
+						} else {
+							if (Math.abs(d.y) > Math.abs(d.z)) {
+								if (d.y > 0) {
+									mesh.replaceGeometry(1);
+									this.newRender = 'ydesc';
+								} else {
+									mesh.replaceGeometry(4);
+									this.newRender = 'yasc';
+								}
+							} else {
+								if (d.z > 0) {
+									mesh.replaceGeometry(2);
+									this.newRender = 'zdesc';
+								} else {
+									mesh.replaceGeometry(5);
+									this.newRender = 'zasc';
+								}
+							}
+						}
+					}
+				}
+				if (this.newRender != this.lastRender) {
+					//console.log(this.newRender);
+					//console.log(geo);
+					/*geo.__dirtyVertices = true;
+
+				   	geo.__dirtyVertices = true;
+					geo.__dirtyNormals = true;
+					geo.__dirtyUvs = true;
+					geo.__dirtyTangents = true;
+
+					geo.__dirtyElements = true;*/
+
+					this.lastRender = this.newRender;
+				}
+
 				if (renderer.scene && renderer.camera) {	
 					renderer.render(renderer.scene, renderer.camera);
 				}
 			}
 		}
+
+		delete THREE.Object3D.prototype.getAllChildren;
 	},
 
 
