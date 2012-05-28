@@ -1,15 +1,14 @@
-CALC.buildFunctionSurfaceGeometries = function (expr, boundingRect, resolution) {
+CALC.buildFunctionSurface = function (expr, boundingRect, resolution, material) {
 
 	var x = new CALC.Variable({symbol: 'x'});
 	var y = new CALC.Variable({symbol: 'y'});
 
-	return CALC.buildParametricSurfaceGeometries(x, y, expr, {x: [boundingRect[0], boundingRect[2]], y: [boundingRect[1], boundingRect[3]]}, null, resolution);
+	return CALC.buildParametricSurface(x, y, expr, {x: [boundingRect[0], boundingRect[2]], y: [boundingRect[1], boundingRect[3]]}, null, resolution, material);
 
 };
 
 
-
-CALC.buildParametricSurfaceGeometries = function (x, y, z, domain, range, resolution) {
+CALC.buildParametricSurface = function (x, y, z, domain, range, resolution, material) {
 
 	this.xExpr = x;
 	this.yExpr = y;
@@ -63,7 +62,6 @@ CALC.buildParametricSurfaceGeometries = function (x, y, z, domain, range, resolu
 		var faces = [], vertices, x0, x1, x2, x3, y0, u1, y2, y3, z0, z1, z2, z3, u0, u1, u2, u3;
 		for (v0 = domain[p0][0]; v0 < domain[p0][1]; v0 += res0) {
 			for (v1 = domain[p1][0]; v1 < domain[p1][1]; v1 += res1) {
-
 				vertices = [];
 
 				variables[p0] = v0;
@@ -107,22 +105,15 @@ CALC.buildParametricSurfaceGeometries = function (x, y, z, domain, range, resolu
 			}
 		}
 
-
 		var facesXasc = faces.slice(0),
 			facesYasc = faces.slice(0);
 			facesZasc = faces.slice(0);
 
-		//var n = 0;
 		var cmpFace = function (a, b, axis) {
-
-			//if (n % 1003 === 0)
-		//		console.log(a[0].position[axis] + " " + b[0].position[axis]);
-			//n++;
 			return a[0].position[axis] === b[0].position[axis] ? 0 :
 				   a[0].position[axis] < b[0].position[axis] ? -1 :
 				   1;
 		};
-		
 
 		facesXasc.sort(function(a, b) { return cmpFace(a, b, 'x') });		
 		facesYasc.sort(function(a, b) { return cmpFace(a, b, 'y') });	
@@ -144,7 +135,6 @@ CALC.buildParametricSurfaceGeometries = function (x, y, z, domain, range, resolu
 			}
 			geo.mergeVertices();
 			geo.computeCentroids();
-
 		};
 
 		var xasc = new THREE.Geometry(),
@@ -154,7 +144,6 @@ CALC.buildParametricSurfaceGeometries = function (x, y, z, domain, range, resolu
 			ydesc = new THREE.Geometry(),
 			zdesc = new THREE.Geometry();
 		
-
 		importData(xasc, facesXasc);
 		importData(yasc, facesYasc);
 		importData(zasc, facesZasc);
@@ -162,9 +151,8 @@ CALC.buildParametricSurfaceGeometries = function (x, y, z, domain, range, resolu
 		importData(ydesc, facesYdesc);
 		importData(zdesc, facesZdesc);
 
+		var geometries = [xasc, yasc, zasc, xdesc, ydesc, zdesc];
 
-		return [xasc, yasc, zasc, xdesc, ydesc, zdesc];
-		
+		return new CALC.MultiSortObject(geometries, material);
 	}	
-
 };

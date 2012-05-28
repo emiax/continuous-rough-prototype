@@ -39,15 +39,8 @@ CALC.visualizations.TangentialPlane = function() {
 			n = 0;
 			var geometry, object, geometries;
 			//geometry = new CALC.FunctionSurfaceGeometry(this.fnSurfExpr, scope.boundingBox, scope.resolution);
-			geometries = CALC.buildFunctionSurfaceGeometries(this.fnSurfExpr, scope.boundingBox, scope.resolution);
-			console.log(geometries)
-			geometry = geometries[0];
-
-			fnSurfMaterial.setZInterval([geometry.boundingBox.min.z, geometry.boundingBox.max.z]);
-
-
-			object = new CALC.DepthMesh(geometries, fnSurfMaterial);
-			
+			object = CALC.buildFunctionSurface(this.fnSurfExpr, scope.boundingBox, scope.resolution, fnSurfMaterial);
+			fnSurfMaterial.setZInterval([object.getBoundingBox().min.z, object.getBoundingBox().max.z]);			
 			object.position.set( 0, 0, 0 );
 			
 			if (this.fnSurfObject) {
