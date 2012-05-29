@@ -25,8 +25,7 @@ CALC.Application.prototype = {
 		if ( !Detector.webgl ) Detector.addGetWebGLMessage();
 	
 
-		this.$container.html('<header>TNA006: Analys III<sup>PREVIEW</sup></header><div id="visualization"></div><div id="animElement" style="color: #fff; position: absolute;">Animated DOM-element</div>');
-		this.$anim = $("#animElement", this.$container);
+		this.$container.html('<header>TNA006: Analys III<sup>PREVIEW</sup></header><div id="visualization"></div>');
 
 		var scope = this;
 		$(window).resize(function (){
@@ -62,7 +61,6 @@ CALC.Application.prototype = {
 			if (this.t > 500) {
 				this.t = 0;
 			}
-			this.$anim.css({top: scope.t + 'px'});
 			//stats.update();
 		//}
 		

@@ -29,11 +29,10 @@ CALC.visualizations.Visualization.prototype = {
 		return children;
 	},
 
-
-	render: function() {
+	render: function(forceUpdate) {
 		var renderer, geo, geoPos, camPos;
 
-		
+	
 
 		for(r in this.renderers) {
 			if (this.renderers.hasOwnProperty(r)) {
@@ -44,7 +43,9 @@ CALC.visualizations.Visualization.prototype = {
 					if (obj instanceof CALC.MultiSortObject) {
 						obj.updateMesh(renderer.camera);
 					}
-					// todo: if (obj instanceof CALC.Label3D) ...
+					if (obj instanceof CALC.Label3D) {
+						obj.updatePosition(renderer, forceUpdate);
+					}
 				}
 
 				// We assume that renderer has been augmented with 'scene' and 'camera' properties.
@@ -81,6 +82,7 @@ CALC.visualizations.Visualization.prototype = {
 				renderer.setSize(0, 0);
 			}
 		}
+		this.render(true);
 	},
 
 	appendTextBox: function($panel, content) {
