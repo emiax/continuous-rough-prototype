@@ -1,13 +1,3 @@
- /*
-	geometries is an array 6 differently sorted geometries.
-	0 : ascending x
-	1 : ascending y
-	2 : ascending z
-	3 : descending x
-	4 : descending y
-	5 : descending z
- */
-
 CALC.Label3D = function (renderer, $content) {
 	THREE.Object3D.call( this );
 
