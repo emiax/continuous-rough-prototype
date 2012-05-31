@@ -63,7 +63,30 @@ CALC.visualizations.Visualization.prototype = {
 		// Augment renderer object with scene and camera, to simplify rendereing process
 		renderer.camera = camera;
 		renderer.scene = scene;
-		$elem.append(renderer.domElement);
+		renderer.mouseStrategy = new MouseStrategy(renderer);
+		$domElement = $(renderer.domElement);
+		$elem.append();
+
+		$domElement.mousedown(function(evt) {
+			CALC.mouseHandler.mouseDown(renderer.strategy, evt);
+		);
+		$domElement.mouseup(function() {
+			CALC.mouseHandler.mouseDown(renderer.strategy, evt);
+		);
+		$domElement.mousemove(function() {
+			CALC.mouseHandler.mouseMove(renderer.strategy, evt);
+		);
+		$domElement.mousewheel(function() {
+			CALC.mouseHandler.mouseWheel(renderer.strategy, evt);
+		);
+		$domElement.touchStart(function(evt) {
+			CALC.mouseHandler.touchStart(renderer.strategy, evt);
+		);
+		$domElement.touchMove(function(evt) {
+			CALC.mouseHandler.touchMove(renderer.strategy, evt);
+		);
+
+
 		return renderer;
 	},
 
@@ -141,6 +164,7 @@ CALC.visualizations.Visualization.prototype = {
 		this.cameras["std"] = camera;
 		this.scenes["std"] = scene;
 		this.renderers["std"] = this.attachRenderer(this.panels.graphics, renderer, scene, camera);
+		this.renderers["std"].mouseStrategy = new NavigationStrategy();
 	}, 
 
 	setSteps: function(steps) {
@@ -151,24 +175,14 @@ CALC.visualizations.Visualization.prototype = {
 		for(var i = 0; i < this.steps.length; i++) {
 			$a = $('<a class="visualization-step">' + this.steps[i].getTitle() + '</a> ');
 			this.stepLinks[i] = $a;
-			var f = function (i) {
+			function (i) {
 				$a.click(function() {
 					scope.visitStep(i);
-				})
+				});
 			}(i);
 			this.panels["navigation"].append($a);	
 		}
-		/*for(var i = 0; i < steps.length; i++) {
-			function() { 
-				var functions = 
 
-				this.step[i] = function() {
-					for(f in functions) {
-						functions[f]();
-					}
-			}
-			}();  
-		}*/
 	},
 
 
