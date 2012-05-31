@@ -3,11 +3,12 @@ CALC.mouseHandler = function() {
 	var that = {};
 	var hold = false,
 		drag = false,
-		stategy,
+		strategy,
 		path = [];
 	
 	that.mouseDown = function(mouseStrategy, event) {
 		event.stopPropagation();
+		event.preventDefault();
 		strategy = mouseStrategy;
 		hold = true;
 		strategy.mouseDown(event);
@@ -15,6 +16,7 @@ CALC.mouseHandler = function() {
 
 	that.mouseUp = function(mouseStrategy, event) {
 		event.stopPropagation();
+		event.preventDefault();
 		if (!drag)
 			strategy.click(event);
 		hold = drag = false;
@@ -24,6 +26,7 @@ CALC.mouseHandler = function() {
 
 	that.mouseMove = function(mouseStrategy, event) {
 		event.stopPropagation();
+		event.preventDefault();
 		drag = hold;
 		if (drag) {
 			path.push({x: event.clientX, y: event.clientY});
@@ -36,12 +39,14 @@ CALC.mouseHandler = function() {
 	
 	that.mouseWheel = function(mouseStrategy, event) {
 		event.stopPropagation();
+		event.preventDefault();
 		strategy.scroll(event);
 	}
 	
 	that.touchStart = function(mouseStrategy, event) {
 		path = [];
 		event.stopPropagation();
+		event.preventDefault();
 		//TODO IF WANTED
 		/*if ( event.touches.length == 1 ) {
 
@@ -56,11 +61,13 @@ CALC.mouseHandler = function() {
 	}
 	
 	that.touchEnd = function(mouseStrategy, event) {
+		event.preventDefault();
 		path = [];
 	}
 
 	that.touchMove = function(mouseStrategy, event) {
 		event.stopPropagation();
+		event.preventDefault();
 		if ( event.touches.length == 1 ) {
 			path.push({x: event.touches[0].pageX, y: event.touches[0].pageY});
 			strategy.drag(event, path);
