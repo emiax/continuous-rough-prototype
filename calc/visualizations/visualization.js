@@ -166,7 +166,11 @@ CALC.visualizations.Visualization.prototype = {
 		this.cameras["std"] = camera;
 		this.scenes["std"] = scene;
 		this.renderers["std"] = this.attachRenderer(this.panels.graphics, renderer, scene, camera);
+<<<<<<< HEAD
 		this.renderers["std"].mouseStrategy = new CALC.NavigationStrategy();
+=======
+		this.renderers["std"].mouseStrategy = new NavigationStrategy(this.renderers["std"]);
+>>>>>>> 5a1ceaa63e60e5f26f865da8872964aae3ef764d
 	}, 
 
 	setSteps: function(steps) {
