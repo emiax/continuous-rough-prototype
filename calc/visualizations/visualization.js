@@ -46,6 +46,9 @@ CALC.visualizations.Visualization.prototype = {
 					if (obj instanceof CALC.Label3D) {
 						obj.updatePosition(renderer, forceUpdate);
 					}
+					if (obj instanceof CALC.VectorArrow) {
+						obj.update(forceUpdate);
+					}
 				}
 
 				// We assume that renderer has been augmented with 'scene' and 'camera' properties.
