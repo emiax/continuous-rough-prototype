@@ -9,6 +9,7 @@ CALC.mouseHandler = function() {
 	that.mouseDown = function(mouseStrategy, event) {
 		event.stopPropagation();
 		event.preventDefault();
+		path.push({x: event.clientX, y: event.clientY});
 		strategy = mouseStrategy;
 		hold = true;
 		strategy.mouseDown(event);

@@ -9,10 +9,12 @@ CALC.NavigationStrategy.prototype.constructor = CALC.NavigationStrategy;
 
 CALC.NavigationStrategy.prototype.drag = function(event, path) {
 	len = path.length;
-	lon = path[len-1].x - path[len-2].x;
-	lat = path[len-1].y - path[len-2].y;
-	this.branch.rotation.x += lon * 0.01;
-	this.branch.rotation.y += lat * 0.01;
+	if (len >= 2) {
+		lon = path[len-1].x - path[len-2].x;
+		lat = path[len-1].y - path[len-2].y;
+		this.branch.rotation.z += lon * -0.01;
+		this.branch.rotation.x += lat * -0.01;
+	}
 };
 
 CALC.NavigationStrategy.prototype.scroll = function(event) {

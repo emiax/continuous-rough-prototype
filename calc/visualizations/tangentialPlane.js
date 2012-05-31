@@ -83,6 +83,7 @@ CALC.visualizations.TangentialPlane = function() {
 	}
 
 	scene.add(objectBranch);
+	this.renderers["std"].mouseStrategy = new CALC.NavigationStrategy(this.renderers["std"], objectBranch);
 
 	var $fnInputDiv = $('<div class="text-box"></div>');
 
