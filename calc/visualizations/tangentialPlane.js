@@ -1,5 +1,4 @@
 CALC.visualizations.TangentialPlane = function() {
-	try {
 	CALC.visualizations.Visualization.call( this );
 	var scope = this;
 	var n = 0;
@@ -213,9 +212,6 @@ CALC.visualizations.TangentialPlane = function() {
 	this.setSteps([step0, step1]);
 	this.visitStep(0);
 	$form.submit();
-	} catch(e) {
-		console.log(e);
-	}
 
 };
 

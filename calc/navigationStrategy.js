@@ -1,9 +1,28 @@
-function CALC.NavigationStrategy = function(context) {
+CALC.NavigationStrategy = function(context, branch) {
 	this.context = context;
+	this.branch = branch;
 };
 
 CALC.NavigationStrategy.prototype = new CALC.MouseStrategy();
-CALC.NavigationStrategy.prototype.constructor = new CALC.NavigationStrategy;
+CALC.NavigationStrategy.prototype.constructor = CALC.NavigationStrategy;
+
+
+CALC.NavigationStrategy.prototype.drag = function(event, path) {
+	len = path.length;
+	lon = path[len-1].x - path[len-2].x;
+	lat = path[len-1].y - path[len-2].y;
+	this.branch.rotation.x += lon * 0.01;
+	this.branch.rotation.y += lat * 0.01;
+};
+
+CALC.NavigationStrategy.prototype.scroll = function(event) {
+	this.context.camera.fov -= event.wheelDeltaY * 0.05;
+	this.context.camera.fov = this.context.camera.fov > 170 ? 170 : (this.context.camera.fov < 5 ? 5 : this.context.camera.fov);
+	
+	this.context.camera.updateProjectionMatrix();
+};
+
+/*
 
 CALC.NavigationStrategy.prototype.calcSpin = function() {
 	var output = "";
@@ -38,6 +57,8 @@ CALC.NavigationStrategy.prototype.mouseDown = function (event) {
 };
 
 CALC.NavigationStrategy.prototype.mouseMove = function( event ) {
+
+	
 	curX = event.clientX;
 	curY = event.clientY;
 	if ( isUserInteracting ) {
@@ -55,39 +76,6 @@ CALC.NavigationStrategy.prototype.mouseUp = function(event) {
 	wasUserInteracting = true;
 };
 
+*/
 
-CALC.NavigationStrategy.prototype.mouseWheel = function(event) {
-	tion onDocumentMouseWheel( event ) {
-
-	camera.fov -= event.wheelDeltaY * 0.05;
-	camera.fov = camera.fov > 170 ? 170 : (camera.fov < 5 ? 5 : camera.fov);
-	
-	camera.updateProjectionMatrix();
-
-	render();
-};
-
-CALC.NavigationStrategy.prototype.touchStart = function(event) {
-	if ( event.touches.length == 1 ) {
-
-		event.preventDefault();
-
-		onPointerDownPointerX = event.touches[ 0 ].pageX;
-		onPointerDownPointerY = event.touches[ 0 ].pageY;
-
-		onPointerDownLon = lon;
-		onPointerDownLat = lat;
-	}
-};
-
-CALC.NavigationStrategy.prototype.touchMove = function(event) {
-	if ( event.touches.length == 1 ) {
-		event.preventDefault();
-
-		lon = ( onPointerDownPointerX - event.touches[0].pageX ) * 0.1 + onPointerDownLon;
-		lat = ( event.touches[0].pageY - onPointerDownPointerY ) * 0.1 + onPointerDownLat;
-
-		render();
-	}
-};
 

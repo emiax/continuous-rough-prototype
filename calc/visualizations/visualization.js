@@ -63,28 +63,30 @@ CALC.visualizations.Visualization.prototype = {
 		// Augment renderer object with scene and camera, to simplify rendereing process
 		renderer.camera = camera;
 		renderer.scene = scene;
-		renderer.mouseStrategy = new MouseStrategy(renderer);
+		renderer.mouseStrategy = new CALC.MouseStrategy(renderer);
 		$domElement = $(renderer.domElement);
 		$elem.append();
 
 		$domElement.mousedown(function(evt) {
 			CALC.mouseHandler.mouseDown(renderer.strategy, evt);
-		);
+		});
 		$domElement.mouseup(function() {
 			CALC.mouseHandler.mouseDown(renderer.strategy, evt);
-		);
+		});
 		$domElement.mousemove(function() {
 			CALC.mouseHandler.mouseMove(renderer.strategy, evt);
-		);
-		$domElement.mousewheel(function() {
+		});
+		$domElement.scroll(function() {
 			CALC.mouseHandler.mouseWheel(renderer.strategy, evt);
-		);
-		$domElement.touchStart(function(evt) {
+		});
+		/*
+		renderer.domElement.touchStart = function (evt) {
 			CALC.mouseHandler.touchStart(renderer.strategy, evt);
-		);
-		$domElement.touchMove(function(evt) {
+		};
+		renderer.domElement.touchMove = function(evt) {
 			CALC.mouseHandler.touchMove(renderer.strategy, evt);
-		);
+		};
+		*/
 
 
 		return renderer;
@@ -164,7 +166,7 @@ CALC.visualizations.Visualization.prototype = {
 		this.cameras["std"] = camera;
 		this.scenes["std"] = scene;
 		this.renderers["std"] = this.attachRenderer(this.panels.graphics, renderer, scene, camera);
-		this.renderers["std"].mouseStrategy = new NavigationStrategy();
+		this.renderers["std"].mouseStrategy = new CALC.NavigationStrategy();
 	}, 
 
 	setSteps: function(steps) {
@@ -175,7 +177,7 @@ CALC.visualizations.Visualization.prototype = {
 		for(var i = 0; i < this.steps.length; i++) {
 			$a = $('<a class="visualization-step">' + this.steps[i].getTitle() + '</a> ');
 			this.stepLinks[i] = $a;
-			function (i) {
+			var f = function (i) {
 				$a.click(function() {
 					scope.visitStep(i);
 				});
