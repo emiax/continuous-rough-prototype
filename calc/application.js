@@ -56,11 +56,6 @@ CALC.Application.prototype = {
 			if (this.visualization) {
 				this.visualization.render();
 			}
-
-			this.t++;
-			if (this.t > 500) {
-				this.t = 0;
-			}
 			//stats.update();
 		//}
 		
