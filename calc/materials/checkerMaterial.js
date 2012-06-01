@@ -39,9 +39,9 @@ CALC.CheckerMaterial = function(parameters) {
 		'}',
 		'void main() {',
 			
-			'vec3 c1 = vec3(0.75, 0.60, 0.00);',
+			'vec3 c1 = vec3(0.65, 0.2, 0.0);',
 			'vec3 c2 = vec3(0.85, 0.50, 0.00);',
-			'vec3 c3 = vec3(0.65, 0.2, 0.0);',
+			'vec3 c3 = vec3(0.75, 0.60, 0.00);',
 
 			'float zAvg = (zMin+zMax)/2.0;',
 			'vec3 c4 = mix(c1, c2, smoothstep(zMin, zAvg, pos.z));',
@@ -49,7 +49,7 @@ CALC.CheckerMaterial = function(parameters) {
 			'vec3 c6 = mix(c4, c5, step(zAvg, pos.z));',
 
 			'vec3 c7 = vec3(0.9, 0.9, 0.9);', // grid color
-			'gl_FragColor = vec4(mix(c7, c6, checker()), 0.7);',
+			'gl_FragColor = vec4(mix(c7, c6, checker()), opacity);',
 			'float odd = mod(floor(pos.x) + floor(pos.y), float(2));',
 			'gl_FragColor -= odd * vec4(0.05,0.05,0.05,0);',
 		'}'

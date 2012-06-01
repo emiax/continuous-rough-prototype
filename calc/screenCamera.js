@@ -60,7 +60,7 @@ CALC.ScreenCamera.prototype.updateProjectionMatrix = function () {
 
 	} else {
 
-		this.projectionMatrix = THREE.Matrix4.makePerspective( -this.fov, this.aspect, this.near, this.far );
+		this.projectionMatrix = THREE.Matrix4.makePerspective( this.fov, this.aspect, this.near, this.far );
 
 	}
 

@@ -12,15 +12,14 @@ CALC.NavigationStrategy.prototype.drag = function(event, path) {
 	if (len >= 2) {
 		lon = path[len-1].x - path[len-2].x;
 		lat = path[len-1].y - path[len-2].y;
-		this.branch.rotation.z += lon * -0.01;
-		this.branch.rotation.x += lat * -0.01;
+		this.branch.rotation.z += lon * 0.01;
+		this.branch.rotation.x += lat * 0.01;
 	}
 };
 
-CALC.NavigationStrategy.prototype.scroll = function(event) {
-	this.context.camera.fov -= event.wheelDeltaY * 0.05;
-	this.context.camera.fov = this.context.camera.fov > 170 ? 170 : (this.context.camera.fov < 5 ? 5 : this.context.camera.fov);
-	
+CALC.NavigationStrategy.prototype.scroll = function(event, delta) {
+	this.context.camera.fov -= delta * 5;
+	this.context.camera.fov = this.context.camera.fov > 70 ? 70 : (this.context.camera.fov < 5 ? 5 : this.context.camera.fov);
 	this.context.camera.updateProjectionMatrix();
 };
 
