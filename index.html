@@ -57,9 +57,12 @@
 		<script>
 			$(document).ready(function() {
 				var application = new CALC.Application($("#application"));
+				
+				var tangentialPlaneVisualization = new CALC.visualizations.TangentialPlane("Tangentplan (passiv)");
+				application.addVisualization(tangentialPlaneVisualization);
+				
 				var tangentialPlaneInteractiveVisualization = new CALC.visualizations.TangentialPlaneInteractive("Tangentplan (interaktiv)");
-				var tangentalPlaneVisualization = new CALC.visualizations.TangentialPlane("Tangentplan (passiv)");
-				application.setVisualization(tangentialPlaneInteractiveVisualization);
+				application.addVisualization(tangentialPlaneInteractiveVisualization);
 			});
 		</script>
 	</head>

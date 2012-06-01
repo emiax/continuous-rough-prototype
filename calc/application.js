@@ -25,7 +25,7 @@ CALC.Application.prototype = {
 		if ( !Detector.webgl ) Detector.addGetWebGLMessage();
 	
 
-		this.$container.html('<header>TNA006: Analys III<sup>PREVIEW</sup><div id="visMenu"></div></header><div id="visualization"></div>');
+		this.$container.html('<header>TNA006: Analys III<sup>PREVIEW</sup><div id="visualization-menu"></div></header><div id="visualization"></div><div id="loading"><p>Loading...</p></div>');
 
 		var scope = this;
 		$(window).resize(function (){
@@ -61,16 +61,32 @@ CALC.Application.prototype = {
 		
 	},
 	
+	createVisualizationButton: function(visualization) {
+		var scope = this;
+		var $button = $('<a href="#">' + visualization.title + '</a>');
+		$button.click(function() {
+			scope.setVisualization(visualization, $button);
+		});
+		return $button;
+	},
+	
 	addVisualization : function(visualization) {
-	
-	
+		var $button = this.createVisualizationButton(visualization);
+		if (!this.visualizations.length) this.setVisualization(visualization, $button);
+		this.visualizations.push(visualization);
+		$("#visualization-menu", this.$container).append($button);
 	},
 
-	setVisualization: function(visualization) {
+	setVisualization: function(visualization, $button) {
+		$("#loading", this.$container).show();
 		this.visualization = visualization;
+		this.visualization.init();
 		$("#visualization", this.$container).replaceWith(visualization.dom);
+		$("#visualization-menu a", this.$container).removeClass("active");
+		$button.addClass("active");
 		visualization.application = this;
 		this.updateWindow();
+		//$("#loading", this.$container).hide();
 	}
 
 

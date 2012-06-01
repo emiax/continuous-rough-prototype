@@ -1,5 +1,12 @@
 CALC.visualizations.TangentialPlane = function(title) {
 	CALC.visualizations.Visualization.call( this, title );
+};
+
+
+CALC.visualizations.TangentialPlane.prototype = new CALC.visualizations.Visualization();
+CALC.visualizations.TangentialPlane.prototype.constructor = CALC.visualizations.TangentialPlane;
+
+CALC.visualizations.TangentialPlane.prototype.init = function() {
 	var scope = this;
 	var n = 0;
 
@@ -230,7 +237,3 @@ CALC.visualizations.TangentialPlane = function(title) {
 	scope.boundingBox = [-10.0, -10.0, 10.0, 10.0];
 	scope.generateSurface('cos(x)*sin(y)');
 };
-
-
-CALC.visualizations.TangentialPlane.prototype = new CALC.visualizations.Visualization();
-CALC.visualizations.TangentialPlane.prototype.constructor = CALC.visualizations.TangentialPlane;

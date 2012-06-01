@@ -109,6 +109,23 @@ header {
     -webkit-box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.7);
 }
 
+#visualization-menu {
+	float: right;
+}
+
+	#visualization-menu a, #visualization-menu a:link, #visualization-menu a:active, #visualization-menu a:visited {
+		margin-left: 20px;
+		color: #3A3C38;
+		text-decoration: none;
+	}
+
+	#visualization-menu a:hover {
+		color: #555;
+	}
+
+	#visualization-menu a.active {
+		color: #fff;
+	}
 
 #graphics-panel {
 	background-color: #252525;
@@ -193,4 +210,15 @@ canvas {
 	background: linear-gradient(top, #c9de96 0%,#398235 100%);
 }
 
-
+#loading {
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	z-index: 1000;
+	color: #fff;
+	font-family: Asap;
+	font-size: 1em;
+	margin-left: -40px;
+	margin-top: -10px;
+	display: none;
+}
