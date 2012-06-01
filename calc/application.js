@@ -78,7 +78,7 @@ CALC.Application.prototype = {
 	},
 
 	setVisualization: function(visualization, $button) {
-		$("#loading", this.$container).show();
+		//$("#loading", this.$container).show();
 		this.visualization = visualization;
 		this.visualization.init();
 		$("#visualization", this.$container).replaceWith(visualization.dom);
