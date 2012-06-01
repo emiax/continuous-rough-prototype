@@ -17,11 +17,13 @@ CALC.VectorArrow = function (xlen, ylen, zlen, color) {
 	var uniforms = {opacity: {type: 'f', value: 1.0}, len: {type: 'f', value: 1.0}, size: {type: 'f', value: 0.05}, color: {type: 'c', value: new THREE.Color(color)}};
 
 	var cylVertexShader = [
+		'varying vec3 pos;',
 		'uniform float size;',
 		'uniform float len;',
 		'varying vec3 vColor;',
 		'uniform vec3 color;',
 		'void main() {',
+			'pos = position;',
 			'vec4 mvPosition = modelViewMatrix * vec4( size*position.x, step(0.00001, position.y)*(position.y*len-6.0*size), size*position.z, 1.0 );',
 			'vColor = color;',
 			'gl_Position = projectionMatrix * mvPosition;',
@@ -30,9 +32,11 @@ CALC.VectorArrow = function (xlen, ylen, zlen, color) {
 
 
 	var coneVertexShader = [
+		'varying vec3 pos;',
 		'uniform float size;',
 		'varying vec3 vColor;',
 		'void main() {',
+			'pos = position;',
 			'vec4 mvPosition = modelViewMatrix * vec4( size*3.0*position.x, size*6.0*position.y, size*3.0*position.z, 1.0 );',
 			'vColor = vec3(1.0, 0.0, 0.0);',
 			'gl_Position = projectionMatrix * mvPosition;',
@@ -40,8 +44,10 @@ CALC.VectorArrow = function (xlen, ylen, zlen, color) {
 	].join("\n");
 
 	var coneFragmentShader = [
+	'varying vec3 pos;',
 	'void main() {',
-			'gl_FragColor = vec4(0.2, 0.3, 0.9, 1.0);',
+			'float a = (pos.z + 1.0)/2.0;',
+			'gl_FragColor = vec4(a/3.0, a/2.0, a, 1.0);',
 		'}'
 	].join("\n");
 
