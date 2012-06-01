@@ -1,10 +1,10 @@
 CALC.visualizations = {};
 
-CALC.visualizations.Visualization = function() {
+CALC.visualizations.Visualization = function(title) {
 	
+	this.title = title;
 	this.renderers = {};
 	this.scenes = {};
-	this.renderers = {};
 	this.cameras = {};
 	this.application = null;
 	this.steps = [];
@@ -79,10 +79,9 @@ CALC.visualizations.Visualization.prototype = {
 		$domElement.mousemove(function(evt) {
 			CALC.mouseHandler.mouseMove(renderer.mouseStrategy, evt);
 		});
-		$domElement.scroll(function(evt) {
-			CALC.mouseHandler.mouseWheel(renderer.mouseStrategy, evt);
+		$domElement.mousewheel(function(evt, delta) {
+			CALC.mouseHandler.mouseWheel(renderer.mouseStrategy, evt, delta);
 		});
-		
 		renderer.domElement.touchStart = function (evt) {
 			CALC.mouseHandler.touchStart(renderer.mouseStrategy, evt);
 		};

@@ -38,10 +38,10 @@ CALC.mouseHandler = function() {
 		strategy.mouseMove(event);
 	}
 	
-	that.mouseWheel = function(mouseStrategy, event) {
+	that.mouseWheel = function(mouseStrategy, event, delta) {
 		event.stopPropagation();
 		event.preventDefault();
-		strategy.scroll(event);
+		strategy.scroll(event, delta);
 	}
 	
 	that.touchStart = function(mouseStrategy, event) {

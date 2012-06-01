@@ -41,7 +41,6 @@ CALC.VisualizationAction.prototype = {
 
 // ABSOLUTE ROTATION - to be moved to a separate file.
 CALC.AbsoluteRotationAction = function(spec) {
-	console.log(spec.object);
 	this.object = spec.object;
 	this.x = spec.x;
 	this.y = spec.y;
@@ -75,12 +74,14 @@ CALC.TextPanelAction.prototype.constructor = CALC.TextPanelAction;
 
 CALC.TextPanelAction.prototype.perform = function() {
 	//console.log("perform!");
+	//this.elem.stop().hide();
 	this.panel.append(this.elem);
+	//this.elem.slideDown('slow');
 }
 
 CALC.TextPanelAction.prototype.unperform = function() {
 	//console.log("unperform!");
-	console.log(this.elem);
+	//this.elem.stop().slideUp('slow');
 	this.elem.detach();
 }
 

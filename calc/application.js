@@ -1,6 +1,6 @@
 CALC.Application = function ($container) {
 	
-
+	this.visualizations = [];
 	this.visualization = null;
 	this.$container = $container;
 	this.scheduler = CALC.scheduler;
@@ -25,7 +25,7 @@ CALC.Application.prototype = {
 		if ( !Detector.webgl ) Detector.addGetWebGLMessage();
 	
 
-		this.$container.html('<header>TNA006: Analys III<sup>PREVIEW</sup></header><div id="visualization"></div>');
+		this.$container.html('<header>TNA006: Analys III<sup>PREVIEW</sup><div id="visMenu"></div></header><div id="visualization"></div>');
 
 		var scope = this;
 		$(window).resize(function (){
@@ -59,6 +59,11 @@ CALC.Application.prototype = {
 			//stats.update();
 		//}
 		
+	},
+	
+	addVisualization : function(visualization) {
+	
+	
 	},
 
 	setVisualization: function(visualization) {

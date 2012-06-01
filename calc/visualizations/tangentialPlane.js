@@ -1,5 +1,5 @@
-CALC.visualizations.TangentialPlane = function() {
-	CALC.visualizations.Visualization.call( this );
+CALC.visualizations.TangentialPlane = function(title) {
+	CALC.visualizations.Visualization.call( this, title );
 	var scope = this;
 	var n = 0;
 
@@ -9,6 +9,8 @@ CALC.visualizations.TangentialPlane = function() {
 	var fnSurfMaterial = new CALC.CheckerMaterial();
 	var fnXCurveMaterial = new THREE.LineBasicMaterial({opacity: 0, linewidth: 2});
 	var fnYCurveMaterial = new THREE.LineBasicMaterial({opacity: 0, linewidth: 2});
+	fnXCurveMaterial.depthTest = false;
+	fnYCurveMaterial.depthTest = false;
 
 	fnSurfMaterial.uniforms.opacity.value = 0;
 
@@ -29,7 +31,7 @@ CALC.visualizations.TangentialPlane = function() {
 		try {
 			this.fnSurfExpr = CALC.parse(input);
 			
-			this.fnXCurveExpr = this.fnSurfExpr.replace({x: 's', y: 0});
+			this.fnXCurveExpr = this.fnSurfExpr.replace({x: 's', y: Math.PI/2});
 			this.fnYCurveExpr = this.fnSurfExpr.replace({x: 0, y: 's'});
 
 			this.parameterExpr = CALC.parse('s');
@@ -57,7 +59,7 @@ CALC.visualizations.TangentialPlane = function() {
 			geometry = new CALC.ParametricCurveGeometry(this.parameterExpr, this.constantExpr, this.fnXCurveExpr, {s: [scope.boundingBox[0], scope.boundingBox[2]]}, null, scope.resolution);
 
 			object = new THREE.Line(geometry, fnXCurveMaterial);
-			object.position.set( 0, 0, 0 );
+			object.position.set( 0, Math.PI/2, 0 );
 
 			if (this.xCurveObject) {
 				objectBranch.remove(this.xCurveObject);
@@ -85,6 +87,8 @@ CALC.visualizations.TangentialPlane = function() {
 	scene.add(objectBranch);
 	this.renderers["std"].mouseStrategy = new CALC.NavigationStrategy(this.renderers["std"], objectBranch);
 
+	/*
+	
 	var $fnInputDiv = $('<div class="text-box"></div>');
 
 	var $fnInputParagraph = $('<p>Mata in en funktion av 2 variabler</p>');
@@ -124,31 +128,41 @@ CALC.visualizations.TangentialPlane = function() {
 	var $fnRotate = $('<a class="action-button" href="#">Rotera 90 grader</a>');
 	var $next = $('<a href="#" class="next-button">Gå vidare</a>');
 	
-	/*$fnRotate.click(function() {
-		n++;
-		CALC.rotate(objectBranch, {z: Math.PI/2*n}, {duration: 100, interpolation: CALC.interpolations.quintic});
-		
-	});*/
-	
 	$fnRotate.click(function() {
 		n++;
 		CALC.rotate(objectBranch, {z: Math.PI/2*n}, {duration: 100, interpolation: CALC.interpolations.quintic});
-		CALC.translate(scope.cameras["std"], {y: 20*Math.pow(-1,n+1)}, {duration: 100, delay: 100, interpolation: CALC.interpolations.quintic});
-		CALC.rotate(scope.cameras["std"], {y: Math.PI*n}, {duration: 100, delay: 100, interpolation: CALC.interpolations.quintic});
+		
 	});
 
 	$fnInputDiv.append($fnRotate);
 	$fnInputDiv.append($next);
 
-
 	$next.click(function() {
 		scope.visitStep(1);
 	});
+	
+	*/
 
-	var step0 = new CALC.VisualizationStep("Ytan", [
+	var $box0 = $('<div class="text-box"></div>'),
+		$desc0 = $('<p>Betrakta funktionsytan <math><mi>z</mi><mo>(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo>)</mo> <mo>=</mo> <mi>cos</mi><mo>(</mo><mi>x</mi><mo>)</mo><mi>sin</mi><mo>(</mo><mi>y</mi><mo>)</mo></math>.</p><p>Vi vill hitta ett tangentplan till <math><mi>z</mi></math> i punkten <math><mo>(</mo><mn>0</mn><mo>,</mo><mfrac><mrow><mi>&#x03C0;<!-- π --></mi></mrow><mrow><mn>2</mn></mrow></mfrac><mo>)</mo></math></p>'),
+		$next0 = $('<a href="#" class="next-button">Gå vidare</a>');
+
+	$next0.click(function() {
+		scope.visitStep(1);
+	});
+	
+	$box0.append($desc0);
+	$box0.append($next0);
+	
+	var $box1 = $('<div class="text-box"></div>'),
+		$desc1 = $("<p>Betrakta nu kurvan i planet <math><mi>x</mi> <mo>=</mo> <mn>0</mn><mo>,</mo> <mi>z</mi><mo>(</mo><mn>0</mn><mo>,</mo><mi>y</mi><mo>)</mo> <mo>=</mo> <mi>cos</mi><mo>(</mo><mn>0</mn><mo>)</mo><mi>sin</mi><mo>(</mo><mi>y</mi><mo>)</mo> <mo>=</mo> <mi>sin</mi><mo>(</mo><mi>y</mi><mo>)</mo></math></p>");
+	
+	$box1.append($desc1);
+	
+	var step0 = new CALC.VisualizationStep("Funktionsytan", [
 			new CALC.TextPanelAction({
 				panel: 		this.panels.text,
-				elem:		$fnInputDiv
+				elem:		$box0
 			}),
 			new CALC.AbsoluteRotationAction({
 				object: 	objectBranch,
@@ -180,7 +194,7 @@ CALC.visualizations.TangentialPlane = function() {
 	var step1 = new CALC.VisualizationStep("Tangenter", [
 			new CALC.TextPanelAction({
 				panel: 		this.panels.text,
-				elem:		$('<div class="text-box"><p>yoyo</p>')
+				elem:		$box1
 			}),
 			new CALC.AbsoluteRotationAction({
 				object: 	objectBranch,
@@ -212,8 +226,9 @@ CALC.visualizations.TangentialPlane = function() {
 
 	this.setSteps([step0, step1]);
 	this.visitStep(0);
-	$form.submit();
-
+	//$form.submit();
+	scope.boundingBox = [-10.0, -10.0, 10.0, 10.0];
+	scope.generateSurface('cos(x)*sin(y)');
 };
 
 
