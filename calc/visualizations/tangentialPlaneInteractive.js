@@ -25,11 +25,6 @@ CALC.visualizations.TangentialPlaneInteractive.prototype.init = function() {
 	var objectBranch = new THREE.Object3D();
 	objectBranch.add(this.tgSphereObject);
 
-	var labelBranch = new THREE.Object3D();
-	objectBranch.add(labelBranch);
-	labelBranch.position.set(4, 0, 0);
-	labelBranch.add(new CALC.Label3D(this.renderers["std"], $('<p style="font-weight: bold;">f(x, y)</p>')));
-
 	var point = THREE.Vector3(0, 0, 0);
 
 	this.boundingBox = [-10, -10, 10, 10];

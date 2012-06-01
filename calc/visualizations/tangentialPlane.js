@@ -173,7 +173,7 @@ CALC.visualizations.TangentialPlane.prototype.init = function() {
 			}),
 			new CALC.AbsoluteRotationAction({
 				object: 	objectBranch,
-				x: 			-0.4,
+				x: 			0.4,
 				z:			0,
 				duration: 	100,
 				interpolation: CALC.interpolations.quintic
