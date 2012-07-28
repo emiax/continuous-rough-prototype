@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset=utf-8 />
+
+<title>A live example of the CSS3 flexible box model with a blog layout</title>
+	
+<!--[if IE]>
+<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+
+<style type="text/css">
+html, body{
+	padding : 0;
+	margin : 0;
+	height : 100%;
+	width : 100%
+}
+
+body{
+	font : 0.8em Arial, Helvetica, sans-serif;
+	line-height : 1.4em;
+	
+	display : -moz-box;
+	display : -webkit-box;
+	display : box;
+	
+	-moz-box-orient : horizontal;
+	-moz-box-pack : center;
+	
+	-webkit-box-orient : horizontal;
+	-webkit-box-pack : center;
+	
+	box-orient : horizontal;
+	box-pack : center;
+}
+
+section{
+	display : block;
+}
+
+#page{
+	height : 100%;
+	max-width : 800px;
+	
+	display : -moz-box;
+	display : -webkit-box;
+	display : box;
+	
+	-moz-box-orient : vertical;
+	-moz-box-flex : 1;
+	
+	-webkit-box-orient : vertical;
+	-webkit-box-flex : 1;
+	
+	box-orient : vertical;
+	box-flex : 1;
+}
+
+header{
+	display : block;
+	padding : 10px;
+	background : #EFEFEF;
+	margin-bottom : 20px;
+	
+	-moz-border-radius : 0 0 10px 10px;
+	-webkit-border-radius : 0 0 10px 10px;
+	border-radius : 0 0 10px 10px;
+}
+
+footer{
+	display : block;
+	padding : 10px;
+	background : #EFEFEF;
+	text-align : center;
+	margin-top : 20px;
+	
+	-moz-border-radius : 10px 10px 0 0 ;
+	-webkit-border-radius : 10px 10px 0 0 ;
+	border-radius : 10px 10px 0 0 ;
+}
+
+footer p{
+	margin-top : 0;
+}
+
+#main{
+	display : -moz-box;
+	display : -webkit-box;
+	display : box;
+	
+	-moz-box-flex : 1;
+	-moz-box-orient : horizontal;
+	-moz-box-direction : reverse;
+	
+	-webkit-box-flex : 1;
+	-webkit-box-orient : horizontal;
+	-webkit-box-direction : reverse;
+	
+	box-flex : 1;
+	box-orient : horizontal;
+	box-direction : reverse;
+}
+
+#content{
+	padding : 0 20px 10px 10px;
+	
+	display : -moz-box;
+	display : -webkit-box;
+	display : box;
+
+	-moz-box-flex : 1;
+	-moz-box-orient : vertical;
+	-moz-box-direction : normal;
+	
+	-webkit-box-flex : 1;
+	-webkit-box-orient : vertical;
+	-webkit-box-direction : normal;
+	
+	box-flex : 1;
+	box-orient : vertical;
+	box-direction : normal;
+}
+
+#content article{
+	display : block;
+	margin : 0.5em 0;
+	
+	-moz-box-ordinal-group : 2;
+	-webkit-box-ordinal-group : 2;
+	box-ordinal-group : 2;
+}
+
+#content article h2{
+	margin-top : 0;
+}
+
+#content nav{
+	border-top : 1px solid #CCC;
+	padding-top : 10px;
+	margin-top : 10px;
+	
+	display : -moz-box;
+	display : -webkit-box;
+	display : box;
+	
+	-moz-box-orient : horizontal;
+	-moz-box-ordinal-group : 2;
+	
+	-webkit-box-orient : horizontal;
+	-webkit-box-ordinal-group : 2;
+	
+	box-orient : horizontal;
+	box-ordinal-group : 2;
+}
+
+#content nav a{
+	display : block;
+	
+	-moz-box-flex : 1;
+	-webkit-box-flex : 1;
+	box-flex : 1;
+}
+
+#content nav a:last-child{
+	text-align : right;
+}
+
+#content .topgroup{
+	-moz-box-ordinal-group : 1;
+	-webkit-box-ordinal-group : 1;
+	box-ordinal-group : 1;
+	
+	-moz-border-radius : 5px;
+	-moz-box-shadow : 0 0 5px #ECC;
+	
+	-webkit-border-radius : 5px;
+	-webkit-box-shadow : 0 0 5px #ECC;
+	
+	border-radius : 5px;
+	box-shadow : 0 0 5px #ECC;
+	
+	border : 1px solid #FCC;
+	padding : 10px;
+}
+
+#content .topgroup h2{
+	margin-top : 0;
+}
+
+#sidebar{
+	width : 180px;
+	padding : 10px;
+	border-right : 1px solid #CCC;
+}
+
+#sidebar div:first-of-type h2:first-of-type{
+	margin-top : 0;
+}
+
+#sidebar ul{
+	display : -moz-box;
+	display : -webkit-box;
+	display : box;
+	
+	-moz-box-orient : vertical;
+	-moz-box-direction : normal;
+	
+	-webkit-box-orient : vertical;
+	-webkit-box-direction : normal;
+	
+	box-orient : vertical;
+	box-direction : normal;
+}
+
+#sidebar .topgroup{
+	-moz-box-ordinal-group : 1;
+	-webkit-box-ordinal-group : 1;
+	box-ordinal-group : 1;
+	
+	font-weight : bold;
+}
+
+#sidebar li{
+	-moz-box-ordinal-group : 2;
+	-webkit-box-ordinal-group : 2;
+	box-ordinal-group : 2;
+}
+
+#sidebar form{
+	display : -moz-box;
+	display : -webkit-box;
+	display : box;
+	
+	-moz-box-orient : horizontal;
+	
+	-webkit-box-orient : horizontal;
+	
+	box-orient : horizontal;
+}
+
+#sidebar form input[type="text"]{
+	-moz-box-flex : 1;
+	-webkit-box-flex : 1;
+	box-flex : 1;
+}
+</style>
+
+</head>
+<body>
+	<div id="page">
+	<header>
+		<h1>The CSS3 Flexible box model in action</h1>
+		<p>This demo show a web site layout fully made thanks to this new box model.</p>
+	</header>
+	<div id="main">
+		<section id="content">
+			<article>
+				<h2>Positioning Articles</h2>
+				<p>The articles above are vertically displayed following the HTML order.</p>
+			</article>
+			<article>
+				<h2>Positioning Form Fields</h2>
+				<p>All the form fields are displayed without any float property. It make the forms layouts easier to build and much more consistant.</p>
+			</article>
+			<article class="topgroup">
+				<h2>Article Always On Top</h2>
+				<p>This article is always placed on top by using a simple class declaration. Its positionning is not locked to the HTML flow, it only depend on the author wish. The same technique is used to highlight a link on the sidebar.</p>
+			</article>
+			<article>
+				<h2>Browser Compliance</h2>
+				<p>This page will be correctly render with Firefox, Safari, chrome and any browser which use the Gecko or Webkit rendering engine.</p>
+			</article>
+			<article>
+				<h2>Positioning Footer</h2>
+				<p>The flexible box model is ideal to solve a common problem in webdesign : to stick the footer on the bottom of the page if there is not enough content (you need a big screen to check this out).</p>
+			</article>
+			
+			<nav>
+				<a href="#">Next Page</a>
+				<a href="#">Previous Page</a>
+			</nav>
+		</section>
+		<section id="sidebar">
+			<div>
+				<h2><label for="recherche">Search</label></h2>
+				<form action="#">
+					<input type="text" id="recherche" />
+					<input type="submit" value="Go" />
+				</form>
+			</div>
+			
+			<div>
+				<h2>Links</h2>
+				<ul>
+					<li><a href="#">Link 1</a></li>
+					<li><a href="#">Link 2</a></li>
+					<li><a href="#">Link 3</a></li>
+					<li class="topgroup"><a href="#">Link 4 (Wahou !)</a></li>
+					<li><a href="#">Link 5</a></li>
+				</ul>
+			</div>
+		</section>
+	</div>
+	<footer>
+		<p>Demo made by <a href="http://jeremie.patonnier.net">Jérémie Patonnier</a></p>
+    <p>More info about this demo on <a href="http://hacks.mozilla.org/2010/04/the-css-3-flexible-box-model">hacks.mozilla.org</a></p>
+	</footer>
+	</div>
+</body>
+</html>
