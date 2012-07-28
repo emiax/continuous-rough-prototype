@@ -46,11 +46,48 @@ CALC.visualizations.TangentialPlaneInteractive.prototype.init = function() {
 			return;
 		}
 		if (scope.fnSurfExpr) {
+			//var dbg = scope.fnSurfExpr;
+			//console.log("debug1");
+			//console.log(dbg);
+
 			n = 0;
 			var geometry, object, geometries;
-			
+			var tg3 = scope.fnSurfExpr.evaluate({x: tg1, y: tg2});
+			/*
+			object = new CALC.VectorArrow(3, 0, new CALC.Multiplication({left: new CALC.Constant({value: 3}), right: scope.fnSurfExpr.replace({y: tg2}).differentiate('x')}), 0xff0000);
+			object.position.set( tg1, tg2, tg3 );
+			objectBranch.add(object);
+
+			if (scope.vectXObject) {
+				objectBranch.remove(scope.vectXObject);
+			}*/
+
+			scope.vectXObject = object;
+			//var dbg = scope.fnSurfExpr.replace({x: tg1});
+			//console.log("debug2");
+			//console.log(dbg);
+
+			//var temp = new CALC.Multiplication({left: new CALC.Constant({value: 3}), right: scope.fnSurfExpr.replace({x: tg1}).differentiate('y')});
+			//console.log(temp);
+			//console.log(tg2);
+			//console.log(temp.evaluate({y: tg2}));
+
+
+			/*
+			object = new CALC.VectorArrow(0, 3, new CALC.Multiplication({left: new CALC.Constant({value: 3}), right: scope.fnSurfExpr.replace({x: tg1}).differentiate('y')}), 0x00ff00);
+			object.position.set( tg1, tg2, tg3 );
+			objectBranch.add(object);
+			if (scope.vectYObject) {
+				objectBranch.remove(scope.vectYObject);
+			}
+			scope.vectYObject = object;
+			*/
+
 			//Tangential Plane
 			var tg = CALC.tangentialPlane(scope.fnSurfExpr, tg1, tg2);
+
+
+
 			object = CALC.buildFunctionSurface(tg, scope.boundingBox, scope.boundingBox[2] - scope.boundingBox[0], tgPlaneMaterial);	
 			object.position.set( 0, 0, 0 );
 			
@@ -60,7 +97,12 @@ CALC.visualizations.TangentialPlaneInteractive.prototype.init = function() {
 			objectBranch.add(object);
 			scope.tgPlaneObject = object;
 			
-			scope.tgSphereObject.position.set( tg1, tg2, scope.fnSurfExpr.evaluate({x: tg1, y: tg2}));
+			
+			scope.tgSphereObject.position.set( tg1, tg2, tg3);
+
+
+
+	
 			
 			//geometry = new CALC.FunctionSurfaceGeometry(scope.fnSurfExpr, scope.boundingBox, scope.resolution);
 			object = CALC.buildFunctionSurface(scope.fnSurfExpr, scope.boundingBox, scope.resolution, fnSurfMaterial);

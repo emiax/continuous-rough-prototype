@@ -1,74 +1,87 @@
 <!doctype html>
 <html lang="en">
-	<head>
-		<title>Visualisering, analys i flera variabler</title>
-		<link rel="stylesheet" type="text/css" href="style.css"></link>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-		
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script> 
-        <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js" type="text/javascript"></script>
+  <head>
+    <title>Visualisering, analys i flera variabler</title>
+    <link rel="stylesheet" type="text/css" href="style.css"></link>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script> 
+    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js" type="text/javascript"></script>
 
-        <script type="text/javascript"
-		  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-		</script>
+    <script type="text/javascript"
+	    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
 
-		<script src="lib/Three.js"></script>
-		<script src="lib/Detector.js"></script>
-		<script src="lib/Stats.js"></script>
-		<script src="lib/jquery.mousewheel.js"></script>
+    <script src="lib/Three.js"></script>
+    <script src="lib/Detector.js"></script>
+    <script src="lib/Stats.js"></script>
+    <script src="lib/jquery.mousewheel.js"></script>
 
-		<script src="calc/calc.js"></script>
-		<script src="calc/expressionTree.js"></script>
-		<script src="calc/nodeVisitor.js"></script>
-		<script src="calc/evaluator.js"></script>
-		<script src="calc/simplifier.js"></script>
-		<script src="calc/differentiator.js"></script>
-		<script src="calc/replacer.js"></script>
-		<script src="calc/mathMLFormatter.js"></script>
-		<script src="calc/parser.js"></script>
-		<script src="calc/tangent.js"></script>
-		<script src="calc/scheduler.js"></script>
-		<script src="calc/screenCamera.js"></script>
-		<script src="calc/mouseHandler.js"></script>
-		<script src="calc/mouseStrategy.js"></script>
-		<script src="calc/navigationStrategy.js"></script>
-		<script src="calc/vectorArrow.js"></script>
+    <script src="calc/calc.js"></script>
+    <script src="calc/exceptions.js"></script>
 
-		<script src="calc/ParametricSurfaceGeometryBuilder.js"></script>
-		<script src="calc/multiSortObject.js"></script>
-		<script src="calc/label3D.js"></script>
-		<script src="calc/ParametricCurveGeometry.js"></script>
-		<script src="calc/ParametricSurfaceGeometry.js"></script>
-		<script src="calc/FunctionSurfaceGeometry.js"></script>
-		
-		
-		
-		<script src="calc/materials/checkerMaterial.js"></script>
+    <script src="calc/expressions/node.js"></script>
+    <script src="calc/expressions/nodeVisitor.js"></script>
+    <script src="calc/expressions/evaluator.js"></script>
+    <script src="calc/expressions/simplifier.js"></script>
+    <script src="calc/expressions/differentiator.js"></script>
+    <script src="calc/expressions/replacer.js"></script>
+    <script src="calc/expressions/mathMLFormatter.js"></script>
+    <script src="calc/expressions/parser.js"></script>
+    <script src="calc/expressions/tangent.js"></script>
 
-		<script src="calc/application.js"></script>
-		<script src="calc/visualizationStep.js"></script>
-		<script src="calc/visualizations/visualization.js"></script>
-		<script src="calc/visualizations/tangentialPlane.js"></script>
-		<script src="calc/visualizations/tangentialPlaneInteractive.js"></script>
+    <script src="calc/scheduler.js"></script>
+    <script src="calc/mouseHandler.js"></script>
+
+    <script src="calc/mouseStrategies/mouseStrategy.js"></script>
+    <script src="calc/mouseStrategies/navigationStrategy.js"></script>
 
 
 
-		<script>
-			$(document).ready(function() {
-				var application = new CALC.Application($("#application"));
-				
-				var tangentialPlaneVisualization = new CALC.visualizations.TangentialPlane("Tangentplan (passiv)");
-				application.addVisualization(tangentialPlaneVisualization);
-				
-				var tangentialPlaneInteractiveVisualization = new CALC.visualizations.TangentialPlaneInteractive("Tangentplan (interaktiv)");
-				application.addVisualization(tangentialPlaneInteractiveVisualization);
-			});
-		</script>
-	</head>
-	<body>
-		<div id="application"></div>
-	</body>
+    <script src="calc/objects/screenCamera.js"></script>
+    <script src="calc/objects/vectorArrow.js"></script>
+    <script src="calc/objects/multiSortObject.js"></script>
+    <script src="calc/objects/label3D.js"></script>
+
+    <script src="calc/geometries/ParametricSurfaceGeometryBuilder.js"></script>
+    <script src="calc/geometries/ParametricCurveGeometry.js"></script>
+    <script src="calc/geometries/ParametricSurfaceGeometry.js"></script>
+    <script src="calc/geometries/FunctionSurfaceGeometry.js"></script>
+
+    <script src="calc/materials/checkerMaterial.js"></script>
+
+    <script src="calc/application.js"></script>
+    <script src="calc/visualizationStep.js"></script>
+    <script src="calc/visualizations/visualization.js"></script>
+    <script src="calc/visualizations/tangentialPlane.js"></script>
+    <script src="calc/visualizations/tangentialPlaneInteractive.js"></script>
+    <script src="calc/visualizations/vectorTest.js"></script>
+
+
+
+    <script>
+      $(document).ready(function() {
+      var app = new CALC.Application($("#application"));
+
+      var vectorTest = new CALC.visualizations.VectorTest("Vektortest");
+      app.addVisualization(vectorTest);
+
+      
+      var tangentialPlane = new CALC.visualizations.TangentialPlane("Tangentplan (passiv)");
+      app.addVisualization(tangentialPlane);
+      
+      var tangentialPlaneInteractive = new CALC.visualizations.TangentialPlaneInteractive("Tangentplan (interaktiv)");
+      app.addVisualization(tangentialPlaneInteractive);
+      
+
+
+      });
+    </script>
+  </head>
+  <body>
+    <div id="application"></div>
+  </body>
 </html>
 
 
