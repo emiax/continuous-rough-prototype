@@ -6,6 +6,7 @@ Function.prototype.method = function (name, func) {
 };
 
 Function.method('extend', function (map) {
+    this.prototype.constructor = this;
     var k;
     for (k in map) {
         if (map.hasOwnProperty(k)) {
@@ -18,9 +19,7 @@ Function.method('extend', function (map) {
 Function.extend({
     extends: function (Parent, map) {
         this.prototype = new Parent();
-        this.prototype.constructor = this;
         this.prototype.super = Parent.prototype;
-
         this.extend(map);
 
         return this;

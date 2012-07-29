@@ -1,5 +1,5 @@
-/*global CALC */
 'use strict';
+/*global CALC */
 
 CALC.parse = function (str) {
     var parser = new CALC.Parser(str);
@@ -132,7 +132,6 @@ CALC.Parser.extend({
                 }
             }
         }
-        console.log(nodes[0]);
         return nodes[0];
     }
 });

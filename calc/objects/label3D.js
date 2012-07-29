@@ -1,59 +1,59 @@
-CALC.Label3D = function (renderer, $content) {
-	THREE.Object3D.call( this );
+'use strict';
+/*global CALC, THREE, $ */
 
-	this.domElement = $('<div class="label3D"></div>');
-	this.domElement.append($content);
+(CALC.Label3D = function (renderer, $content) {
+    THREE.Object3D.call(this);
 
-	this.domX = -1;
-	this.domY = 0;
+    this.domElement = $('<div class="label3D"></div>');
+    this.domElement.append($content);
 
-	$(renderer.domElement).parent().append(this.domElement);
+    this.domX = -1;
+    this.domY = 0;
 
-	this.domElement.css({opacity: 0.6});
-	// add dom element
-};
+    $(renderer.domElement).parent().append(this.domElement);
 
-CALC.Label3D.prototype = new THREE.Object3D();
-CALC.Label3D.prototype.constructor = CALC.Label3D;
+    this.domElement.css({opacity: 0.6});
+    this.projector = new THREE.Projector();
+    // add dom element
+}).extends(THREE.Object3D, {
+    prepareFrame: function (renderer, force) {
+        var camera = renderer.camera, vect, $renderer, h, w, left, top;
+
+        this.updateMatrix();
+        this.updateMatrixWorld();
+
+        camera.updateMatrix();
+        camera.updateMatrixWorld();
 
 
-CALC.Label3D.prototype.updatePosition = function(renderer, force) {
-	var camera = renderer.camera;
+        //console.log(this.matrixWorld.getPosition());
+        vect = this.projector.projectVector(this.matrixWorld.getPosition(), renderer.camera);
 
-	this.updateMatrix();
-	this.updateMatrixWorld();
 
-	camera.updateMatrix();
-	camera.updateMatrixWorld();
-	
-	var projector = new THREE.Projector();
-	//console.log(this.matrixWorld.getPosition());
-	var vect = projector.projectVector(this.matrixWorld.getPosition(), renderer.camera);
-	
+        if (force || vect.x !== this.domX || vect.y !== this.domY) {
+            $renderer = $(renderer.domElement);
+            h = $renderer.innerHeight();
+            w = $renderer.innerWidth();
 
-	if (force || vect.x !== this.domX || vect.y !== this.domY) {
-		var $rendererDom = $(renderer.domElement);
-		var h = $rendererDom.innerHeight(),
-			w = $rendererDom.innerWidth();
+            this.domX = vect.x;
+            this.domY = vect.y;
 
-		this.domX = vect.x;
-		this.domY = vect.y;
+            //console.log(vect);
+            if (this.domX > 0.5 || this.domX < -0.5 || this.domY > 0.5 || this.domY < -0.5) {
+                this.domElement.css({visibility: 'hidden'});
+                //console.log(this.domX + " " + this.domY);
+            } else {
+                this.domElement.css({visibility: 'visible'});
+            }
 
-		//console.log(vect);
-		if (this.domX > 0.5 || this.domX < -0.5 || this.domY > 0.5 || this.domY < -0.5) {
-			this.domElement.css({visibility: 'hidden'});
-			//console.log(this.domX + " " + this.domY);
-		} else {
-			this.domElement.css({visibility: 'visible'});
-		}
+            left = w*vect.x + w/2;
+            top = -h*vect.y + h/2;
 
-		var l = w*vect.x + w/2;
-		var t = -h*vect.y + h/2;
-
-		this.domElement.css({
-			left: l,
-			top: t
-		});
-	}
-	//console.log(vect);
-};
+            this.domElement.css({
+                left: left,
+                top: top
+            });
+        }
+        //console.log(vect);
+    }
+});

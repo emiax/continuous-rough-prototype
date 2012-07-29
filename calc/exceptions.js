@@ -1,20 +1,24 @@
-CALC.Exception = function(message) {
+'use strict';
+
+/*global CALC */
+
+CALC.Exception = function (message) {
 	this.name = "Unexpected Exception";
 	this.message = "Sorry!";
-}
+};
 
 
-CALC.InvalidArgumentException = function(message) {
+CALC.InvalidArgumentException = function (message) {
 	this.name = "Invalid argument";
 	this.message = "Invalid argument: " + message;
-}
+};
 
-CALC.NotImplementedYetException = function() {
+CALC.NotImplementedYetException = function () {
 	this.name = "Not implemented yet";
 	this.message = "This feature it not yet implemented";
-}
+};
 
-CALC.AbstractCallException = function() {
+CALC.AbstractCallException = function () {
 	this.name = "Abstract method call";
-	this.method = "The method is abstract";
+	this.message = "The method is abstract";
 };

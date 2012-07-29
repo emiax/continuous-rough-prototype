@@ -1,14 +1,17 @@
-CALC.MouseStrategy = function(context) {
-	this.context = context;
-};
+'use strict';
+/*global CALC */
 
-CALC.MouseStrategy.prototype.mouseDown = function (event) {};
-CALC.MouseStrategy.prototype.mouseMove = function(event) {};
-CALC.MouseStrategy.prototype.mouseUp = function(event) {};
-CALC.MouseStrategy.prototype.mouseWheel = function(event) {};
-CALC.MouseStrategy.prototype.touchStart = function(event) {};
-CALC.MouseStrategy.prototype.touchEnd = function(event) {};
-CALC.MouseStrategy.prototype.touchMove = function(event) {};
-CALC.MouseStrategy.prototype.click = function(event) {};
-CALC.MouseStrategy.prototype.drag = function(event) {};
-CALC.MouseStrategy.prototype.scroll = function(event) {};
+(CALC.MouseStrategy = function (context) {
+    this.context = context;
+}).extend({
+    mouseDown: function (event) {},
+    mouseMove: function (event) {},
+    mouseUp: function (event) {},
+    mouseWheel: function (event) {},
+    touchStart: function (event) {},
+    touchEnd: function (event) {},
+    touchMove: function (event) {},
+    click: function (event) {},
+    drag: function (event) {},
+    scroll: function (event) {}
+});
