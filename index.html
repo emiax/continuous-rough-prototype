@@ -40,6 +40,7 @@
 
 
     <script src="calc/objects/screenCamera.js"></script>
+    <script src="calc/objects/cameraBranch.js"></script>
     <script src="calc/objects/vectorArrow.js"></script>
     <script src="calc/objects/multiSortObject.js"></script>
     <script src="calc/objects/label3D.js"></script>
@@ -62,10 +63,8 @@
 
     <script>
       $(document).ready(function() {
-      var app = new CALC.Application($("#application"));
+      var app = new CALC.Application($("#application"), /*developMode*/ true);
 
-      var vectorTest = new CALC.visualizations.VectorTest("Vektortest");
-      app.addVisualization(vectorTest);
 
       
       var tangentialPlane = new CALC.visualizations.TangentialPlane("Tangentplan (passiv)");
@@ -73,6 +72,10 @@
       
       var tangentialPlaneInteractive = new CALC.visualizations.TangentialPlaneInteractive("Tangentplan (interaktiv)");
       app.addVisualization(tangentialPlaneInteractive);
+
+
+      var vectorTest = new CALC.visualizations.VectorTest("Vektortest");
+      app.addVisualization(vectorTest);
       
 
 

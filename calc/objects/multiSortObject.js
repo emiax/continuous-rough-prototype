@@ -40,7 +40,7 @@
     },
 
     prepareFrame: function (renderer) {
-        var camera = renderer.camera, camPos, inv, d;
+        var camera = renderer.cameraBranch.camera, camPos, inv, d;
 
         this.updateMatrix();
         this.updateMatrixWorld();
@@ -48,7 +48,7 @@
         camera.updateMatrix();
         camera.updateMatrixWorld();
 
-        camPos = camera.matrix.getPosition().clone();
+        camPos = camera.matrixWorld.getPosition().clone();
 
         inv = new THREE.Matrix4();
         inv.getInverse(this.matrixWorld);

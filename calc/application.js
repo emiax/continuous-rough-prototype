@@ -1,4 +1,4 @@
-CALC.Application = function ($container) {
+CALC.Application = function ($container, developMode) {
     var scope = this;
 
     this.visualizations = [];
@@ -16,15 +16,18 @@ CALC.Application = function ($container) {
         scope.updateWindow();
     });
 
+
+    if (developMode !== undefined) {
+        this.stats = new Stats();
+        this.stats.domElement.style.position = 'absolute';
+        this.stats.domElement.style.bottom = '0px';
+        this.stats.domElement.style.right = '0px';
+        $('body').append(this.stats.domElement);
+    }
+
+
     this.render();
 
-
-    /*if (debugMode != undefined) {
-      this.stats = new Stats();
-      this.stats.domElement.style.position = 'absolute';
-      this.stats.domElement.style.top = '0px';
-      this.document.childNodes[0].appendChild(stats.domElement);
-      }*/
 
 }.extend({
 
@@ -46,7 +49,9 @@ CALC.Application = function ($container) {
         if (this.visualization) {
             this.visualization.render();
         }
-        //stats.update();
+        if (this.stats) {
+            this.stats.update();
+        }
     },
 
     createVisualizationButton: function(visualization) {

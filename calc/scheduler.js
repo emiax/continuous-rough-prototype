@@ -208,6 +208,13 @@ CALC.fade = function (material, args, timing, callback, evtHandle) {
     }, timing.duration, timing.interpolation, timing.delay, callback, evtHandle);
 };
 
+CALC.animateCamera = function (cameraBranch, args, timing, callback, evtHandle) {
+    timing = timing || {};
+    return CALC.animate(cameraBranch, {
+        perspective: args.perspective,
+        zoom: args.zoom
+    }, timing.duration, timing.interpolation, timing.delay, callback, evtHandle);
+};
 
 
 

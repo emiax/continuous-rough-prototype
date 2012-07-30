@@ -92,6 +92,26 @@
     }
 });
 
+//PerspectiveAction - to be moved to a separate file.
+(CALC.CameraAction = function (spec) {
+    this.cameraBranch = spec.cameraBranch;
+    this.perspective = spec.perspective;
+    this.zoom = spec.zoom;
+
+    this.duration = spec.duration;
+    this.delay = spec.delay;
+    this.interpolation = spec.interpolation;
+}).extends(CALC.VisualizationAction, {
+    perform: function () {
+        CALC.animateCamera(this.cameraBranch, {perspective: this.perspective, zoom: this.zoom }, {duration: this.duration, interpolation: this.interpolation});
+    },
+
+    unperform: function () {
+        //do nothing
+    }
+});
+
+
 
 //MaterialUniformAction - to be moved to a separate file.
 (CALC.MaterialUniformAction = function (spec) {

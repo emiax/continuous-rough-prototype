@@ -1,3 +1,6 @@
+'use strict';
+/*global CALC */
+
 CALC.visualizations.TangentialPlane = function(title) {
     CALC.visualizations.Visualization.call( this, title );
 };
@@ -10,9 +13,9 @@ CALC.visualizations.TangentialPlane.prototype.init = function() {
     var scope = this;
     var n = 0;
 
-    this.standardVisualizationSetup();    
+    this.standardVisualizationSetup();
     var scene = this.scenes["std"];
-    
+
     var fnSurfMaterial = new CALC.CheckerMaterial();
     var fnXCurveMaterial = new THREE.LineBasicMaterial({opacity: 0, linewidth: 2});
     var fnYCurveMaterial = new THREE.LineBasicMaterial({opacity: 0, linewidth: 2});
@@ -35,74 +38,74 @@ CALC.visualizations.TangentialPlane.prototype.init = function() {
     this.resolution = 0.2;
 
     this.generateSurface = function (input) {
-	try {
-	    this.fnSurfExpr = CALC.parse(input);
-	    
-	    this.fnXCurveExpr = this.fnSurfExpr.replace({x: 's', y: Math.PI/2});
-	    this.fnYCurveExpr = this.fnSurfExpr.replace({x: 0, y: 's'});
+        try {
+            this.fnSurfExpr = CALC.parse(input);
 
-	    this.parameterExpr = CALC.parse('s');
-	    this.constantExpr = CALC.parse('0');
+            this.fnXCurveExpr = this.fnSurfExpr.replace({x: 's', y: Math.PI/2});
+            this.fnYCurveExpr = this.fnSurfExpr.replace({x: 0, y: 's'});
 
-	} catch(e) {
-	    console.log("Could not parse exception");
-	    //todo: handle parse expressions properly
-	    return;
-	}
-	if (this.fnSurfExpr) {
-	    n = 0;
-	    var geometry, object, geometries;
-	    //geometry = new CALC.FunctionSurfaceGeometry(this.fnSurfExpr, scope.boundingBox, scope.resolution);
-	    object = CALC.buildFunctionSurface(this.fnSurfExpr, scope.boundingBox, scope.resolution, fnSurfMaterial);
-	    fnSurfMaterial.setZInterval([object.getBoundingBox().min.z, object.getBoundingBox().max.z]);			
-	    object.position.set( 0, 0, 0 );
-	    
-	    if (this.fnSurfObject) {
-		objectBranch.remove(this.fnSurfObject);
-	    }
-	    objectBranch.add(object);
-	    this.fnSurfObject = object;
+            this.parameterExpr = CALC.parse('s');
+            this.constantExpr = CALC.parse('0');
 
-	    geometry = new CALC.ParametricCurveGeometry(this.parameterExpr, this.constantExpr, this.fnXCurveExpr, {s: [scope.boundingBox[0], scope.boundingBox[2]]}, null, scope.resolution);
+        } catch(e) {
+            console.log("Could not parse exception");
+            //todo: handle parse expressions properly
+            return;
+        }
+        if (this.fnSurfExpr) {
+            n = 0;
+            var geometry, object, geometries;
+            //geometry = new CALC.FunctionSurfaceGeometry(this.fnSurfExpr, scope.boundingBox, scope.resolution);
+            object = CALC.buildFunctionSurface(this.fnSurfExpr, scope.boundingBox, scope.resolution, fnSurfMaterial);
+            fnSurfMaterial.setZInterval([object.getBoundingBox().min.z, object.getBoundingBox().max.z]);
+            object.position.set( 0, 0, 0 );
 
-	    object = new THREE.Line(geometry, fnXCurveMaterial);
-	    object.position.set( 0, Math.PI/2, 0 );
+            if (this.fnSurfObject) {
+                objectBranch.remove(this.fnSurfObject);
+            }
+            objectBranch.add(object);
+            this.fnSurfObject = object;
 
-	    if (this.xCurveObject) {
-		objectBranch.remove(this.xCurveObject);
-	    }
+            geometry = new CALC.ParametricCurveGeometry(this.parameterExpr, this.constantExpr, this.fnXCurveExpr, {s: [scope.boundingBox[0], scope.boundingBox[2]]}, null, scope.resolution);
 
-	    objectBranch.add(object);
-	    this.xCurveObject = object;
+            object = new THREE.Line(geometry, fnXCurveMaterial);
+            object.position.set( 0, Math.PI/2, 0 );
 
-	    geometry = new CALC.ParametricCurveGeometry(this.constantExpr, this.parameterExpr, this.fnYCurveExpr, {s: [scope.boundingBox[1], scope.boundingBox[3]]}, null, scope.resolution);
-	    object = new THREE.Line(geometry, fnYCurveMaterial);
-	    object.position.set( 0, 0, 0 );
+            if (this.xCurveObject) {
+                objectBranch.remove(this.xCurveObject);
+            }
 
-	    if (this.yCurveObject) {
-		objectBranch.remove(this.yCurveObject);
-	    }
+            objectBranch.add(object);
+            this.xCurveObject = object;
 
-	    objectBranch.add(object);
-	    this.yCurveObject = object;
+            geometry = new CALC.ParametricCurveGeometry(this.constantExpr, this.parameterExpr, this.fnYCurveExpr, {s: [scope.boundingBox[1], scope.boundingBox[3]]}, null, scope.resolution);
+            object = new THREE.Line(geometry, fnYCurveMaterial);
+            object.position.set( 0, 0, 0 );
 
-	} else {
-	    console.log("Expression is undefined");
-	}
+            if (this.yCurveObject) {
+                objectBranch.remove(this.yCurveObject);
+            }
+
+            objectBranch.add(object);
+            this.yCurveObject = object;
+
+        } else {
+            console.log("Expression is undefined");
+        }
     }
 
     scene.add(objectBranch);
     this.renderers["std"].mouseStrategy = new CALC.NavigationStrategy(this.renderers["std"], objectBranch);
 
     /*
-      
+
       var $fnInputDiv = $('<div class="text-box"></div>');
 
       var $fnInputParagraph = $('<p>Mata in en funktion av 2 variabler</p>');
       $fnInputDiv.append($fnInputParagraph);
       var $form = $('<form action="#"></form>');
-      
-      
+
+
       var $fnInput = $('<input type="text" value="cos(x)*cos(y)">');
       var $xMinInput = $('<input type="text" value="-10">');
       var $xMaxInput = $('<input type="text" value="10">');
@@ -111,7 +114,7 @@ CALC.visualizations.TangentialPlane.prototype.init = function() {
       var $yMaxInput = $('<input type="text" value="10">');
 
 
-      
+
       $form.submit(function() {
 
       scope.boundingBox = [parseFloat($xMinInput.val()), parseFloat($yMinInput.val()), parseFloat($xMaxInput.val()), parseFloat($yMaxInput.val())];
@@ -134,11 +137,11 @@ CALC.visualizations.TangentialPlane.prototype.init = function() {
 
       var $fnRotate = $('<a class="action-button" href="#">Rotera 90 grader</a>');
       var $next = $('<a href="#" class="next-button">Gå vidare</a>');
-      
+
       $fnRotate.click(function() {
       n++;
       CALC.rotate(objectBranch, {z: Math.PI/2*n}, {duration: 100, interpolation: CALC.interpolations.quintic});
-      
+
       });
 
       $fnInputDiv.append($fnRotate);
@@ -147,7 +150,7 @@ CALC.visualizations.TangentialPlane.prototype.init = function() {
       $next.click(function() {
       scope.visitStep(1);
       });
-      
+
     */
 
     var $box0 = $('<div class="text-box"></div>'),
@@ -155,79 +158,94 @@ CALC.visualizations.TangentialPlane.prototype.init = function() {
     $next0 = $('<a href="#" class="next-button">Gå vidare</a>');
 
     $next0.click(function() {
-	scope.visitStep(1);
+        scope.visitStep(1);
     });
-    
+
     $box0.append($desc0);
     $box0.append($next0);
-    
+
     var $box1 = $('<div class="text-box"></div>'),
     $desc1 = $("<p>Betrakta nu kurvan i planet <math><mi>x</mi> <mo>=</mo> <mn>0</mn><mo>,</mo> <mi>z</mi><mo>(</mo><mn>0</mn><mo>,</mo><mi>y</mi><mo>)</mo> <mo>=</mo> <mi>cos</mi><mo>(</mo><mn>0</mn><mo>)</mo><mi>sin</mi><mo>(</mo><mi>y</mi><mo>)</mo> <mo>=</mo> <mi>sin</mi><mo>(</mo><mi>y</mi><mo>)</mo></math></p>");
-    
+
     $box1.append($desc1);
-    
+
     var step0 = new CALC.VisualizationStep("Funktionsytan", [
-	new CALC.TextPanelAction({
-	    panel: 		this.panels.text,
-	    elem:		$box0
-	}),
-	new CALC.AbsoluteRotationAction({
-	    object: 	objectBranch,
-	    x: 			0.4,
-	    z:			0,
-	    duration: 	100,
-	    interpolation: CALC.interpolations.quintic
-	}),
-	new CALC.MaterialUniformAction({
-	    material: 	fnSurfMaterial,
-	    opacity: 	1.0,
-	    duration: 	100,
-	    interpolation: CALC.interpolations.quintic
-	}),
-	new CALC.FadeAction({
-	    material: 	fnXCurveMaterial,
-	    opacity: 	0.0,
-	    duration: 	100,
-	    interpolation: CALC.interpolations.quintic
-	}),
-	new CALC.FadeAction({
-	    material: 	fnYCurveMaterial,
-	    opacity: 	0.0,
-	    duration: 	100,
-	    interpolation: CALC.interpolations.quintic
-	})			
+        new CALC.TextPanelAction({
+            panel:              this.panels.text,
+            elem:               $box0
+        }),
+        new CALC.AbsoluteRotationAction({
+            object:     objectBranch,
+            x:                  0.4,
+            z:                  0,
+            duration:   100,
+            interpolation: CALC.interpolations.quintic
+        }),
+        new CALC.MaterialUniformAction({
+            material:   fnSurfMaterial,
+            opacity:    1.0,
+            duration:   100,
+            interpolation: CALC.interpolations.quintic
+        }),
+        new CALC.FadeAction({
+            material:   fnXCurveMaterial,
+            opacity:    0.0,
+            duration:   100,
+            interpolation: CALC.interpolations.quintic
+        }),
+        new CALC.FadeAction({
+            material:   fnYCurveMaterial,
+            opacity:    0.0,
+            duration:   100,
+            interpolation: CALC.interpolations.quintic
+        }),
+        new CALC.CameraAction({
+            cameraBranch: scope.cameraBranches.std,
+            zoom: 1.2,
+            perspective: 1,
+            duration:   100,
+            interpolation: CALC.interpolations.quintic
+        })
+
     ]);
 
     var step1 = new CALC.VisualizationStep("Tangenter", [
-	new CALC.TextPanelAction({
-	    panel: 		this.panels.text,
-	    elem:		$box1
-	}),
-	new CALC.AbsoluteRotationAction({
-	    object: 	objectBranch,
-	    x: 			0,
-	    z:			-Math.PI/2,
-	    duration: 	100,
-	    interpolation: CALC.interpolations.quintic
-	}),
-	new CALC.MaterialUniformAction({
-	    material: 	fnSurfMaterial,
-	    opacity: 	0,
-	    duration: 	100,
-	    interpolation: CALC.interpolations.quintic
-	}),
-	new CALC.FadeAction({
-	    material: 	fnXCurveMaterial,
-	    opacity: 	1.0,
-	    duration: 	100,
-	    interpolation: CALC.interpolations.quintic
-	}),
-	new CALC.FadeAction({
-	    material: 	fnYCurveMaterial,
-	    opacity: 	1.0,
-	    duration: 	100,
-	    interpolation: CALC.interpolations.quintic
-	})
+        new CALC.TextPanelAction({
+            panel:      this.panels.text,
+            elem:       $box1
+        }),
+        new CALC.AbsoluteRotationAction({
+            object:     objectBranch,
+            x:          0,
+            z:          -Math.PI/2,
+            duration:   100,
+            interpolation: CALC.interpolations.quintic
+        }),
+        new CALC.MaterialUniformAction({
+            material:   fnSurfMaterial,
+            opacity:    0,
+            duration:   100,
+            interpolation: CALC.interpolations.quintic
+        }),
+        new CALC.FadeAction({
+            material:   fnXCurveMaterial,
+            opacity:    1.0,
+            duration:   100,
+            interpolation: CALC.interpolations.quintic
+        }),
+        new CALC.FadeAction({
+            material:   fnYCurveMaterial,
+            opacity:    1.0,
+            duration:   100,
+            interpolation: CALC.interpolations.quintic
+        }),
+        new CALC.CameraAction({
+            cameraBranch: scope.cameraBranches.std,
+            zoom: 1,
+            perspective: 0,
+            duration:   100,
+            interpolation: CALC.interpolations.quintic
+        })
     ]);
 
 

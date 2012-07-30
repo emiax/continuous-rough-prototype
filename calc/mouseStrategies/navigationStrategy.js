@@ -15,9 +15,11 @@
         }
     },
     scroll: function (event, delta) {
-        this.context.camera.fov -= delta * 5;
-        this.context.camera.fov = this.context.camera.fov > 70 ? 70 : (this.context.camera.fov < 5 ? 5 : this.context.camera.fov);
-        this.context.camera.updateProjectionMatrix();
+        //this.context.camera.fov -= delta * 5;
+        //this.context.camera.fov = this.context.camera.fov > 70 ? 70 : (this.context.camera.fov < 5 ? 5 : this.context.camera.fov);
+
+        this.context.cameraBranch.changeZoom(delta);
+        //this.context.camera.updateProjectionMatrix();
     }
 });
 

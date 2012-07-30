@@ -17,7 +17,7 @@
     // add dom element
 }).extends(THREE.Object3D, {
     prepareFrame: function (renderer, force) {
-        var camera = renderer.camera, vect, $renderer, h, w, left, top;
+        var camera = renderer.cameraBranch.camera, vect, $renderer, h, w, left, top;
 
         this.updateMatrix();
         this.updateMatrixWorld();
@@ -27,7 +27,7 @@
 
 
         //console.log(this.matrixWorld.getPosition());
-        vect = this.projector.projectVector(this.matrixWorld.getPosition(), renderer.camera);
+        vect = this.projector.projectVector(this.matrixWorld.getPosition(), camera);
 
 
         if (force || vect.x !== this.domX || vect.y !== this.domY) {

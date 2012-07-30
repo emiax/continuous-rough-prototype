@@ -7,7 +7,7 @@ CALC.visualizations = {};
     this.title = title;
     this.renderers = {};
     this.scenes = {};
-    this.cameras = {};
+    this.cameraBranches = {};
     this.application = null;
     this.steps = [];
     this.currentStep = -1;
@@ -30,22 +30,22 @@ CALC.visualizations = {};
             if (this.renderers.hasOwnProperty(r)) {
                 renderer = this.renderers[r];
                 update(renderer);
-                // We assume that renderer has been augmented with 'scene' and 'camera' properties.
+                // We assume that renderer has been augmented with 'scene' and 'cameraBranch' properties.
                 // This is done in visualization.attachRenderer
-                if (renderer.scene && renderer.camera) {
-                    renderer.render(renderer.scene, renderer.camera);
+                if (renderer.scene && renderer.cameraBranch) {
+                    renderer.render(renderer.scene, renderer.cameraBranch.camera);
                 }
             }
         }
     },
 
 
-    attachRenderer: function ($elem, renderer, scene, camera) {
+    attachRenderer: function ($elem, renderer, scene, cameraBranch) {
         var mh = CALC.mouseHandler, $domElement;
 
         renderer.setSize($elem.innerWidth(), $elem.innerHeight());
-        // Augment renderer object with scene and camera, to simplify rendereing process
-        renderer.camera = camera;
+        // Augment renderer object with scene and cameraBranch, to simplify rendereing process
+        renderer.cameraBranch = cameraBranch;
         renderer.scene = scene;
         renderer.mouseStrategy = new CALC.MouseStrategy(renderer);
         $domElement = $(renderer.domElement);
@@ -91,8 +91,8 @@ CALC.visualizations = {};
                 h = $panel.innerHeight();
                 if (w && h) {
                     renderer.setSize(w, h);
-                    renderer.camera.aspect = w/h;
-                    renderer.camera.updateProjectionMatrix();
+                    renderer.cameraBranch.camera.aspect = w/h;
+                    renderer.cameraBranch.camera.updateProjectionMatrix();
                 } else {
                     renderer.setSize(0, 0);
                 }
@@ -119,7 +119,7 @@ CALC.visualizations = {};
         $panel.html($content);
     },
     standardVisualizationSetup: function () {
-        var renderer, camera, scene, origin, light;
+        var renderer, cameraBranch, camera, scene, origin, light;
 
         this.dom = $('<div id="visualization">' +
                      '<div id="main-row">' +
@@ -137,15 +137,16 @@ CALC.visualizations = {};
 
         renderer = new THREE.WebGLRenderer({ antialias: true });
 
-        camera = new THREE.PerspectiveCamera(45, /* Temporary aspect ratio is set to 1, but will be set in updateRenderers */ 1, 1, 2000);
+//        camera = new THREE.PerspectiveCamera(45, /* Temporary aspect ratio is set to 1, but will be set in updateRenderers */ 1, 1, 2000);
+        cameraBranch = new CALC.CameraBranch();        
+        camera = cameraBranch.camera;
+
         scene = new THREE.Scene();
 
         origin = new THREE.Vector3(0, 0, 0);
-        camera.position.y = -20;
-        camera.up = new THREE.Vector3(0, 0, 1);
-        camera.lookAt(origin);
 
-        scene.add(camera);
+        cameraBranch.position.y = -20;
+        scene.add(cameraBranch);
 
 
         light = new THREE.AmbientLight(0x282828);
@@ -155,9 +156,9 @@ CALC.visualizations = {};
         light.position = new THREE.Vector3(4, -2, 1);
         scene.add(light);
 
-        this.cameras.std = camera;
+        this.cameraBranches.std = cameraBranch;
         this.scenes.std = scene;
-        this.renderers.std = this.attachRenderer(this.panels.graphics, renderer, scene, camera);
+        this.renderers.std = this.attachRenderer(this.panels.graphics, renderer, scene, cameraBranch);
     },
 
     setSteps: function (steps) {
