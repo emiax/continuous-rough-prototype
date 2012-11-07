@@ -13,6 +13,11 @@
 
 (CALC.MultiSortObject = function (geometries, material) {
     var g, n,  mesh;
+    
+    if (!geometries && !material) {
+        return;
+    }
+
     THREE.Object3D.call(this);
     
     this.meshes = [];
