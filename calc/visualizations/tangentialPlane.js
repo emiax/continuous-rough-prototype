@@ -16,13 +16,13 @@ CALC.visualizations.TangentialPlane.prototype.init = function() {
     this.standardVisualizationSetup();
     var scene = this.scenes["std"];
 
-    var fnSurfMaterial = new CALC.CheckerMaterial();
+    var fnSurfMaterial = new THREE.MeshBasicMaterial();
     var fnXCurveMaterial = new THREE.LineBasicMaterial({opacity: 0, linewidth: 2});
     var fnYCurveMaterial = new THREE.LineBasicMaterial({opacity: 0, linewidth: 2});
     fnXCurveMaterial.depthTest = false;
     fnYCurveMaterial.depthTest = false;
 
-    fnSurfMaterial.uniforms.opacity.value = 0;
+   // fnSurfMaterial.uniforms.opacity.value = 0;
 
     var fnSurfObject = null;
     var objectBranch = new THREE.Object3D();
@@ -40,7 +40,7 @@ CALC.visualizations.TangentialPlane.prototype.init = function() {
     this.generateSurface = function (input) {
         try {
             this.fnSurfExpr = CALC.parse(input);
-
+            
             this.fnXCurveExpr = this.fnSurfExpr.replace({x: 's', y: Math.PI/2});
             this.fnYCurveExpr = this.fnSurfExpr.replace({x: 0, y: 's'});
 
@@ -54,17 +54,90 @@ CALC.visualizations.TangentialPlane.prototype.init = function() {
         }
         if (this.fnSurfExpr) {
             n = 0;
-            var geometry, object, geometries;
+            var geometry, object, object1, object2, geometries;
             //geometry = new CALC.FunctionSurfaceGeometry(this.fnSurfExpr, scope.boundingBox, scope.resolution);
-            object = CALC.buildFunctionSurface(this.fnSurfExpr, scope.boundingBox, scope.resolution, fnSurfMaterial);
-            fnSurfMaterial.setZInterval([object.getBoundingBox().min.z, object.getBoundingBox().max.z]);
-            object.position.set( 0, 0, 0 );
+            //object = CALC.buildFunctionSurface(this.fnSurfExpr, scope.boundingBox, scope.resolution, fnSurfMaterial);
+            
+            var expr = CALC.parse('sin(x) + 1.0');
+
+            object1 = new CALC.FunctionSurface({
+                z: expr,
+                domain: {
+                    x: [-10, 10],
+                    y: [-10, 10]
+                },
+                attributes: {
+                    r: CALC.parse('(x^2 + y^2)^(1/2)'),
+                    d:  CALC.parse('sin(x) + 1.0').differentiate(),
+                   // theta: CALC.parse('arg([x, y])') // TODO: IMPLEMENT vectors, ARCTAN and such stuff.
+                },
+                constraints: {
+                    r: {
+                        lower: 5
+
+                    }
+                },
+                resolution: 0.2,
+                appearance: {
+                    checkerPattern: {
+                        opacity: 0.3,
+                        color: new CALC.Color(0, 0, 0),
+                        x: 0.5,
+                        y: 0.5
+                        
+                    },
+                    colorGradientParameter: 'd',
+                    colorGradient: {
+                        '-1': new CALC.Color(0xff, 0x00, 0x00),
+                        '-0.9': new CALC.Color(0x00, 0x99, 0x00)//,
+                        //1: new CALC.Color(0x00, 0x00, 0xff), //0xffff0000
+                    }
+                }
+            });
+            
+            
+            object2 = new CALC.FunctionSurface({
+                z: CALC.parse('x*y/50'),
+                domain: {
+                    x: [-10, 10],
+                    y: [-10, 10]
+                },
+                attributes: {
+                    r: CALC.parse('(x^2 + y^2)^(1/2)'),
+                    t: CALC.parse('x'),
+                    s: CALC.parse('y')
+                   // theta: CALC.parse('arg([x, y])') // TODO: IMPLEMENT vectors, ARCTAN and such stuff.
+                },
+                constraints: { },
+                resolution: 0.2,
+                appearance: {
+                    checkerPattern: {
+                        opacity: 0.6,
+                        color: new CALC.Color(0xff, 0xff, 0xff),
+                        r: 1
+                    },
+                    colorGradient: {
+                        0: new CALC.Color(0x22, 0x22, 0x55),
+                        10:  new CALC.Color(0x66, 0x66, 0xff),
+                    },
+                    colorGradientParameter: 'r'
+                }
+            });
+
+            fnSurfMaterial = object1.material;
+
+
+//            fnSurfMaterial.setZInterval([object.getBoundingBox().min.z, object.getBoundingBox().max.z]);
+            object1.position.set( 0, 0, 0 );
+            //object2.position.set( 0, 0, 0 );
 
             if (this.fnSurfObject) {
                 objectBranch.remove(this.fnSurfObject);
             }
-            objectBranch.add(object);
-            this.fnSurfObject = object;
+            objectBranch.add(object1);
+            objectBranch.add(object2);
+
+            this.fnSurfObject = object1;
 
             geometry = new CALC.ParametricCurveGeometry(this.parameterExpr, this.constantExpr, this.fnXCurveExpr, {s: [scope.boundingBox[0], scope.boundingBox[2]]}, null, scope.resolution);
 
@@ -181,7 +254,7 @@ CALC.visualizations.TangentialPlane.prototype.init = function() {
             duration:   100,
             interpolation: CALC.interpolations.quintic
         }),
-        new CALC.MaterialUniformAction({
+    /*    new CALC.MaterialUniformAction({
             material:   fnSurfMaterial,
             opacity:    1.0,
             duration:   100,
@@ -198,7 +271,7 @@ CALC.visualizations.TangentialPlane.prototype.init = function() {
             opacity:    0.0,
             duration:   100,
             interpolation: CALC.interpolations.quintic
-        }),
+        }), */
         new CALC.CameraAction({
             cameraBranch: scope.cameraBranches.std,
             zoom: 1.2,
@@ -221,7 +294,7 @@ CALC.visualizations.TangentialPlane.prototype.init = function() {
             duration:   100,
             interpolation: CALC.interpolations.quintic
         }),
-        new CALC.MaterialUniformAction({
+     /*   new CALC.MaterialUniformAction({
             material:   fnSurfMaterial,
             opacity:    0,
             duration:   100,
@@ -238,7 +311,7 @@ CALC.visualizations.TangentialPlane.prototype.init = function() {
             opacity:    1.0,
             duration:   100,
             interpolation: CALC.interpolations.quintic
-        }),
+        }),*/
         new CALC.CameraAction({
             cameraBranch: scope.cameraBranches.std,
             zoom: 1,
