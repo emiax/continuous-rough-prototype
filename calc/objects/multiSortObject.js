@@ -12,22 +12,31 @@
 */
 
 (CALC.MultiSortObject = function (geometries, material) {
+    var g, n,  mesh;
     THREE.Object3D.call(this);
-
+    
     this.meshes = [];
-    var g, len = geometries.length, mesh;
-    for (g = 0; g < len; g++) {
-        mesh = new THREE.Mesh(geometries[g], material);
-        mesh.doubleSided = true;
-        this.meshes.push(mesh);
+    
+    if (geometries && material) {
+        n = geometries.length;
+        for (g = 0; g < n; g++) {
+            mesh = new THREE.Mesh(geometries[g], material);
+            mesh.doubleSided = true;
+            this.meshes.push(mesh);
+        }
+        
+        this.material = material;
+        this.currentIndex = 0;
+        this.currentChild = this.meshes[0];
+        this.add(this.meshes[0]);
     }
-
-    this.currentIndex = 0;
-    this.currentChild = this.meshes[0];
-    this.add(this.meshes[0]);
 }).extends(THREE.Object3D, {
     getBoundingBox: function (i) {
-        return this.meshes[0].geometry.boundingBox;
+        var geo = this.meshes[0].geometry;
+        if (!geo.boundingBox) {
+            geo.computeBoundingBox();
+        }
+        return geo.boundingBox;
     },
 
     replaceMesh: function (i) {
@@ -39,6 +48,13 @@
         }
     },
 
+    replaceMaterial: function(material) {
+        var m, n;
+        for (g = 0, n = this.meshes.length; g < n; g++) {
+            this.meshes[g].material = material;
+        }
+    },
+    
     prepareFrame: function (renderer) {
         var camera = renderer.cameraBranch.camera, camPos, inv, d;
 
