@@ -47,6 +47,7 @@ CALC.Application = function ($container, developMode) {
         this.scheduler.tick();
 
         if (this.visualization) {
+//            console.log("rendering");
             this.visualization.render();
         }
         if (this.stats) {
@@ -77,7 +78,6 @@ CALC.Application = function ($container, developMode) {
     },
 
     setVisualization: function(visualization, $button) {
-        //$("#loading", this.$container).show();
         this.visualization = visualization;
         this.visualization.init();
         $("#visualization", this.$container).replaceWith(visualization.dom);
@@ -85,7 +85,6 @@ CALC.Application = function ($container, developMode) {
         $button.addClass("active");
         visualization.application = this;
         this.updateWindow();
-        //$("#loading", this.$container).hide();
     }
 });
 

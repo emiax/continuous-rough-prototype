@@ -94,7 +94,7 @@
 
 //PerspectiveAction - to be moved to a separate file.
 (CALC.CameraAction = function (spec) {
-    this.cameraBranch = spec.cameraBranch;
+    this.camera = spec.camera;
     this.perspective = spec.perspective;
     this.zoom = spec.zoom;
 

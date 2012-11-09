@@ -191,11 +191,11 @@
             vertices = scope.vertices,
             faces = orders[g];
             
-            scope.vertices.forEach(function (vertex) {
+            vertices.forEach(function (vertex) {
                 geo.vertices.push(new THREE.Vector3(vertex[0], vertex[1], vertex[2]));
             });
             
-            scope.faces.forEach(function (face) {
+            faces.forEach(function (face) {
                 geo.faces.push(new THREE.Face4(face[0], face[1], face[2], face[3]));
             });
             

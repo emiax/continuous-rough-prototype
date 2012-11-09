@@ -1,8 +1,8 @@
 'use strict';
 /*global CALC */
 
-(CALC.MouseStrategy = function (context) {
-    this.context = context;
+(CALC.MouseStrategy = function (renderer) {
+    this.renderer = renderer;
 }).extend({
     mouseDown: function (event) {},
     mouseMove: function (event) {},

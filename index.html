@@ -40,7 +40,6 @@
 
 
     <script src="calc/objects/screenCamera.js"></script>
-    <script src="calc/objects/cameraBranch.js"></script>
     <script src="calc/objects/vectorArrow.js"></script>
     <script src="calc/objects/multiSortObject.js"></script>
     <script src="calc/objects/label3D.js"></script>
@@ -72,8 +71,9 @@
 
 
     <script>
+      var app;
       $(document).ready(function() {
-      var app = new CALC.Application($("#application"), /*developMode*/ true);
+      app = new CALC.Application($("#application"), /*developMode*/ true);
 
 
       

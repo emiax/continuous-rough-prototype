@@ -61,7 +61,7 @@
     },
     
     prepareFrame: function (renderer) {
-        var camera = renderer.cameraBranch.camera, camPos, inv, d;
+        var camera = renderer.camera, camPos, inv, d;
 
         this.updateMatrix();
         this.updateMatrixWorld();

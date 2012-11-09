@@ -1,11 +1,12 @@
 'use strict';
 /*global CALC*/
 
-(CALC.NavigationStrategy = function (context, branch) {
-    this.context = context;
+(CALC.NavigationStrategy = function (renderer, branch) {
+    this.renderer = renderer;
     this.branch = branch;
 }).extends(CALC.MouseStrategy, {
     drag: function (event, path) {
+
         var len = path.length, lon, lat;
         if (len >= 2) {
             lon = path[len - 1].x - path[len - 2].x;
@@ -15,68 +16,12 @@
         }
     },
     scroll: function (event, delta) {
-        //this.context.camera.fov -= delta * 5;
+        //console.log("zoom with " + delta);
+        console.log(this.contextbranch);
+        this.renderer.camera.fov -= delta * 5;
         //this.context.camera.fov = this.context.camera.fov > 70 ? 70 : (this.context.camera.fov < 5 ? 5 : this.context.camera.fov);
 
-        this.context.cameraBranch.changeZoom(delta);
-        //this.context.camera.updateProjectionMatrix();
+        //this.context.cameraBranch.changeZoom(delta);
+        this.renderer.camera.updateProjectionMatrix();
     }
 });
-
-/*
-
-  CALC.NavigationStrategy.prototype.calcSpin = function() {
-  var output = "";
-  rec %= 10;
-  recX[rec] = curX;
-  recY[rec] = curY;
-  if (wasUserInteracting) {
-  var firstRec = (rec + 1) % 10;
-  var avX = (recX[rec] - recX[firstRec]) / 10;
-  var avY = (recY[rec] - recY[firstRec]) / 10;
-  stepZ = (avX > 1 || avX < -1 ? avX*0.01 : 0);
-  stepX = (avY > 1 || avY < -1 ? -avY*0.01 : 0);
-  }
-  spinZ += stepZ;
-  spinX += stepX;
-  rec++;
-  wasUserInteracting = false;
-  };
-
-  CALC.NavigationStrategy.prototype.mouseDown = function (event) {
-  event.preventDefault();
-
-  isUserInteracting = true;
-  stepZ = 0;
-  stepX = 0;
-
-  onPointerDownPointerX = event.clientX;
-  onPointerDownPointerY = event.clientY;
-
-  onPointerDownLon = lon;
-  onPointerDownLat = lat;
-  };
-
-  CALC.NavigationStrategy.prototype.mouseMove = function( event ) {
-
-
-  curX = event.clientX;
-  curY = event.clientY;
-  if ( isUserInteracting ) {
-  //lon = ( onPointerDownPointerX - event.clientX ) * 0.1 + onPointerDownLon;
-  //lat = ( event.clientY - onPointerDownPointerY ) * 0.1 + onPointerDownLat;
-  lon = ( onPointerDownPointerX - event.clientX ) * 0.1 + onPointerDownLon;
-  lat = ( event.clientY - onPointerDownPointerY ) * 0.1 + onPointerDownLat;
-  render();
-  }
-  };
-
-  CALC.NavigationStrategy.prototype.mouseUp = function(event) {
-  isUserInteracting = false;
-  render();
-  wasUserInteracting = true;
-  };
-
-*/
-
-
