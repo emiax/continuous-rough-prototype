@@ -1,331 +1,115 @@
 'use strict';
 /*global CALC */
 
-CALC.visualizations.TangentialPlane = function(title) {
+(CALC.visualizations.TangentialPlane = function(title) {
+
     CALC.visualizations.Visualization.call( this, title );
-};
 
+}).extends(CALC.visualizations.Visualization, {
 
-CALC.visualizations.TangentialPlane.prototype = new CALC.visualizations.Visualization();
-CALC.visualizations.TangentialPlane.prototype.constructor = CALC.visualizations.TangentialPlane;
+    init: function() {
+        var scope = this;
+        
+        this.standardVisualizationSetup();
+        var scene = this.scenes["std"];
+        var objectBranch = new THREE.Object3D();
+        
+        scene.add(objectBranch);
 
-CALC.visualizations.TangentialPlane.prototype.init = function() {
-    var scope = this;
-    var n = 0;
+        var label = new CALC.Label3D(this.renderers["std"], $('<p style="font-weight: bold;">f(x, y)</p>'));
+        label.position.x = 0;
+        label.position.y = 0;
+        
+        
+        var boundingBox = [-10, -10, 10, 10];
+        var resolution = 0.2;
+        
+        objectBranch.add(label);
 
-    this.standardVisualizationSetup();
-    var scene = this.scenes["std"];
-
-    var fnSurfMaterial = new THREE.MeshBasicMaterial();
-    var fnXCurveMaterial = new THREE.LineBasicMaterial({opacity: 0, linewidth: 2});
-    var fnYCurveMaterial = new THREE.LineBasicMaterial({opacity: 0, linewidth: 2});
-    fnXCurveMaterial.depthTest = false;
-    fnYCurveMaterial.depthTest = false;
-
-   // fnSurfMaterial.uniforms.opacity.value = 0;
-
-    var fnSurfObject = null;
-    var objectBranch = new THREE.Object3D();
-
-    var labelBranch = new THREE.Object3D();
-    objectBranch.add(labelBranch);
-    labelBranch.position.set(4, 0, 0);
-    labelBranch.add(new CALC.Label3D(this.renderers["std"], $('<p style="font-weight: bold;">f(x, y)</p>')));
-
-    var point = THREE.Vector3(0, 0, 0);
-
-    this.boundingBox = [-10, -10, 10, 10];
-    this.resolution = 0.2;
-
-    this.generateSurface = function (input) {
-        try {
-            this.fnSurfExpr = CALC.parse(input);
-            
-            this.fnXCurveExpr = this.fnSurfExpr.replace({x: 's', y: Math.PI/2});
-            this.fnYCurveExpr = this.fnSurfExpr.replace({x: 0, y: 's'});
-
-            this.parameterExpr = CALC.parse('s');
-            this.constantExpr = CALC.parse('0');
-
-        } catch(e) {
-            console.log("Could not parse exception");
-            //todo: handle parse expressions properly
-            return;
-        }
-        if (this.fnSurfExpr) {
-            n = 0;
-            var geometry, object, object1, object2, geometries;
-            //geometry = new CALC.FunctionSurfaceGeometry(this.fnSurfExpr, scope.boundingBox, scope.resolution);
-            //object = CALC.buildFunctionSurface(this.fnSurfExpr, scope.boundingBox, scope.resolution, fnSurfMaterial);
-            
-            var expr = CALC.parse('sin(x) + 1.0');
-
-            object1 = new CALC.FunctionSurface({
-                z: expr,
-                domain: {
-                    x: [-10, 10],
-                    y: [-10, 10]
-                },
-                attributes: {
-                    r: CALC.parse('(x^2 + y^2)^(1/2)'),
-                    d:  CALC.parse('sin(x) + 1.0').differentiate(),
-                   // theta: CALC.parse('arg([x, y])') // TODO: IMPLEMENT vectors, ARCTAN and such stuff.
-                },
-                constraints: {
-                    r: {
-                        lower: 5
-
-                    }
-                },
-                resolution: 0.2,
-                appearance: {
-                    checkerPattern: {
-                        opacity: 0.3,
-                        color: new CALC.Color(0, 0, 0),
-                        x: 0.5,
-                        y: 0.5
-                        
-                    },
-                    colorGradientParameter: 'd',
-                    colorGradient: {
-                        '-1': new CALC.Color(0xff, 0x00, 0x00),
-                        '-0.9': new CALC.Color(0x00, 0x99, 0x00)//,
-                        //1: new CALC.Color(0x00, 0x00, 0xff), //0xffff0000
-                    }
+        var expr = CALC.parse('sin(x)*cos(y)');
+        
+        var surface = new CALC.FunctionSurface({
+            z: CALC.parse('sin(x)*cos(y) + x/2'),
+            domain: {
+                x: [-10, 10],
+                y: [-10, 10]
+            },
+            attributes: {
+                r: CALC.parse('((x+3)^2 + y^2)^(1/2)'),
+                d: expr.differentiate(),
+            },
+            constraints: {
+                r: {
+                    lower: 7,
+                    upper: 8,
+                    upperFeather: 0.2
                 }
-            });
-            
-            
-            object2 = new CALC.FunctionSurface({
-                z: CALC.parse('x*y/50'),
-                domain: {
-                    x: [-10, 10],
-                    y: [-10, 10]
+            },
+            resolution: resolution,
+            appearance: {
+                checkerPattern: {
+                    opacity: 0.3,
+                    color: new CALC.Color(255, 255, 255),
+                    x: 1,
+                    y: 1
+                    
                 },
-                attributes: {
-                    r: CALC.parse('(x^2 + y^2)^(1/2)'),
-                    t: CALC.parse('x'),
-                    s: CALC.parse('y')
-                   // theta: CALC.parse('arg([x, y])') // TODO: IMPLEMENT vectors, ARCTAN and such stuff.
-                },
-                constraints: { },
-                resolution: 0.2,
-                appearance: {
-                    checkerPattern: {
-                        opacity: 0.6,
-                        color: new CALC.Color(0xff, 0xff, 0xff),
-                        r: 1
-                    },
-                    colorGradient: {
-                        0: new CALC.Color(0x22, 0x22, 0x55),
-                        10:  new CALC.Color(0x66, 0x66, 0xff),
-                    },
-                    colorGradientParameter: 'r'
+                colorGradientParameter: 'd',
+                colorGradient: {
+                    '-1': new CALC.Color(0xbb, 0x00, 0x00),
+                    '1': new CALC.Color(0x00, 0x99, 0x00)
                 }
-            });
-
-            fnSurfMaterial = object1.material;
-
-
-//            fnSurfMaterial.setZInterval([object.getBoundingBox().min.z, object.getBoundingBox().max.z]);
-            object1.position.set( 0, 0, 0 );
-            //object2.position.set( 0, 0, 0 );
-
-            if (this.fnSurfObject) {
-                objectBranch.remove(this.fnSurfObject);
             }
-            objectBranch.add(object1);
-            objectBranch.add(object2);
+        });
+        
+        objectBranch.add(surface);
 
-            this.fnSurfObject = object1;
-
-            geometry = new CALC.ParametricCurveGeometry(this.parameterExpr, this.constantExpr, this.fnXCurveExpr, {s: [scope.boundingBox[0], scope.boundingBox[2]]}, null, scope.resolution);
-
-            object = new THREE.Line(geometry, fnXCurveMaterial);
-            object.position.set( 0, Math.PI/2, 0 );
-
-            if (this.xCurveObject) {
-                objectBranch.remove(this.xCurveObject);
+        var surface2 = new CALC.FunctionSurface({
+            z: CALC.parse('sin(x)*cos(y) + y/3'),
+            domain: {
+                x: [-10, 10],
+                y: [-10, 10]
+            },
+            attributes: {
+                r: CALC.parse('((x-3)^2 + y^2)^(1/2)'),
+                d: expr.differentiate(),
+            },
+            constraints: {
+                r: {
+                    lower: 6,
+                    upper: 7,
+                    upperFeather: 0.2
+                }
+            },
+            resolution: resolution,
+            appearance: {
+                checkerPattern: {
+                    opacity: 0.3,
+                    color: new CALC.Color(255, 255, 255),
+                    x: {
+                        distance: 0.4,
+                        offset: 2
+                    },
+                    y: {
+                        distance: 0.4,
+                        offset: 1
+                    }
+                    
+                },
+                colorGradientParameter: 'r',
+                colorGradient: {
+                    '3': new CALC.Color(0xbb, 0x00, 0x00),
+                    '5': new CALC.Color(0x00, 0xbb, 0x00),
+                    '7': new CALC.Color(0x00, 0x80, 0xbb)
+                }
             }
+        });
+        
+        objectBranch.add(surface2);
 
-            objectBranch.add(object);
-            this.xCurveObject = object;
+        this.renderers["std"].mouseStrategy = new CALC.NavigationStrategy(this.renderers["std"], objectBranch);
 
-            geometry = new CALC.ParametricCurveGeometry(this.constantExpr, this.parameterExpr, this.fnYCurveExpr, {s: [scope.boundingBox[1], scope.boundingBox[3]]}, null, scope.resolution);
-            object = new THREE.Line(geometry, fnYCurveMaterial);
-            object.position.set( 0, 0, 0 );
-
-            if (this.yCurveObject) {
-                objectBranch.remove(this.yCurveObject);
-            }
-
-            objectBranch.add(object);
-            this.yCurveObject = object;
-
-        } else {
-            console.log("Expression is undefined");
-        }
     }
+    
 
-    scene.add(objectBranch);
-    this.renderers["std"].mouseStrategy = new CALC.NavigationStrategy(this.renderers["std"], objectBranch);
-
-    /*
-
-      var $fnInputDiv = $('<div class="text-box"></div>');
-
-      var $fnInputParagraph = $('<p>Mata in en funktion av 2 variabler</p>');
-      $fnInputDiv.append($fnInputParagraph);
-      var $form = $('<form action="#"></form>');
-
-
-      var $fnInput = $('<input type="text" value="cos(x)*cos(y)">');
-      var $xMinInput = $('<input type="text" value="-10">');
-      var $xMaxInput = $('<input type="text" value="10">');
-
-      var $yMinInput = $('<input type="text" value="-10">');
-      var $yMaxInput = $('<input type="text" value="10">');
-
-
-
-      $form.submit(function() {
-
-      scope.boundingBox = [parseFloat($xMinInput.val()), parseFloat($yMinInput.val()), parseFloat($xMaxInput.val()), parseFloat($yMaxInput.val())];
-      scope.generateSurface($fnInput.val());
-      });
-
-      $form.append($fnInput);
-      $form.append($xMinInput);
-      $form.append($xMaxInput);
-      $form.append($yMinInput);
-      $form.append($yMaxInput);
-
-      $("input", $form).change(function() {
-      $form.submit();
-      });
-
-
-
-      $fnInputParagraph.append($form);
-
-      var $fnRotate = $('<a class="action-button" href="#">Rotera 90 grader</a>');
-      var $next = $('<a href="#" class="next-button">Gå vidare</a>');
-
-      $fnRotate.click(function() {
-      n++;
-      CALC.rotate(objectBranch, {z: Math.PI/2*n}, {duration: 100, interpolation: CALC.interpolations.quintic});
-
-      });
-
-      $fnInputDiv.append($fnRotate);
-      $fnInputDiv.append($next);
-
-      $next.click(function() {
-      scope.visitStep(1);
-      });
-
-    */
-
-    var $box0 = $('<div class="text-box"></div>'),
-    $desc0 = $('<p>Betrakta funktionsytan <math><mi>z</mi><mo>(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo>)</mo> <mo>=</mo> <mi>cos</mi><mo>(</mo><mi>x</mi><mo>)</mo><mi>sin</mi><mo>(</mo><mi>y</mi><mo>)</mo></math>.</p><p>Vi vill hitta ett tangentplan till <math><mi>z</mi></math> i punkten <math><mo>(</mo><mn>0</mn><mo>,</mo><mfrac><mrow><mi>&#x03C0;<!-- π --></mi></mrow><mrow><mn>2</mn></mrow></mfrac><mo>)</mo></math></p>'),
-    $next0 = $('<a href="#" class="next-button">Gå vidare</a>');
-
-    $next0.click(function() {
-        scope.visitStep(1);
-    });
-
-    $box0.append($desc0);
-    $box0.append($next0);
-
-    var $box1 = $('<div class="text-box"></div>'),
-    $desc1 = $("<p>Betrakta nu kurvan i planet <math><mi>x</mi> <mo>=</mo> <mn>0</mn><mo>,</mo> <mi>z</mi><mo>(</mo><mn>0</mn><mo>,</mo><mi>y</mi><mo>)</mo> <mo>=</mo> <mi>cos</mi><mo>(</mo><mn>0</mn><mo>)</mo><mi>sin</mi><mo>(</mo><mi>y</mi><mo>)</mo> <mo>=</mo> <mi>sin</mi><mo>(</mo><mi>y</mi><mo>)</mo></math></p>");
-
-    $box1.append($desc1);
-
-    var step0 = new CALC.VisualizationStep("Funktionsytan", [
-        new CALC.TextPanelAction({
-            panel:              this.panels.text,
-            elem:               $box0
-        }),
-        new CALC.AbsoluteRotationAction({
-            object:     objectBranch,
-            x:                  0.4,
-            z:                  0,
-            duration:   100,
-            interpolation: CALC.interpolations.quintic
-        }),
-    /*    new CALC.MaterialUniformAction({
-            material:   fnSurfMaterial,
-            opacity:    1.0,
-            duration:   100,
-            interpolation: CALC.interpolations.quintic
-        }),
-        new CALC.FadeAction({
-            material:   fnXCurveMaterial,
-            opacity:    0.0,
-            duration:   100,
-            interpolation: CALC.interpolations.quintic
-        }),
-        new CALC.FadeAction({
-            material:   fnYCurveMaterial,
-            opacity:    0.0,
-            duration:   100,
-            interpolation: CALC.interpolations.quintic
-        }), */
-        new CALC.CameraAction({
-            cameraBranch: scope.cameraBranches.std,
-            zoom: 1.2,
-            perspective: 1,
-            duration:   100,
-            interpolation: CALC.interpolations.quintic
-        })
-
-    ]);
-
-    var step1 = new CALC.VisualizationStep("Tangenter", [
-        new CALC.TextPanelAction({
-            panel:      this.panels.text,
-            elem:       $box1
-        }),
-        new CALC.AbsoluteRotationAction({
-            object:     objectBranch,
-            x:          0,
-            z:          -Math.PI/2,
-            duration:   100,
-            interpolation: CALC.interpolations.quintic
-        }),
-     /*   new CALC.MaterialUniformAction({
-            material:   fnSurfMaterial,
-            opacity:    0,
-            duration:   100,
-            interpolation: CALC.interpolations.quintic
-        }),
-        new CALC.FadeAction({
-            material:   fnXCurveMaterial,
-            opacity:    1.0,
-            duration:   100,
-            interpolation: CALC.interpolations.quintic
-        }),
-        new CALC.FadeAction({
-            material:   fnYCurveMaterial,
-            opacity:    1.0,
-            duration:   100,
-            interpolation: CALC.interpolations.quintic
-        }),*/
-        new CALC.CameraAction({
-            cameraBranch: scope.cameraBranches.std,
-            zoom: 1,
-            perspective: 0,
-            duration:   100,
-            interpolation: CALC.interpolations.quintic
-        })
-    ]);
-
-
-    this.setSteps([step0, step1]);
-    this.visitStep(0);
-    //$form.submit();
-    scope.boundingBox = [-10.0, -10.0, 10.0, 10.0];
-    scope.generateSurface('cos(x)*sin(y)');
-};
-
+});

@@ -19,12 +19,6 @@
         color = spec.color,
         opacity = spec.opacity;
     
-    if (!(color instanceof CALC.Color)) {
-        console.log('ASCHTUUNG');
-    }
-    
-    console.log(opacity);
-
     delete spec.color;
     delete spec.opacity;
 
@@ -33,10 +27,14 @@
         v = spec[k];
         
         if (v !== "color") { 
- 
-            distance = v.distance || 1.0;
-            offset = v.offset || 0.0;
-            
+            if (typeof v === 'number') {
+                distance = v;
+                offset = 0;
+            } else {
+                distance = v.distance || 1.0;
+                offset = v.offset || 0.0;
+            }
+
             params.push({
                 parameter: k,
                 distance: distance,

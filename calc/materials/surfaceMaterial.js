@@ -47,19 +47,16 @@
 
 (CALC.SurfaceMaterial = function (spec) {
 
-    var uniforms = [],
-    scope = this;
+    var scope = this;
 
     this.appearance = spec.appearance;
 
-    console.log(spec);
     this.parameters = Object.keys(spec.attributes);
     this.constraints = spec.constraints;
     this.extremes = spec.extremes;
     this.attributes = [];
-    console.log(spec.extremes);
-    console.log(spec.constraints);
-
+    this.uniforms = [];
+    console.log(scope);        
 
     /* 
      *  Generate uniforms based on constraints
@@ -69,34 +66,25 @@
         var c = scope.constraints[p];
         var e = scope.extremes[p];
         
-        if (!c) { c = {} };
-//        console.log(p);
-//        console.log(c);
+        if (!c) {
+            c = {};
+        };
         
         var lc = c['lower'] !== undefined ? c['lower'] : (e[0] - 1);
         var uc = c['upper'] !== undefined ? c['upper'] : (e[1] + 1);
         var lf = c['lowerFeather'] !== undefined ? c['lowerFeather'] : 0;
         var uf = c['upperFeather'] !== undefined ? c['upperFeather'] : 0;
 
-//        console.log(lx
-        
         scope.uniforms[scope.lowerConstraint(p)] = {type: 'f', value: lc};
-        console.log(scope.uniforms);
         scope.uniforms[scope.upperConstraint(p)] = {type: 'f', value: uc};
 
         scope.uniforms[scope.lowerFeather(p)] = {type: 'f', value: lf};
         scope.uniforms[scope.upperFeather(p)] = {type: 'f', value: uf};
     });
 
-
-    console.log(scope.uniforms);
-
     Object.keys(spec.attributes).forEach(function (k) { 
         scope.attributes[scope.attributeParameter(k)] = {type: 'f', value: spec.attributes[k]};
     });
-
-    console.log(this.attributes);
-
 
     var colorGradient = this.appearance.colorGradient;
     var colorGradientParameter = this.appearance.colorGradientParameter;
@@ -109,8 +97,6 @@
     var fs = this.generateFragmentShader(),
         vs = this.generateVertexShader();
 
-    console.log(this.attributes);
-
     THREE.ShaderMaterial.call(this, {
         fragmentShader: fs, //THREE.ShaderLib.basic.fragmentShader, //fragmentShader,
         vertexShader: vs,// //vertexShader,
@@ -119,11 +105,6 @@
         alphaTest: 1.0,
         depthTest: true
     });
-
-    console.log(spec.attributes);
-    
-    console.log(vs);
-    console.log(fs);
 
 }).extends(THREE.ShaderMaterial, {
 
@@ -252,9 +233,7 @@
             glsl += scope.varyingParameter(v) + " = " + scope.attributeParameter(v) + ";\n";
            // glsl += scope.varyingParameter(v) + " = 1.0;\n";
         });
-        
-        console.log(glsl);
-        
+                
         return glsl;
     },
 
@@ -280,7 +259,6 @@
 
         });
         glsl += "gl_FragColor.a *= constraintsOpacity;\n";
-        console.log(glsl);
         return glsl;
     },
 
@@ -304,13 +282,15 @@
 
             if (glsl) {
                 glsl += "gl_FragColor = mix(gl_FragColor, " + color.glslLiteral() + "," +
-                    "smoothstep(float(" + positionA + "), float(" + positionB + "), " + param + "));\n";
+                    "smoothstep(float(" + positionB + "), float(" + positionA + "), " + param + "));\n";
             } else {
                 // if this is the first iteration
                 glsl = "gl_FragColor = " + color.glslLiteral() + ";\n";
             }
         });
 
+        console.log(glsl);
+        
         return glsl;
     },
 
@@ -323,8 +303,6 @@
         var pattern = this.checkerPattern;
         var scope = this;
 
-        console.log(pattern.opacity());
-        console.log(pattern.color().glslLiteral());
         var glsl = "gl_FragColor.rgb = mix(gl_FragColor.rgb, " + pattern.color().glslLiteral() + ".rgb, float(" + pattern.opacity() + ")*floor(mod(0.0";
         pattern.forEachParameter(function(parameter, distance, offset) {
             glsl += " + floor((float(" + scope.varyingParameter(parameter) + ") - float(" + offset + ")) / float(" + distance + "))"; 
@@ -332,8 +310,6 @@
         glsl += ", 2.0)));"
         
 //        glsl = "gl_FragColor.rgb = mix(gl_FragColor.rgb, vec3(0.0, 0.0, 0.0), float(" + pattern.opacity() + "));";
-        console.log(glsl);
-        
         return glsl;
     },
 
@@ -359,6 +335,10 @@
         return glsl;
     },
 
+    glslDiscard: function() {
+        return "if (gl_FragColor.a < 0.0001) { discard; }\n";
+    },
+
 
     /**
      * Generate fragment shader code
@@ -375,6 +355,8 @@
         glsl += this.glslApplyColorGradient();
         glsl += this.glslApplyCheckerPattern();
         glsl += this.glslApplyConstraints();
+
+        glsl += this.glslDiscard();
 
         
         glsl += "}";

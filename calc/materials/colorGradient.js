@@ -16,15 +16,12 @@
     delete spec.mode;
 
     Object.keys(spec).forEach(function (k) {
-        console.log(spec[k]);
         var v = spec[k],
-
-            color = v instanceof CALC.Color ? v : new CALC.Color(v);
-
+        color = v instanceof CALC.Color ? v : new CALC.Color(v);
         colors.push([k, color]);
         length ++;
     });
-    
+
     colors.sort(function (a, b) {
         return a[0] - b[0];
     });

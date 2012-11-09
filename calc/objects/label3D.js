@@ -12,24 +12,30 @@
 
     $(renderer.domElement).parent().append(this.domElement);
 
+//    console.log(this.domElement);
+    
+
     this.domElement.css({opacity: 0.6});
     this.projector = new THREE.Projector();
     // add dom element
 }).extends(THREE.Object3D, {
     prepareFrame: function (renderer, force) {
-        var camera = renderer.cameraBranch.camera, vect, $renderer, h, w, left, top;
-
-        this.updateMatrix();
-        this.updateMatrixWorld();
+        var camera = renderer.camera, vect, $renderer, h, w, left, top;
 
         camera.updateMatrix();
         camera.updateMatrixWorld();
+        
+        this.updateMatrix();
+        this.updateMatrixWorld();
 
 
-        //console.log(this.matrixWorld.getPosition());
+
+
         vect = this.projector.projectVector(this.matrixWorld.getPosition(), camera);
-
-
+//        console.log(camera.rotation);
+        
+        
+        
         if (force || vect.x !== this.domX || vect.y !== this.domY) {
             $renderer = $(renderer.domElement);
             h = $renderer.innerHeight();
@@ -41,9 +47,11 @@
             //console.log(vect);
             if (this.domX > 0.5 || this.domX < -0.5 || this.domY > 0.5 || this.domY < -0.5) {
                 this.domElement.css({visibility: 'hidden'});
+//                console.log("hidden");
                 //console.log(this.domX + " " + this.domY);
             } else {
                 this.domElement.css({visibility: 'visible'});
+//                console.log("hidden");
             }
 
             left = w*vect.x + w/2;
