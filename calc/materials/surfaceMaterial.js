@@ -82,6 +82,8 @@
         scope.uniforms[scope.upperFeather(p)] = {type: 'f', value: uf};
     });
 
+
+
     Object.keys(spec.attributes).forEach(function (k) { 
         scope.attributes[scope.attributeParameter(k)] = {type: 'f', value: spec.attributes[k]};
     });
@@ -93,6 +95,8 @@
     this.colorGradient = colorGradient instanceof CALC.ColorGradient ? colorGradient : new CALC.ColorGradient(colorGradient);
     this.colorGradientParameter = colorGradientParameter;
     this.checkerPattern = checkerPattern instanceof CALC.CheckerPattern ? checkerPattern : new CALC.CheckerPattern(checkerPattern);
+
+    scope.uniforms[scope.checkerOpacity()] = {type: 'f', value: this.checkerPattern.opacity()};
 
     var fs = this.generateFragmentShader(),
         vs = this.generateVertexShader();
@@ -141,8 +145,8 @@
         return "uCheckerColor";
     },
 
-    checkerAlpha: function () {
-        return "uCheckerAlpha";
+    checkerOpacity: function () {
+        return "uCheckerOpacity";
     },
 
     /**
@@ -171,7 +175,7 @@
         var scope = this, glsl = "";
 
         glsl += "uniform float " + this.checkerColor() + ";\n";
-        glsl += "uniform float " + this.checkerAlpha() + ";\n";
+        glsl += "uniform float " + this.checkerOpacity() + ";\n";
 
         Object.keys(this.parameters).forEach(function (k) {
             var v = scope.parameters[k];
@@ -303,7 +307,7 @@
         var pattern = this.checkerPattern;
         var scope = this;
 
-        var glsl = "gl_FragColor.rgb = mix(gl_FragColor.rgb, " + pattern.color().glslLiteral() + ".rgb, float(" + pattern.opacity() + ")*floor(mod(0.0";
+        var glsl = "gl_FragColor.rgb = mix(gl_FragColor.rgb, " + pattern.color().glslLiteral() + ".rgb, " + scope.checkerOpacity() + "*floor(mod(0.0";
         pattern.forEachParameter(function(parameter, distance, offset) {
             glsl += " + floor((float(" + scope.varyingParameter(parameter) + ") - float(" + offset + ")) / float(" + distance + "))"; 
         });

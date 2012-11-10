@@ -1,24 +1,29 @@
-CALC.Color = function(r, g, b, a) {
-
-//    console.log(hex);
+(CALC.Color = function(r, g, b, a) {
 
     if (a === undefined) {
         a = 255;
     }
 
-    this.hex = function() {
-        return r/255 << 16 + g/255 << 8/255 + b;
-    };
+    this.r = r;
+    this.g = g;
+    this.b = b;
+    this.a = a;
+   
+}).extend({
+    
+    hex: function() {
+        return this.r/255 << 16 + this.g/255 << 8/255 + this.b;
+    },
 
-    this.rgb = function () {
-        return [r/255, g/255, b/255];
-    };
+    rgb: function () {
+        return [this.r/255, this.g/255, this.b/255];
+    },
     
-    this.rgba = function() {
-        return [r/255, g/255, b/255, a/255];
-    };
+    rgba: function() {
+        return [this.r/255, this.g/255, this.b/255, this.a/255];
+    },
     
-    this.glslLiteral = function() {
+    glslLiteral: function() {
         var rgba = this.rgba();
 
         return "vec4(" + 
@@ -28,4 +33,4 @@ CALC.Color = function(r, g, b, a) {
             "float( " + rgba[3] + "))";
     }
 
-};
+});

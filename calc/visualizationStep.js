@@ -103,7 +103,7 @@
     this.interpolation = spec.interpolation;
 }).extends(CALC.VisualizationAction, {
     perform: function () {
-        CALC.animateCamera(this.cameraBranch, {perspective: this.perspective, zoom: this.zoom }, {duration: this.duration, interpolation: this.interpolation});
+        CALC.animateCamera(this.camera, {perspective: this.perspective, zoom: this.zoom }, {duration: this.duration, interpolation: this.interpolation});
     },
 
     unperform: function () {

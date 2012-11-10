@@ -32,7 +32,9 @@
     <script src="calc/expressions/parser.js"></script>
     <script src="calc/expressions/tangent.js"></script>
 
-    <script src="calc/scheduler.js"></script>
+    <script src="calc/time/scheduler.js"></script>
+    <script src="calc/time/animator.js"></script>
+    <script src="calc/time/interpolations.js"></script>
     <script src="calc/mouseHandler.js"></script>
 
     <script src="calc/mouseStrategies/mouseStrategy.js"></script>
@@ -77,7 +79,7 @@
 
 
       
-      var tangentialPlane = new CALC.visualizations.TangentialPlane("Tangentplan (passiv)");
+      var tangentialPlane = new CALC.visualizations.TangentialPlane("String Theory");
       app.addVisualization(tangentialPlane);
       
       var tangentialPlaneInteractive = new CALC.visualizations.TangentialPlaneInteractive("Tangentplan (interaktiv)");
