@@ -106,6 +106,86 @@
         });
         
         objectBranch.add(surface2);
+        
+        
+        this.animate1 = function() {
+            CALC.animator.animateObjectParameters({
+                object: surface2.rotation,
+                frames: 100,
+                parameters: {
+                    x: 1,
+                    y: 1
+                },          
+                callback: scope.animate2,
+                interpolation: CALC.interpolations.sinusodial
+            });
+
+            surface2.animate({
+                frames: 100,
+                interpolation: CALC.interpolations.sinusodial,
+                checkerOpacity: 0.3,
+                constraints: {
+                    r: {
+                        upper: 8,
+                        lower: 7
+                        
+                    }
+                }
+            });
+
+            surface.animate({
+                frames: 100,
+                interpolation: CALC.interpolations.sinusodial,
+                constraints: {
+                    r: {
+                        lower: 4,
+                        upper: 6
+                    }
+                }
+            });
+
+        };
+
+        
+        this.animate2 = function () {
+            CALC.animator.animateObjectParameters({
+                object: surface2.rotation,
+                frames: 100,
+                parameters: {
+                    x: 0,
+                    y: 0
+                },
+                interpolation: CALC.interpolations.sinusodial,
+                callback: scope.animate1
+            });   
+
+            surface2.animate({
+                frames: 100,
+                interpolation: CALC.interpolations.sinusodial,
+                checkerOpacity: 1,
+                constraints: {
+                    r: {
+                        lower: 6,
+                        upper: 7
+                    }
+                }
+            });
+
+            surface.animate({
+                frames: 100,
+                interpolation: CALC.interpolations.sinusodial,
+                constraints: {
+                    r: {
+                        lower: 6,
+                        upper: 8
+                    }
+                }
+            });
+
+
+        };
+            
+        this.animate1();
 
         this.renderers["std"].mouseStrategy = new CALC.NavigationStrategy(this.renderers["std"], objectBranch);
 

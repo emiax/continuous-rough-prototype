@@ -303,6 +303,82 @@
         this.material.uniforms[k].value = v;
     },
 
+    /* spec:
+       frames,
+       milliseconds,
+       interpolation,
+       callback,
+       checkerColor = number, checkerOpacity = number,
+       constraints = (exammple) {
+          r {
+             lower: 0.3
+             upperFeather: 0.3
+          }
+       }
+     */
+    animate: function (spec) {
+        var material = this.material, uniforms = material.uniforms, animationSpec = {}, step, parameters = [], oldParameters = {}, newParameters = {}, checkerOpacityName;
+        if (spec.constraints) {
+            Object.keys(spec.constraints).forEach(function(k) {
+                var constraintSpec = spec.constraints[k];
+                Object.keys(constraintSpec).forEach(function(p) {
+                    var v = constraintSpec[p];
+                    console.log(p);
+                    var uniformName;
+                    if (p === 'lower') {
+                        uniformName = material.lowerConstraint(k);
+                    } else if (p === 'upper') {
+                        uniformName = material.upperConstraint(k);
+                    } else if (p === 'lowerFeather') {
+                        uniformName = material.lowerFeather(k);
+                    } else if (p === 'upperFeather') {
+                        uniformName = material.upperFeather(k);
+                    }
+                    console.log(uniformName);
+
+                    parameters.push(uniformName);
+                    newParameters[uniformName] = v;
+                    oldParameters[uniformName] = uniforms[uniformName].value;
+                });
+                
+            });
+        }
+        
+
+        // TODO: interpolation between colors will need exension of the scheduler
+        //if (spec.checkerColor !== undefined) {
+        //     = spec.checkerColor;
+       // }
+        
+        if (spec.checkerOpacity !== undefined) {
+            checkerOpacityName = material.checkerOpacity();
+            console.log(uniforms);
+            console.log(checkerOpacityName);
+            parameters.push(checkerOpacityName);
+            oldParameters[checkerOpacityName] = uniforms[checkerOpacityName].value;
+            newParameters[checkerOpacityName] = spec.checkerOpacity;
+        }
+
+        step = function(x) {
+            return function () {
+                parameters.forEach(function (p) {
+                    var a = oldParameters[p];
+                    var b = newParameters[p];
+                    uniforms[p].value = a + (b - a)*x;
+                });
+            };
+        };
+
+        CALC.animator.animate({
+            frames: spec.frames,
+            milliseconds: spec.milliseconds,
+            interpolation: spec.interpolation,
+            callback: spec.callback,
+            step: step
+        });
+        
+    },
+    
 
     setUniforms: function (spec) {
         Object.keys(spec).forEach(function (k) {
