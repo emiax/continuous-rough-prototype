@@ -1,109 +1,104 @@
-CALC.animate = function (object, args, duration, interpolate, delay, callback, evtHandle) {
-    var a, t = 0, source;
+'use strict'
+/*global CALC */
 
-    for (a in args) {
-        if (args[a] === undefined) {
-            delete args[a];
-        }
+(CALC.Animation = function (spec) {
+    var scope = this,
+        scheduler = CALC.scheduler;
+    
+    if (spec.milliseconds !== undefined) {
+        this.duration = spec.milliseconds;
+        this.unit = "milliseconds";
+        this.endTime = this.startTime = 0;
+    } else {
+        this.duration = spec.frames || 60;
+        this.unit = "frames";
+        this.startTime = this.endTime = 0;
     }
 
-    callback = callback || function () {};
-    interpolate = interpolate || CALC.interpolations.linear;
-    delay = delay || 0;
+    this.interpolation = spec.interpolation || CALC.interpolations.linear;
 
-    function step() {
-        var a, interpolation, dest;
-        t += 1/duration;
-        interpolation = interpolate(t);
-        for (a in args) {
-            if (args.hasOwnProperty(a)) {
-                dest = args[a];
-                object[a] = source[a] + interpolation*(dest - source[a]);
-            }
+    /* functions to perform in the beginning, during every step and in the end of the animation */
+    this.begin = spec.begin;
+    this.step = spec.step;
+    this.end = spec.end || function() {};
+
+    this.active = false;
+
+}).extend({
+    
+    proceed: function() {
+        var t,
+            scope = this,
+            scheduler = CALC.scheduler;
+
+        if (!this.active) {
+            return;
         }
-        if (t < 1) {
-            CALC.scheduler.attach(step, 0, evtHandle);
+
+        if (scope.unit === "milliseconds") {
+            t = (scheduler.millisecond() - this.startTime)/(this.endTime - this.startTime);
         } else {
-            CALC.scheduler.attach(callback, 0, evtHandle);
+            t = (scheduler.frame() - this.startTime)/(this.endTime - this.startTime);
         }
+        
+        this.makeFrame(t);
+
+        if (t < 1) {
+            scheduler.attach(function() {
+                scope.proceed();
+            }, 0);
+        } else {
+            this.active = false;
+            this.end();
+        }
+    },
+    
+    makeFrame: function (t) {
+        var x;
+
+        if (t > 1) t = 1;
+        if (t < 0) t = 0;
+
+        x = this.interpolation(t);
+        
+        this.step(x);
+    },
+
+    start: function() {
+        var scope = this, 
+            scheduler = CALC.scheduler;
+
+        this.active = true;
+        
+        if (this.unit === 'milliseconds') {
+            this.startTime = scheduler.millisecond();
+        } else {
+            this.startTime = scheduler.frame();
+        }
+
+        this.endTime = this.startTime + this.duration;
+        
+        this.begin();
+        scheduler.attach(function() {
+            scope.proceed();
+        }, 0);
+    },
+
+
+    abort: function() {
+        this.active = false;
+    },
+
+
+    skip: function(skipEnd) {
+        this.makeFrame(1);
+        this.abort();
+    },
+
+    revert: function() {
+        this.makeFrame(0);
+        this.abort();
     }
 
-    function start() {
-        var a;
-        source = {};
 
-        for (a in args) {
-            if (args.hasOwnProperty(a)) {
-                source[a] = object[a];
-            }
-        }
-        step();
-    }
-
-    return CALC.scheduler.attach(start, delay, evtHandle);
-};
-
-
-
-
-CALC.rotate = function (object, args, timing, callback, evtHandle) {
-    var i, n, k, axes = ['x', 'y', 'z'];
-    timing = timing || {};
-
-    for (i = 0, n = axes.length; i < n; i++) {
-        k = axes[i];
-
-        if (args[k] !== undefined) {
-            object.rotation[k] %= 2*Math.PI;
-            if (object.rotation[k] < 0) {
-                object.rotation[k] += 2*Math.PI;
-            }
-
-            args[k] %= 2*Math.PI;
-            if (args[k] < 0) {
-                args[k] += 2*Math.PI;
-            }
-
-            if (object.rotation[k] - args[k] > Math.PI) {
-                object.rotation[k] -= 2*Math.PI;
-            } else if (args[k] - object.rotation[k] > Math.PI) {
-                object.rotation[k] += 2*Math.PI;
-            }
-        }
-    }
-
-    return CALC.animate(object.rotation, {
-        x: args.x,
-        y: args.y,
-        z: args.z
-    }, timing.duration, timing.interpolation, timing.delay, callback, evtHandle);
-};
-
-CALC.translate = function (object, args, timing, callback, evtHandle) {
-    timing = timing || {};
-    return CALC.animate(object.position, {
-        x: args.x,
-        y: args.y,
-        z: args.z
-    }, timing.duration, timing.interpolation, timing.delay, callback, evtHandle);
-};
-
-CALC.fade = function (material, args, timing, callback, evtHandle) {
-    timing = timing || {};
-    return CALC.animate(material, {
-        opacity: args.opacity
-    }, timing.duration, timing.interpolation, timing.delay, callback, evtHandle);
-};
-
-/*
-  object.rotate({
-  x: Math.PI/2,
-  y: Math.PI
-  }, {
-  duration: 120,
-  interpolation: CALC.interpolations.quintic,
-  delay: 120
-  });
-*/
-
-
+});

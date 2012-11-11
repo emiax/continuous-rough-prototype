@@ -17,7 +17,6 @@
     },
     scroll: function (event, delta) {
         //console.log("zoom with " + delta);
-        console.log(this.contextbranch);
         this.renderer.camera.fov -= delta * 5;
         //this.context.camera.fov = this.context.camera.fov > 70 ? 70 : (this.context.camera.fov < 5 ? 5 : this.context.camera.fov);
 

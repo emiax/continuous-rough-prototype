@@ -14,54 +14,8 @@ CALC.animator = (function () {
      * }
      */
     that.animate = function (spec) {
-        var animation = {},
-            fn,
-            startFrame = scheduler.frame(),
-            startMillisecond = scheduler.millisecond(),
-            endFrame,
-            endMillisecond,
-            interpolation,
-            callback,
-            step;
-        
-
-
-        if (spec.frames !== undefined) {
-            endFrame = startFrame + spec.frames;
-        } else if (spec.milliseconds !== undefined) {
-            endMillisecond = startMillisecond + spec.milliseconds;
-        } else { 
-            endMillisecond = startMillisecond + 1000; 
-        }
-        
-        interpolation = spec.interpolation || CALC.interpolations.linear;
-        callback = spec.callback || function() {};
-        step = spec.step;
-
-
-        function f() {
-            var t, x;
-            
-            if (endFrame !== undefined) {
-                t = (scheduler.frame() - startFrame)/(endFrame - startFrame);
-            } else {
-                t = (scheduler.millisecond() - startMillisecond)/(endMillisecond - startMillisecond);
-            }
-            
-            if (t > 1) t = 1;
-            if (t < 0) t = 0;
-
-            x = interpolation(t);
-            step(x);
-
-            if (t < 1) {
-                scheduler.attach(f, 0);
-            } else {
-                callback();
-            }
-        };
-        
-        scheduler.attach(f, 0);
+        var animation = new CALC.Animation(spec);
+        animation.start();
         return animation;
     },
 
@@ -72,26 +26,31 @@ CALC.animator = (function () {
            parameters = Object.keys(spec.parameters),
            oldParameters = {},
            newParameters = spec.parameters,
+           begin,
            step;
 
-        parameters.forEach(function(p) {
-            oldParameters[p] = obj[p];
-        });
-
+        begin = function() {
+            parameters.forEach(function(p) {
+                oldParameters[p] = obj[p];
+            });
+        };
+        
         step = function(x) {
             parameters.forEach(function(p) {
                 var a = oldParameters[p];
                 var b = newParameters[p];
                 obj[p] = a + (b - a)*x;
             });
+            
         }
 
         var animationSpec = {
             frames: spec.frames,
             milliseconds: spec.milliseconds,
             interpolation: spec.interpolation,
-            callback: spec.callback,
-            step: step
+            begin: begin,
+            step: step,
+            end: spec.end
         }
 
         return that.animate(animationSpec);

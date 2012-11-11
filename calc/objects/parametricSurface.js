@@ -307,7 +307,7 @@
        frames,
        milliseconds,
        interpolation,
-       callback,
+       end, (callback)
        checkerColor = number, checkerOpacity = number,
        constraints = (exammple) {
           r {
@@ -317,13 +317,21 @@
        }
      */
     animate: function (spec) {
-        var material = this.material, uniforms = material.uniforms, animationSpec = {}, step, parameters = [], oldParameters = {}, newParameters = {}, checkerOpacityName;
+        var material = this.material,
+        uniforms = material.uniforms,
+        animationSpec = {},
+        begin,
+        step,
+        parameters = [],
+        oldParameters = {},
+        newParameters = {},
+        checkerOpacityName = this.material.checkerOpacity();
+
         if (spec.constraints) {
             Object.keys(spec.constraints).forEach(function(k) {
                 var constraintSpec = spec.constraints[k];
                 Object.keys(constraintSpec).forEach(function(p) {
                     var v = constraintSpec[p];
-                    console.log(p);
                     var uniformName;
                     if (p === 'lower') {
                         uniformName = material.lowerConstraint(k);
@@ -334,45 +342,49 @@
                     } else if (p === 'upperFeather') {
                         uniformName = material.upperFeather(k);
                     }
-                    console.log(uniformName);
-
                     parameters.push(uniformName);
                     newParameters[uniformName] = v;
-                    oldParameters[uniformName] = uniforms[uniformName].value;
                 });
-                
             });
         }
         
-
         // TODO: interpolation between colors will need exension of the scheduler
         //if (spec.checkerColor !== undefined) {
         //     = spec.checkerColor;
        // }
-        
+
         if (spec.checkerOpacity !== undefined) {
-            checkerOpacityName = material.checkerOpacity();
-            console.log(uniforms);
-            console.log(checkerOpacityName);
-            parameters.push(checkerOpacityName);
-            oldParameters[checkerOpacityName] = uniforms[checkerOpacityName].value;
             newParameters[checkerOpacityName] = spec.checkerOpacity;
+            parameters.push(checkerOpacityName);
+        }
+        
+        begin = function() {
+            parameters.forEach(function (uniformName) {
+                oldParameters[uniformName] = uniforms[uniformName].value;
+            });
+            
+            if (spec.checkerOpacity !== undefined) {
+                oldParameters[checkerOpacityName] = uniforms[checkerOpacityName].value;
+            }
         }
 
         step = function(x) {
             parameters.forEach(function (p) {
                 var a = oldParameters[p];
                 var b = newParameters[p];
+                if (b === undefined) console.log(p);
                 uniforms[p].value = a + (b - a)*x;
+
             });
         };
 
-        CALC.animator.animate({
+        return CALC.animator.animate({
             frames: spec.frames,
             milliseconds: spec.milliseconds,
             interpolation: spec.interpolation,
-            callback: spec.callback,
-            step: step
+            begin: begin,
+            step: step,
+            end: spec.end
         });
         
     },
