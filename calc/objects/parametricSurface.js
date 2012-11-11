@@ -360,13 +360,11 @@
         }
 
         step = function(x) {
-            return function () {
-                parameters.forEach(function (p) {
-                    var a = oldParameters[p];
-                    var b = newParameters[p];
-                    uniforms[p].value = a + (b - a)*x;
-                });
-            };
+            parameters.forEach(function (p) {
+                var a = oldParameters[p];
+                var b = newParameters[p];
+                uniforms[p].value = a + (b - a)*x;
+            });
         };
 
         CALC.animator.animate({

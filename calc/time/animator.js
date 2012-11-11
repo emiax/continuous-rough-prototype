@@ -52,8 +52,7 @@ CALC.animator = (function () {
             if (t < 0) t = 0;
 
             x = interpolation(t);
-            
-            (step(x))();
+            step(x);
 
             if (t < 1) {
                 scheduler.attach(f, 0);
@@ -80,13 +79,11 @@ CALC.animator = (function () {
         });
 
         step = function(x) {
-            return function() {
-                parameters.forEach(function(p) {
-                    var a = oldParameters[p];
-                    var b = newParameters[p];
-                    obj[p] = a + (b - a)*x;
-                });
-            };
+            parameters.forEach(function(p) {
+                var a = oldParameters[p];
+                var b = newParameters[p];
+                obj[p] = a + (b - a)*x;
+            });
         }
 
         var animationSpec = {
