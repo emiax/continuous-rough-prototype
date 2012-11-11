@@ -1,6 +1,11 @@
 'use strict';
 /*global CALC, $ */
 
+CALC.mathMLFormat = function (spec) {
+    var d = new CALC.MathMLFormatter(spec);
+    return d.format();
+};
+
 CALC.Node.extend({
     mathML: function (symbol) {
         return CALC.mathML({node: this});
@@ -17,11 +22,6 @@ CALC.Node.extend({
     this.node = spec.node || null;
 
 }).extends(CALC.NodeVisitor, {
-
-    mathML: function (spec) {
-        var d = new CALC.MathMLFormatter(spec);
-        return d.format();
-    },
 
     format: function () {
         return this.node.accept(this);
