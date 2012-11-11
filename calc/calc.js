@@ -20,8 +20,10 @@ Function.extend({
     extends: function (Parent, map) {
         this.prototype = new Parent();
         this.prototype.super = Parent.prototype;
-        this.extend(map);
-
+        if (map) {
+            this.extend(map);
+        }
+        
         return this;
     }
 });

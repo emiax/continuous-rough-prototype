@@ -116,7 +116,7 @@
                     x: 1,
                     y: 1
                 },          
-                callback: scope.animate2,
+                end: scope.animate2,
                 interpolation: CALC.interpolations.sinusodial
             });
 
@@ -156,7 +156,7 @@
                     y: 0
                 },
                 interpolation: CALC.interpolations.sinusodial,
-                callback: scope.animate1
+                end: scope.animate1
             });   
 
             surface2.animate({
@@ -181,12 +181,10 @@
                     }
                 }
             });
-
-
         };
             
         this.animate1();
-
+        
         this.renderers["std"].mouseStrategy = new CALC.NavigationStrategy(this.renderers["std"], objectBranch);
 
     }
