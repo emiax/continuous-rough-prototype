@@ -109,7 +109,7 @@
         
         
         this.animate1 = function() {
-            CALC.animator.animateObjectParameters({
+            CALC.animator.animateProperties({
                 object: surface2.rotation,
                 frames: 100,
                 parameters: {
@@ -124,13 +124,13 @@
                 frames: 100,
                 interpolation: CALC.interpolations.sinusodial,
                 checkerOpacity: 0.3,
-                constraints: {
+                /*constraints: {
                     r: {
                         upper: 8,
                         lower: 7
                         
                     }
-                }
+                }*/
             });
 
             surface.animate({
@@ -148,7 +148,7 @@
 
         
         this.animate2 = function () {
-            CALC.animator.animateObjectParameters({
+            CALC.animator.animateProperties({
                 object: surface2.rotation,
                 frames: 100,
                 parameters: {
@@ -163,12 +163,12 @@
                 frames: 100,
                 interpolation: CALC.interpolations.sinusodial,
                 checkerOpacity: 1,
-                constraints: {
+                /*constraints: {
                     r: {
                         lower: 6,
                         upper: 7
                     }
-                }
+                }*/
             });
 
             surface.animate({
