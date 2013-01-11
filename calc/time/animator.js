@@ -20,14 +20,16 @@ CALC.animator = (function () {
     },
 
     
-    that.animateObjectParameters = function (spec) {
+    that.animateProperties = function (spec) {
         
         var obj = spec.object,
            parameters = Object.keys(spec.parameters),
            oldParameters = {},
            newParameters = spec.parameters,
            begin,
-           step;
+           step,
+           beforeStep = spec.beforeStep || function () {},
+           afterStep = spec.afterStep || function () {};
 
         begin = function() {
             parameters.forEach(function(p) {
@@ -36,12 +38,13 @@ CALC.animator = (function () {
         };
         
         step = function(x) {
+            beforeStep();
             parameters.forEach(function(p) {
                 var a = oldParameters[p];
                 var b = newParameters[p];
                 obj[p] = a + (b - a)*x;
             });
-            
+            afterStep();
         }
 
         var animationSpec = {
@@ -59,5 +62,3 @@ CALC.animator = (function () {
     
     return that;
 }());
-
-
