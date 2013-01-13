@@ -88,14 +88,16 @@
     cylGeometry = new THREE.CylinderGeometry(1, 1, 1, 10, 1);
     coneGeometry = new THREE.CylinderGeometry(0, 1, 1, 10, 1);
 
+    console.log(cylGeometry);
+
     // place cylinder with its base in its origin
     for (v = 0, vl = cylGeometry.vertices.length; v < vl; v++) {
-        cylGeometry.vertices[v].position.y += 0.5;
+        cylGeometry.vertices[v].y += 0.5;
     }
 
     // place cone with its tip in its origin
     for (v = 0, vl = coneGeometry.vertices.length; v < vl; v++) {
-        coneGeometry.vertices[v].position.y -= 0.5;
+        coneGeometry.vertices[v].y -= 0.5;
     }
 
 

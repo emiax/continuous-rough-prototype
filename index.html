@@ -63,6 +63,18 @@
 
     <script src="calc/materials/surfaceMaterial.js"></script>
 
+    <script src="calc/function.js"></script>
+    <script src="calc/parametricObject.js"></script>
+    <script src="calc/surface.js"></script>
+    
+
+    <script src="calc/appearance/surfaceAppearance.js"></script>
+
+    <script src="calc/appearance/appearanceLayer.js"></script>
+    <script src="calc/appearance/gradientLayer.js"></script>
+    <script src="calc/appearance/checkerLayer.js"></script>
+    
+
 
     <script src="calc/application.js"></script>
     <script src="calc/visualizationStep.js"></script>
@@ -70,6 +82,7 @@
     <script src="calc/visualizations/tangentialPlane.js"></script>
     <script src="calc/visualizations/tangentialPlaneInteractive.js"></script>
     <script src="calc/visualizations/vectorTest.js"></script>
+    <script src="calc/visualizations/compositeSurface.js"></script>
 
 
 
@@ -78,17 +91,16 @@
       $(document).ready(function() {
       app = new CALC.Application($("#application"), /*developMode*/ true);
 
+      var compositeSurface = new CALC.visualizations.CompositeSurface("Depth-sorting");
+      app.addVisualization(compositeSurface);
 
-      
+
       var tangentialPlane = new CALC.visualizations.TangentialPlane("String Theory");
       app.addVisualization(tangentialPlane);
       
       var tangentialPlaneInteractive = new CALC.visualizations.TangentialPlaneInteractive("Tangentplan (interaktiv)");
       app.addVisualization(tangentialPlaneInteractive);
 
-
-      var vectorTest = new CALC.visualizations.VectorTest("Vektortest");
-      app.addVisualization(vectorTest);
       
 
 
