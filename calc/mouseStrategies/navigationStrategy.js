@@ -16,11 +16,14 @@
         }
     },
     scroll: function (event, delta) {
+		//this.renderer.camera.perspective += relativeZoom / 200;
+		//this.renderer.camera.perspective = this.renderer.camera.perspective < 0 ? 0 : (this.renderer.camera.perspective > 1 ? 1 : this.renderer.camera.perspective);
+		this.renderer.camera.zoom(delta*5);
+		
         //console.log("zoom with " + delta);
-        this.renderer.camera.fov -= delta * 5;
+        //this.renderer.camera.fov -= delta * 5;
         //this.context.camera.fov = this.context.camera.fov > 70 ? 70 : (this.context.camera.fov < 5 ? 5 : this.context.camera.fov);
 
         //this.context.cameraBranch.changeZoom(delta);
-        this.renderer.camera.updateProjectionMatrix();
     }
 });

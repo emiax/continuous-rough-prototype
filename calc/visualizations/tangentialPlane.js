@@ -20,7 +20,6 @@
         label.position.x = 0;
         label.position.y = 0;
         
-        
         var boundingBox = [-10, -10, 10, 10];
         var resolution = 0.2;
         
@@ -39,11 +38,11 @@
                 d: expr.differentiate(),
             },
             constraints: {
-                r: {
+                /*r: {
                     lower: 7,
                     upper: 8,
                     upperFeather: 0.2
-                }
+                }*/
             },
             resolution: resolution,
             appearance: {
@@ -137,10 +136,10 @@
                 frames: 100,
                 interpolation: CALC.interpolations.sinusodial,
                 constraints: {
-                    r: {
+                    /*r: {
                         lower: 4,
                         upper: 6
-                    }
+                    }*/
                 }
             });
 
@@ -175,10 +174,10 @@
                 frames: 100,
                 interpolation: CALC.interpolations.sinusodial,
                 constraints: {
-                    r: {
+                    /*r: {
                         lower: 6,
                         upper: 8
-                    }
+                    }*/
                 }
             });
         };
