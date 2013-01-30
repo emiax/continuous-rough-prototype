@@ -13,6 +13,8 @@
             lat = path[len - 1].y - path[len - 2].y;
             this.branch.rotation.z += lon * 0.01;
             this.branch.rotation.x += lat * 0.01;
+			if (this.branch.rotation.x > Math.PI / 2) this.branch.rotation.x = Math.PI / 2;
+			else if (this.branch.rotation.x < -Math.PI / 2) this.branch.rotation.x = -Math.PI / 2;
         }
     },
     scroll: function (event, delta) {
