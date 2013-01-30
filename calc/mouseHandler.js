@@ -4,36 +4,39 @@
 CALC.mouseHandler = (function () {
 
     var that = {},
-        hold = false,
-        drag = false,
+        hold = [],
+        drag = [],
         strategy,
         path = [];
 
     that.mouseDown = function (mouseStrategy, event) {
+		var button = event.which;
         event.stopPropagation();
         event.preventDefault();
         path.push({x: event.clientX, y: event.clientY});
         strategy = mouseStrategy;
-        hold = true;
+        hold[button] = true;
         strategy.mouseDown(event);
     };
 
     that.mouseUp = function (mouseStrategy, event) {
+		var button = event.which;
         event.stopPropagation();
         event.preventDefault();
-        if (!drag) {
+        if (!drag[button]) {
             strategy.click(event);
         }
-        hold = drag = false;
+        hold[button] = drag[button] = false;
         path = [];
         strategy.mouseUp(event);
     };
 
     that.mouseMove = function (mouseStrategy, event) {
+		var button = event.which;
         event.stopPropagation();
         event.preventDefault();
-        drag = hold;
-        if (drag) {
+        drag[button] = hold[button];
+        if (drag[button]) {
             path.push({x: event.clientX, y: event.clientY});
             strategy.drag(event, path);
         } else {

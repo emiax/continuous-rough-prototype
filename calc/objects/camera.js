@@ -1,4 +1,4 @@
-CALC.Camera = function (left, right, top, bottom, near, far, fov, aspect, perspective) {
+CALC.Camera = function (left, right, top, bottom, near, far, fov, aspect, focusDistance, perspective) {
 
     THREE.Camera.call( this );
 	
@@ -12,7 +12,7 @@ CALC.Camera = function (left, right, top, bottom, near, far, fov, aspect, perspe
 
 	this.fov = fov !== undefined ? fov : 53.14;
 	this.aspect = aspect !== undefined ? aspect : 1;
-	this.focusDistance = 20;
+	this.focusDistance = (focusDistance !== undefined) ? focusDistance : 20;
 	
 	this.perspectiveMatrix = new THREE.Matrix4();
 	this.orthographicMatrix = new THREE.Matrix4();
