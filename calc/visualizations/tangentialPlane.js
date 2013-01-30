@@ -16,19 +16,24 @@
         
         scene.add(objectBranch);
 
-        var label = new CALC.Label3D(this.renderers["std"], $('<p style="font-weight: bold;">f(x, y)</p>'));
-        label.position.x = 0;
-        label.position.y = 0;
+        var label = new CALC.Label3D(this.renderers["std"], $('<p>f(x, y)</p>'));
+        label.position.x = -5;
+        label.position.y = -5;
+        objectBranch.add(label);
+
+        var label2 = new CALC.Label3D(this.renderers["std"], $('<p>g(x, y)</p>'));
+        label2.position.x = 5.5;
+        label2.position.y = 5.5;
+		label2.position.z = 1.5;
+        objectBranch.add(label2);
         
         var boundingBox = [-10, -10, 10, 10];
         var resolution = 0.2;
-        
-        objectBranch.add(label);
 
         var expr = CALC.parse('sin(x)*cos(y)');
         
         var surface = new CALC.FunctionSurface({
-            z: CALC.parse('sin(x)*cos(y) + x/2'),
+            z: CALC.parse('sin(x)*cos(y)'),
             domain: {
                 x: [-10, 10],
                 y: [-10, 10]
@@ -108,7 +113,20 @@
         
         
         this.animate1 = function() {
+			
             CALC.animator.animateProperties({
+                object: scope.renderers["std"].camera,
+                milliseconds: 1000,
+                parameters: {
+                    perspective: 0
+                },
+                interpolation: CALC.interpolations.cubic,
+				afterStep: function() {scope.renderers["std"].camera.updateProjectionMatrix.call(scope.renderers["std"].camera)},
+                end: scope.animate2
+            });
+			
+			
+            /*CALC.animator.animateProperties({
                 object: surface2.rotation,
                 frames: 100,
                 parameters: {
@@ -117,37 +135,50 @@
                 },          
                 end: scope.animate2,
                 interpolation: CALC.interpolations.sinusodial
-            });
+            });*/
 
-            surface2.animate({
+            /*surface2.animate({
                 frames: 100,
                 interpolation: CALC.interpolations.sinusodial,
                 checkerOpacity: 0.3,
-                /*constraints: {
+                constraints: {
                     r: {
                         upper: 8,
                         lower: 7
                         
                     }
-                }*/
+                }
             });
 
             surface.animate({
                 frames: 100,
                 interpolation: CALC.interpolations.sinusodial,
                 constraints: {
-                    /*r: {
+                    r: {
                         lower: 4,
                         upper: 6
-                    }*/
+                    }
                 }
-            });
+            });*/
 
         };
 
         
         this.animate2 = function () {
+			
             CALC.animator.animateProperties({
+                object: scope.renderers["std"].camera,
+                milliseconds: 1000,
+                parameters: {
+                    perspective: 1
+                },
+                interpolation: CALC.interpolations.cubic,
+				afterStep: function() {scope.renderers["std"].camera.updateProjectionMatrix.call(scope.renderers["std"].camera)},
+                end: scope.animate1
+            });	
+			
+			
+            /*CALC.animator.animateProperties({
                 object: surface2.rotation,
                 frames: 100,
                 parameters: {
@@ -156,30 +187,30 @@
                 },
                 interpolation: CALC.interpolations.sinusodial,
                 end: scope.animate1
-            });   
+            });*/	
 
-            surface2.animate({
+            /*surface2.animate({
                 frames: 100,
                 interpolation: CALC.interpolations.sinusodial,
                 checkerOpacity: 1,
-                /*constraints: {
+                constraints: {
                     r: {
                         lower: 6,
                         upper: 7
                     }
-                }*/
+                }
             });
 
             surface.animate({
                 frames: 100,
                 interpolation: CALC.interpolations.sinusodial,
                 constraints: {
-                    /*r: {
+                    r: {
                         lower: 6,
                         upper: 8
-                    }*/
+                    }
                 }
-            });
+            });*/
         };
             
         this.animate1();
