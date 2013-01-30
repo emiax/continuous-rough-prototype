@@ -14,8 +14,7 @@
 
 //    console.log(this.domElement);
     
-
-    this.domElement.css({opacity: 0.6});
+    this.domElement.css({opacity: 0.6}).hover(function() {$(this).css('opacity', 1)}, function() {$(this).css('opacity', 0.6)});
     this.projector = new THREE.Projector();
     // add dom element
 }).extends(THREE.Object3D, {
