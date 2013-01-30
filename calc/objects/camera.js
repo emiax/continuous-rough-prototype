@@ -10,9 +10,9 @@ CALC.Camera = function (left, right, top, bottom, near, far, fov, aspect, perspe
 	this.near = (near !== undefined) ? near : 0.1;
 	this.far = (far !== undefined) ? far : 2000;
 
-	this.fov = fov !== undefined ? fov : 45;
+	this.fov = fov !== undefined ? fov : 53.14;
 	this.aspect = aspect !== undefined ? aspect : 1;
-	this.focusDistance = 10;
+	this.focusDistance = 20;
 	
 	this.perspectiveMatrix = new THREE.Matrix4();
 	this.orthographicMatrix = new THREE.Matrix4();
@@ -42,11 +42,11 @@ CALC.Camera.prototype.updateProjectionMatrix = function () {
 
 	this.perspectiveMatrix.makePerspective(this.fov, this.aspect, this.near, this.far);
 	
-	this.top = Math.sin(Math.PI / 180 * this.fov) * this.focusDistance;
+	this.top = Math.tan(Math.PI / 360 * this.fov) * this.focusDistance;
 	this.bottom = -this.top;
 	this.left = this.aspect * this.bottom;
 	this.right = this.aspect * this.top;
-	
+
 	this.orthographicMatrix.makeOrthographic(this.left, this.right, this.top, this.bottom, this.near, this.far);
 	
 	var scale = (this.perspective/(1.05 - this.perspective))/20; //Well...yeah

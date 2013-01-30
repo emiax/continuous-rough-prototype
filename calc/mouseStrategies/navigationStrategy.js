@@ -16,8 +16,9 @@
         }
     },
     scroll: function (event, delta) {
-		//this.renderer.camera.perspective += relativeZoom / 200;
+		//this.renderer.camera.perspective += delta / 20;
 		//this.renderer.camera.perspective = this.renderer.camera.perspective < 0 ? 0 : (this.renderer.camera.perspective > 1 ? 1 : this.renderer.camera.perspective);
+		//this.renderer.camera.updateProjectionMatrix();
 		this.renderer.camera.zoom(delta*5);
 		
         //console.log("zoom with " + delta);
