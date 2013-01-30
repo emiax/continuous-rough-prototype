@@ -28,9 +28,6 @@
         this.updateMatrix();
         this.updateMatrixWorld();
 
-
-
-
         vect = this.projector.projectVector(this.matrixWorld.getPosition(), camera);
 //        console.log(camera.rotation);
         
@@ -45,7 +42,7 @@
             this.domY = vect.y;
 
             //console.log(vect);
-            if (this.domX > 0.5 || this.domX < -0.5 || this.domY > 0.5 || this.domY < -0.5) {
+            if (this.domX > 1 || this.domX < -1 || this.domY > 1 || this.domY < -1) {
                 this.domElement.css({visibility: 'hidden'});
 //                console.log("hidden");
                 //console.log(this.domX + " " + this.domY);
@@ -54,8 +51,8 @@
 //                console.log("hidden");
             }
 
-            left = w*vect.x + w/2;
-            top = -h*vect.y + h/2;
+			left = w/2 * (1 + vect.x);
+            top = h/2 * (1 - vect.y);
 
             this.domElement.css({
                 left: left,
