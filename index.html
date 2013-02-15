@@ -58,12 +58,11 @@
     <script src="calc/materials/color.js"></script>
     <script src="calc/materials/checkerPattern.js"></script>
     <script src="calc/materials/colorGradient.js"></script>
-    <script src="calc/materials/shader.js"></script>
-    <script src="calc/materials/surfaceShader.js"></script>
 
     <script src="calc/materials/surfaceMaterial.js"></script>
 
     <script src="calc/function.js"></script>
+    <script src="calc/materials/materialManager.js"></script>
     <script src="calc/parametricObject.js"></script>
     <script src="calc/surface.js"></script>
     
@@ -91,7 +90,7 @@
       $(document).ready(function() {
       app = new CALC.Application($("#application"), /*developMode*/ true);
 
-      var compositeSurface = new CALC.visualizations.CompositeSurface("Depth-sorting");
+      var compositeSurface = new CALC.visualizations.CompositeSurface("Composite Surface");
       app.addVisualization(compositeSurface);
 
 

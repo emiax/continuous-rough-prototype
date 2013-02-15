@@ -14,32 +14,36 @@ CALC.visualizations = {};
 
     this.lastRender = '';
 }).extend({
+    /*
+     * Render this visualization
+     */
     render: function (forceUpdate) {
-        var renderer, geo, geoPos, camPos, r;
+
+        var renderers = this.renderers;
 
         function update(renderer) {
             THREE.SceneUtils.traverseHierarchy(renderer.scene, function (obj) {
                 if (typeof obj.prepareFrame === 'function') {
                     obj.prepareFrame(renderer, forceUpdate);
-//                    console.log(obj);
                 }
             });
         }
 
-        for (r in this.renderers) {
-            if (this.renderers.hasOwnProperty(r)) {
-                renderer = this.renderers[r];
-                update(renderer);
-                // We assume that renderer has been augmented with 'scene' and 'camera' properties.
-                // This is done in visualization.attachRenderer
-                if (renderer.scene && renderer.camera) {
-                    renderer.render(renderer.scene, renderer.camera);
-                }
+        Object.keys(this.renderers).forEach(function (k) {
+            var renderer = renderers[k];
+            update(renderer);
+            // We assume that renderer has been augmented with 'scene' and 'camera' properties.
+            // This is done in visualization.attachRenderer
+            if (renderer.scene && renderer.camera) {
+                renderer.render(renderer.scene, renderer.camera);
             }
-        }
+        });
     },
 
 
+    /*
+     * Attatch a THREE.Renderer to this visualization
+     */
     attachRenderer: function ($elem, renderer, scene, camera) {
         var mh = CALC.mouseHandler, $domElement;
 
@@ -75,32 +79,36 @@ CALC.visualizations = {};
             mh.touchMove(renderer.mouseStrategy, evt);
         };
 
-
-
         return renderer;
     },
 
+
+    /*
+     * Update renderers (aspect & projectionMatrix, to be called when window changed size)
+     */
     updateRenderers: function () {
         var $panel, w, h, renderers, renderer, r;
         renderers = this.renderers;
-        for (r in renderers) {
-            if (renderers.hasOwnProperty(r)) {
-                renderer = renderers[r];
-                $panel = $(renderer.domElement).parent();
-                w = $panel.innerWidth();
-                h = $panel.innerHeight();
-                if (w && h) {
-                    renderer.setSize(w, h);
-                    renderer.camera.aspect = w/h;
-                    renderer.camera.updateProjectionMatrix();
-                } else {
-                    renderer.setSize(0, 0);
-                }
+
+        Object.keys(renderers).forEach(function (k) {
+            var r = renderers[k];
+            $panel = $(r.domElement).parent();
+            w = $panel.innerWidth();
+            h = $panel.innerHeight();
+            if (w && h) {
+                r.setSize(w, h);
+                r.camera.aspect = w/h;
+                r.camera.updateProjectionMatrix();
+            } else {
+                r.setSize(0, 0);
             }
-        }
+        });
         this.render(true);
     },
 
+    /*
+     * Attach a text box with some content, to panel
+     */
     appendTextBox: function ($panel, content) {
         var $box = $('<div class="text-box"></div>');
         $box.html(content);
@@ -109,15 +117,26 @@ CALC.visualizations = {};
         $box.slideDown('slow');
     },
 
+    /*
+     * Add some jQuery-DOM-elemnt to panel
+     */
     appendPanel: function ($panel, $content) {
         // todo: do something to preserve state somewhere..
         $panel.append($content);
     },
 
+
+    /*
+     * Clear the panel
+     */
     clearPanel: function ($panel, $content) {
         // todo: do something to preserve state somewhere..
         $panel.html($content);
     },
+
+    /*
+     * Setup a standard visualization, with a panel to the right, and a graphics window in the middle.
+     */
     standardVisualizationSetup: function () {
         var renderer, camera, scene, origin, light;
 
@@ -154,15 +173,18 @@ CALC.visualizations = {};
         light.position = new THREE.Vector3(4, -2, 1);
         scene.add(light);
 
-         this.scenes.std = scene;
+        this.scenes.std = scene;
         this.renderers.std = this.attachRenderer(this.panels.graphics, renderer, scene, camera);
     },
 
+    /*
+     * THIS WILL PROBABLY CHANGE A LOT when the step system is rewritten.
+     */
     setSteps: function (steps) {
         var scope = this,
-            text = "",
-            i,
-            $a;
+        text = "",
+        i,
+        $a;
 
         this.steps = steps;
         this.stepLinks = [];
@@ -183,7 +205,9 @@ CALC.visualizations = {};
 
     },
 
-
+    /*
+     * THIS WILL PROBABLY CHANGE A LOT when the step system is rewritten.
+     */
     visitStep: function (i) {
         if (this.stepLinks[this.currentStep]) {
             this.stepLinks[this.currentStep].removeClass("active");

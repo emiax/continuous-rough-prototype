@@ -5,8 +5,8 @@ CALC.Application = function ($container, developMode) {
     this.visualization = null;
     this.$container = $container;
     this.scheduler = CALC.scheduler;
-    this.stats = null; // todo
-    this.t = 0;
+
+    this.stats = null;
 
     if ( !Detector.webgl ) Detector.addGetWebGLMessage();
 
@@ -16,7 +16,6 @@ CALC.Application = function ($container, developMode) {
         scope.updateWindow();
     });
 
-
     if (developMode !== undefined) {
         this.stats = new Stats();
         this.stats.domElement.style.position = 'absolute';
@@ -25,47 +24,44 @@ CALC.Application = function ($container, developMode) {
         $('body').append(this.stats.domElement);
     }
 
-
-    this.render();
-
+    this.renderLoop();
 
 }.extend({
-
+    /*
+     * Update the window, if the size changes
+     */
     updateWindow: function () {
         if (this.visualization) {
             this.visualization.updateRenderers();
         }
     },
 
-    render: function () {
 
+    /*
+     * Main render loop
+     */
+    renderLoop: function () {
         var scope = this;
+
         requestAnimationFrame(function() {
-            scope.render()
+            scope.renderLoop()
         });
 
         this.scheduler.tick();
 
         if (this.visualization) {
-//            console.log("rendering");
             this.visualization.render();
         }
+
         if (this.stats) {
             this.stats.update();
         }
     },
 
-    createVisualizationButton: function(visualization) {
-        var scope = this,
-            $button = $('<a href="#">' + visualization.title + '</a>');
 
-        $button.click(function() {
-            scope.setVisualization(visualization, $button);
-        });
-        
-        return $button;
-    },
-
+    /*
+     * Add a new visualization
+     */
     addVisualization : function(visualization) {
         var $button = this.createVisualizationButton(visualization);
 
@@ -77,6 +73,25 @@ CALC.Application = function ($container, developMode) {
         }
     },
 
+
+    /*
+     * Create a new link to a visualization
+     */
+    createVisualizationButton: function(visualization) {
+        var scope = this,
+            $button = $('<a href="#">' + visualization.title + '</a>');
+
+        $button.click(function() {
+            scope.setVisualization(visualization, $button);
+        });
+        
+        return $button;
+    },
+
+
+    /*
+     * set the current visualization
+     */
     setVisualization: function(visualization, $button) {
         this.visualization = visualization;
         this.visualization.init();

@@ -28,8 +28,4 @@ Function.extend({
     }
 });
 
-
-var CALC = (function () {
-    var that = {};
-    return that;
-}());
+var CALC = {};

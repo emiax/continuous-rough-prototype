@@ -28,7 +28,7 @@
   The third symbol (if not defined) will automatically be set to zero everywhere.
 
 */
-(CALC.Function = function(spec) {
+CALC.Function = (function(spec) {
 
     this.domain = spec.domain || {},
     this.values = spec.values || {},
@@ -49,6 +49,17 @@
         return output;
     },
 
+
+    getSymbols: function() {
+        var scope = this, symbols = [];
+        Object.keys(scope.domain).forEach(function (k) {
+                symbols.push(k);
+        });
+        Object.keys(scope.values).forEach(function (k) {
+                symbols.push(k);
+        });
+        return symbols;
+    },
 
     getNonSpatialSymbols: function() {
         var scope = this, symbols = [];
@@ -125,6 +136,15 @@
 
         function addVertex(parameters) {
             var v = scope.evaluate(parameters);
+            
+            // Augment vertex with input parameters
+            
+           Object.keys(parameters).forEach(function (k) {
+                    v[k] = parameters[k];
+            });
+
+//            console.log(v);
+
             vertices.push(v);
 
             // Update extremes
