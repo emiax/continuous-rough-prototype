@@ -5,6 +5,7 @@ CALC.MaterialManager = (function(spec) {
     this.appearances = spec.appearances;
     this.vertices = spec.vertices;
     this.attribs = spec.attribs;
+    this.symbolTable = spec.symbolTable;
 
     this.attributeKeys = Object.keys(spec.attribs[0]);
     
@@ -17,6 +18,7 @@ CALC.MaterialManager = (function(spec) {
         fragmentShader: this.generateFragmentShader(),
         vertexShader: this.generateVertexShader(),
         attributes: this.generateAttributes(),
+        transparent: true,
         alphaTest: 1.0,
         depthTest: true
     });
@@ -151,7 +153,6 @@ CALC.MaterialManager = (function(spec) {
 
 
     update: function () {
-//        console.log('updatieng');
     },
 
 
@@ -211,6 +212,16 @@ CALC.MaterialManager = (function(spec) {
 
     varyingParameter: function(parameter) {
         return "vParameter_" + parameter;
+    },
+
+    attributeParameterTranslated: function (parameter) {
+        return "aParameter_" +  this.symbolTable[parameter];
+    },
+
+    varyingParameterTranslated: function (parameter) {
+        console.log(parameter);
+        return "vParameter_" +  this.symbolTable[parameter];
     }
+
 
 });

@@ -24,12 +24,12 @@ CALC.SurfaceAppearance = (function(layers, color) {
     getFragmentShader: function (context) {
         var scope = this;
         var glsl = "";
-        glsl += "gl_FragColor = vec4(0.7, 0.8, 0.8, 0.8); \n";        
-/*        console.log(context.varyingParameter);
+//        glsl += "gl_FragColor = vec4(0.7, 0.8, 0.8, 0.8); \n";        
+//        console.log(context.varyingParameter);
         this.layers.forEach(function (v) {
             glsl += v.getFragmentShaderChunk(context);
         });
-*/
+
         return glsl;
     }
     

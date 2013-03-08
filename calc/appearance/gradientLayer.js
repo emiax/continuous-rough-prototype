@@ -16,7 +16,7 @@ CALC.GradientLayer = (function (parameter, gradient, mode) {
     getFragmentShaderChunk: function(context) {
 
         var gradient = this.gradient,
-            param = context.varyingParameter(this.colorGradientParameter),
+            param = context.varyingParameterTranslated(this.parameter),
             glsl,
             positionA,
             positionB;

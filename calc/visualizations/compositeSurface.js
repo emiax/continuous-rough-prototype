@@ -20,12 +20,12 @@
         var testFun1 = new CALC.Function({
             domain: {
                 s: [0, 2*Math.PI],
-                t: [-2, 8]
+                t: [0, 2]
             },
             values: {
-                x: CALC.parse('0.2*cos(s) + cos(t)'), 
-                y: CALC.parse('0.2*sin(s)'),
-                z: CALC.parse('t')
+                x: CALC.parse('t*cos(s)'), 
+                y: CALC.parse('t*sin(s)'),
+                z: CALC.parse('-2')
             },
             tessellationDistance: 0.2
         });
@@ -33,7 +33,7 @@
         var testFun2 = new CALC.Function({
             domain: {
                 s: [0, 2*Math.PI],
-                t: [3, 4]
+                t: [-2, 2]
             },
             values: {
                 x: CALC.parse('2*cos(s)'), 
@@ -46,12 +46,12 @@
         var testFun3 = new CALC.Function({
             domain: {
                 s: [0, 2*Math.PI],
-                t: [2, 5]
+                t: [1.5, 2]
             },
             values: {
                 x: CALC.parse('t*cos(s)'), 
                 y: CALC.parse('t*sin(s)'),
-                z: CALC.parse('4.2'),
+                z: CALC.parse('2'),
                 u: CALC.parse('sin(s)')
             },
             tessellationDistance: 0.20
@@ -60,13 +60,11 @@
 
         var testBottom = new CALC.Function({
             domain: {
-                s: [0, 2*Math.PI],
-                t: [2, 5]
+                x: [-4, 4],
+                y: [-4, 4]
             },
             values: {
-                x: CALC.parse('t*cos(s)'), 
-                y: CALC.parse('t*sin(s)'),
-                z: CALC.parse('s')
+                z: CALC.parse('cos(x) * sin(y)'), 
             },
             tessellationDistance: 0.20
         });
@@ -95,6 +93,22 @@
         );
 
 
+
+        var testAppearance3 = new CALC.SurfaceAppearance([
+            new CALC.GradientLayer('t', new CALC.ColorGradient({                
+                '0': new CALC.Color(0xbb, 0x00, 0x00, 0x70),
+                '2': new CALC.Color(0xee, 0x00, 0x00, 0x70)
+            })),
+            new CALC.CheckerLayer({
+                z: 0.2,
+                color: new CALC.Color(180, 180, 0)
+            })]
+        );
+
+
+
+
+
         var testSurface = new CALC.Surface([
             {
                 'function': testFun1,
@@ -111,7 +125,7 @@
             },
             {
                 'function': testBottom,
-                'appearance': testAppearance2
+                'appearance': testAppearance3
             }
 
         ]);

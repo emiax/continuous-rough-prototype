@@ -22,67 +22,23 @@ CALC.ParametricObject = (function (spec) {
     this.init(spec);
     var tessData = this.tessellate();
 
-    var orders = (function () {
-
-        /* 
-         * Compare faces
-         */
-        function cmpFaces(a, b, axis) {
-            var vertices = tessData.vertices;
-            var c1 = vertices[a[0]][axis] + vertices[a[1]][axis] + vertices[a[2]][axis];
-            var c2 = vertices[b[0]][axis] + vertices[b[1]][axis] + vertices[b[2]][axis];
-            
-            return c1 === c2 ? 0 :
-                c1 < c2 ? -1 :
-                1;
-        }
-        
-        // Create 6 differently sorted versions of the face lists (painter's algorithm stuff related to MultiSortObject)
-        var orders = [
-            tessData.faces.slice(0).sort(function (a, b) { return cmpFaces(a, b, 'x'); }),
-            tessData.faces.slice(0).sort(function (a, b) { return cmpFaces(a, b, 'y'); }),
-            tessData.faces.slice(0).sort(function (a, b) { return cmpFaces(a, b, 'z'); })
-        ];
-        
-        (function reverseOrders() {
-            var i;
-            for (i = 0; i < 3; i++) {
-                orders.push(orders[i].slice(0).reverse());
-            }
-        }());
-        return orders;
-    })();
-
-
-
-
     // Create 6 geometries
-    var geometries = [];
-    (function createGeometries() {
-        var g;
-        for (g = 0; g < 6; g++) {
-
-
-            var geo = new THREE.Geometry(),
-            vertices = tessData.vertices,
-            faces = orders[g];
-            
-
-
-
-            tessData.vertices.forEach(function (vertex) {
-                geo.vertices.push(new THREE.Vector3(vertex.x, vertex.y, vertex.z));
-            });
-            
-            faces.forEach(function (face) {
-                geo.faces.push(new THREE.Face3(face[0], face[1], face[2]));
-            });
-            
-            geo.computeCentroids();
-            geometries[g] = geo;
-        }
-    }());
     
+    var geometry = new THREE.Geometry(),
+    vertices = tessData.vertices,
+    faces = tessData.faces;//orders[g];
+            
+    tessData.vertices.forEach(function (vertex) {
+        geometry.vertices.push(new THREE.Vector3(vertex.x, vertex.y, vertex.z));
+    });
+            
+    faces.forEach(function (face) {
+        geometry.faces.push(new THREE.Face3(face[0], face[1], face[2]));
+    });
+            
+    geometry.computeCentroids();
+        
+
 
 //    console.log(this.appearances);
 
@@ -92,11 +48,22 @@ CALC.ParametricObject = (function (spec) {
         attribs: tessData.attribs,
         symbolTable: this.symbolTable
     });
+    var material = this.materialManager.getMaterial();
+
+    this.mesh = new THREE.Mesh(geometry, material)
+    console.log(this.mesh.geometry);
+    this.mesh.doubleSided = true;
+    this.add(this.mesh);
+
+    this.faceSorter = new CALC.FaceSorter({
+        vertices: tessData.vertices,
+        faces: tessData.faces,
+        host: this
+    });
     
-    this.object3D = new CALC.MultiSortObject(geometries, this.materialManager.getMaterial());
-    this.add(this.object3D);
-    
-    console.log(this.object3D);
+
+
+
     
     
 }).extends(THREE.Object3D, {
@@ -107,7 +74,6 @@ CALC.ParametricObject = (function (spec) {
      */
     init: function (spec) {
         var scope = this;
-
 
         var nextAttributeId = 0;
         var nextAppearanceId = 0;
@@ -248,10 +214,10 @@ CALC.ParametricObject = (function (spec) {
 
     prepareFrame: function (renderer) {
         
-        this.materialManager.update();
-        
         // TODO: update materials and stuffs
-        
+
+        this.materialManager.update();
+        this.faceSorter.update(renderer.camera);
         
     },
 

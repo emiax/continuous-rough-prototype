@@ -1,7 +1,11 @@
 'use strict'
 /*global CALC */
 
-(CALC.Animation = function (spec) {
+
+
+CALC.Animation = (function (spec) {
+    
+    
     var scope = this,
         scheduler = CALC.scheduler;
     
