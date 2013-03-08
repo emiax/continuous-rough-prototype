@@ -63,6 +63,7 @@
 
     <script src="calc/function.js"></script>
     <script src="calc/materials/materialManager.js"></script>
+    <script src="calc/faceSorter.js"></script>
     <script src="calc/parametricObject.js"></script>
     <script src="calc/surface.js"></script>
     
@@ -86,6 +87,9 @@
 
 
     <script>
+
+      var GLOBAL = 10000;
+      
       var app;
       $(document).ready(function() {
       app = new CALC.Application($("#application"), /*developMode*/ true);
