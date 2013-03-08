@@ -141,7 +141,8 @@ CALC.visualizations = {};
         scene = new THREE.Scene();
         origin = new THREE.Vector3(0, 0, 0);
 
-        camera = new THREE.PerspectiveCamera(45, /* Temporary aspect ratio is set to 1, but will be set in updateRenderers */ 1, 1, 2000);
+        //camera = new THREE.PerspectiveCamera(45, /* Temporary aspect ratio is set to 1, but will be set in updateRenderers */ 1, 1, 2000);
+		camera = new CALC.Camera();
 
         camera.position.y = -20;
         scene.add(camera);
