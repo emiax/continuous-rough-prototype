@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 /*global CALC */
 
 (CALC.Animation = function (spec) {
