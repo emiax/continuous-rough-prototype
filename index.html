@@ -69,6 +69,8 @@
     <script src="calc/visualizations/tangentialPlane.js"></script>
     <script src="calc/visualizations/tangentialPlaneInteractive.js"></script>
     <script src="calc/visualizations/vectorTest.js"></script>
+    <script src="calc/visualizations/mobius.js"></script>
+    <script src="calc/visualizations/optimization.js"></script>
 
 
 
@@ -78,13 +80,17 @@
       app = new CALC.Application($("#application"), /*developMode*/ true);
 
 
+      var optimization = new CALC.visualizations.Optimization("Optimization");
+      app.addVisualization(optimization);
+
+      var mobiusStrip = new CALC.visualizations.MobiusStrip("Möbius Strip");
+      app.addVisualization(mobiusStrip);
       
       var tangentialPlane = new CALC.visualizations.TangentialPlane("String Theory");
       app.addVisualization(tangentialPlane);
       
       var tangentialPlaneInteractive = new CALC.visualizations.TangentialPlaneInteractive("Tangentplan (interaktiv)");
       app.addVisualization(tangentialPlaneInteractive);
-
 
       var vectorTest = new CALC.visualizations.VectorTest("Vektortest");
       app.addVisualization(vectorTest);

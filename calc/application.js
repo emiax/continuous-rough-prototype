@@ -7,6 +7,10 @@ CALC.Application = function ($container, developMode) {
     this.scheduler = CALC.scheduler;
     this.stats = null; // todo
     this.t = 0;
+	
+	$container.bind('contextmenu', function(e){
+		return false;
+	});
 
     if ( !Detector.webgl ) Detector.addGetWebGLMessage();
 
