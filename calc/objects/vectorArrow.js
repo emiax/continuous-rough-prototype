@@ -30,7 +30,7 @@
     this._oldY = 0;
     this._oldZ = 0;
 
-    uniforms = {opacity: {type: 'f', value: 1.0}, len: {type: 'f', value: 1.0}, size: {type: 'f', value: 0.05}, color: {type: 'c', value: new THREE.Color(color)}};
+    uniforms = {opacity: {type: 'f', value: 1.0}, len: {type: 'f', value: 1.0}, size: {type: 'f', value: 0.02}, color: {type: 'c', value: new THREE.Color(color)}};
 
     cylVertexShader = [
         'varying vec3 pos;',
@@ -90,12 +90,12 @@
 
     // place cylinder with its base in its origin
     for (v = 0, vl = cylGeometry.vertices.length; v < vl; v++) {
-        cylGeometry.vertices[v].position.y += 0.5;
+        cylGeometry.vertices[v].y += 0.5;
     }
 
     // place cone with its tip in its origin
     for (v = 0, vl = coneGeometry.vertices.length; v < vl; v++) {
-        coneGeometry.vertices[v].position.y -= 0.5;
+        coneGeometry.vertices[v].y -= 0.5;
     }
 
 
