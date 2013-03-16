@@ -1,7 +1,7 @@
 'use strict';
 /*global CALC, $ */
 
-CALC.mathMLFormat = function (spec) {
+CALC.mathML = function (spec) {
     var d = new CALC.MathMLFormatter(spec);
     return d.format();
 };
@@ -13,7 +13,7 @@ CALC.Node.extend({
 
     mathMLElement: function (symbol) {
         // requires jQuery to work
-        return $('<math>' + CALC.mathML({node: this}) + '</math>');
+        return $('<math style="font-size: 24px">' + CALC.mathML({node: this}) + '</math>');
     }
 });
 
@@ -65,11 +65,13 @@ CALC.Node.extend({
     },
 
     visitDivision: function (node) {
-        return '<mfrac><mrow>' + node.left.mathML() + '</mrow><mrow>' + node.right.mathML() + '</mfrac>';
+        return '<mfrac><mrow>' + node.left.mathML() + '</mrow><mrow>' + node.right.mathML() + '</mrow></mfrac>';
     },
 
     visitPower: function (node) {
-        return '<msup>' + node.left.mathML() + node.right.mathML() + '</msup>';
+		var left = node.left instanceof CALC.Operation ? this.parenthesize(node.left.mathML()) : node.left.mathML(),
+			right = node.right instanceof CALC.Operation ? this.parenthesize(node.right.mathML()) : node.right.mathML();
+        return '<msup>' + left + right + '</msup>';
     },
 
     visitExp: function (node) {
@@ -89,7 +91,7 @@ CALC.Node.extend({
     },
 
     parenthesize: function (s) {
-        return '<mo>(</mo>' + s + '<mo>)</mo>';
+        return '<mfenced open="(" close=")"><mrow>' + s + '</mrow></mfenced>';
 
     }
 });

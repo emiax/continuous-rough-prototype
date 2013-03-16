@@ -17,7 +17,7 @@
 				else if (this.branch.rotation.x < -Math.PI / 2) this.branch.rotation.x = -Math.PI / 2;
 			}
 		}
-		else if (event.which == 2) {
+		else if (event.which == 3) {
 			var len = path.length, lon, lat;
 			if (len >= 2) {
 				lon = path[len - 1].x - path[len - 2].x;

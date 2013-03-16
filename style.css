@@ -142,6 +142,9 @@ header {
 	font-size: 0.9em;
 	color: white;
 	cursor: default;
+	background: black;
+	border-radius: 5px;
+	padding: 5px;
 	
 /* 	background-color: #fff;
 	padding: 10px;
