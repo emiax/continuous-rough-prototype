@@ -10,7 +10,7 @@ CALC.Application = function ($container, developMode) {
 
     if ( !Detector.webgl ) Detector.addGetWebGLMessage();
 
-    this.$container.html('<header>TNA006: Analys III<sup>PREVIEW</sup><div id="visualization-menu"></div></header><div id="visualization"></div><div id="loading"><p>Loading...</p></div>');
+    this.$container.html('<header>Continuous<sup>PREVIEW</sup><div id="visualization-menu"></div></header><div id="visualization"></div><div id="loading"><p>Loading...</p></div>');
 
     $(window).resize(function (){
         scope.updateWindow();

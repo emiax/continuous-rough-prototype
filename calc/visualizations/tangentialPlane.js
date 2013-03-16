@@ -213,6 +213,7 @@
             });*/
         };
             
+
         this.animate1();
         
         this.renderers["std"].mouseStrategy = new CALC.NavigationStrategy(this.renderers["std"], objectBranch);

@@ -125,8 +125,6 @@ CALC.visualizations = {};
                      '<div id="main-row">' +
                      '<div id="graphics-panel"></div>' +
                      '<div id="text-panel"></div>' +
-                     '</div>' +
-                     '<div id="navigation-panel"></div>' +
                      '</div>');
 
         this.panels = {
