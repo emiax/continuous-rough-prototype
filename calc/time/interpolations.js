@@ -10,5 +10,8 @@ CALC.interpolations = {
     },
     quintic: function (t) {
         return (6*t*t - 15*t + 10)*(t*t*t);
+    },
+    easeOut: function(t) {
+        return (t-1)*(1-t) + 1;
     }
 };

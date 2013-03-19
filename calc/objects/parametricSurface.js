@@ -200,6 +200,10 @@
             });
             
             geo.computeCentroids();
+            geo.computeFaceNormals();
+            geo.computeVertexNormals();
+            console.log(geo.vertexNormals);
+
             
             geometries[g] = geo;
         }

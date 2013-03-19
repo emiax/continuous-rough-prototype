@@ -34,12 +34,14 @@
 
     cylVertexShader = [
         'varying vec3 pos;',
+        'varying vec3 n;',
         'uniform float size;',
         'uniform float len;',
         'varying vec3 vColor;',
         'uniform vec3 color;',
         'void main() {',
         'pos = position;',
+        'n = normal;',
         'vec4 mvPosition = modelViewMatrix * vec4( size*position.x, step(0.00001, position.y)*(position.y*len-6.0*size), size*position.z, 1.0 );',
         'vColor = color;',
         'gl_Position = projectionMatrix * mvPosition;',
@@ -49,10 +51,12 @@
 
     coneVertexShader = [
         'varying vec3 pos;',
+        'varying vec3 n;',
         'uniform float size;',
         'varying vec3 vColor;',
         'void main() {',
         'pos = position;',
+        'n = normal;',
         'vec4 mvPosition = modelViewMatrix * vec4( size*3.0*position.x, size*6.0*position.y, size*3.0*position.z, 1.0 );',
         'vColor = vec3(1.0, 0.0, 0.0);',
         'gl_Position = projectionMatrix * mvPosition;',
@@ -61,11 +65,23 @@
 
     fragmentShader = [
         'varying vec3 pos;',
+        'varying vec3 n;',
         'uniform vec3 color;',
+
+        "vec3 applyLight(vec3 color, float intensity, vec3 direction, vec3 normal) {",
+        "vec3 diffuse = intensity * (color * clamp(dot(normalize(direction), normal), 0.0, 1.0));",
+        "return diffuse;",
+        "}",
+
         'void main() {',
         'float a = (pos.z + 1.0)/2.0;',
         //'gl_FragColor = vec4(a/3.0, a/2.0, a, 1.0);',
-        'gl_FragColor = vec4(color, 1.0);',
+
+        "vec3 component1 = (applyLight(vec3(1.0, 1.0, 1.0), 0.3, vec3(-1.0, -1.0, -0.4), n));",
+        "vec3 component2 = (applyLight(vec3(1.0, 1.0, 1.0), 0.3, vec3(1.0, 1.0, -0.4), n));",
+        "vec3 ambient = vec3(0.5, 0.5, 0.5);",
+
+        'gl_FragColor = vec4(color * (ambient + component1 + component2), 1.0);',
         '}'
     ].join("\n");
 

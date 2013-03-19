@@ -220,6 +220,8 @@
             glsl += "varying float " + scope.varyingParameter(v) + ";\n";
         });
 
+        glsl += "varying vec3 vNormal;";
+
         return glsl;
     },
 
@@ -334,6 +336,9 @@
         glsl += this.glslVaryingAssignments(parameters);
         
         glsl += "  gl_Position = projectionMatrix * mvPosition;\n";
+        glsl += "  vNormal = (modelViewMatrix*vec4(normal, 1.0)).xyz;";
+
+        //glsl += " gl_Position += vec4(vNormal*10.0, 0.0);";
         glsl += "}\n";
 
         return glsl;
@@ -354,6 +359,13 @@
         glsl += this.glslUniformDefinitions(parameters);
         glsl += this.glslVaryingDefinitions(parameters);
 
+        glsl += "vec3 applyLight(vec3 color, float intensity, vec3 direction, vec3 normal) {";        
+        glsl += "vec3 diffuse = intensity * (color * clamp(dot(normalize(direction), normal), 0.0, 1.0));";
+        glsl += "return diffuse;";
+        glsl += "}";
+        
+
+
         glsl += "void main() {\n";
         
         glsl += this.glslApplyColorGradient();
@@ -362,7 +374,33 @@
 
         glsl += this.glslDiscard();
 
+        glsl += "vec3 normal = normalize(vNormal);";
+       // glsl += "if (!gl_FrontFacing) { normal *= -1.0; }";
+/*
+        glsl += "vec3 lightColor = vec3(1.0, 1.0, 1.0);";
+        glsl += "float lightIntensity = 1.0;";
+        glsl += "vec3 lightDirection = normalize(vec3(1.0, 1.0, 0.0));";
+        glsl += "vec3 diffuse = lightIntensity * (lightColor * clamp(dot(lightDirection, normal), 0.0, 1.0));";
+        glsl += "gl_FragColor.rgb *= diffuse;";
+*/
+        /*
+        glsl += "lightColor = vec3(1.0, 1.0, 1.0);";
+        glsl += "lightIntensity = 1.0;";
+        glsl += "lightDirection = normalize(vec3(1.0, 1.0, 1.0));";
+        glsl += "diffuse = lightIntensity * (lightColor * clamp(dot(lightDirection, normal), 0.0, 1.0));";
+        glsl += "gl_FragColor.rgb *= diffuse;";
+*/
+       //glsl += "vec4 faceColor = gl_FragColor.rgb;";
+
+        glsl += "vec3 component1 = (applyLight(vec3(1.0, 1.0, 1.0), 0.3, vec3(-1.0, -1.0, -0.4), normal));";
+        glsl += "vec3 component2 = (applyLight(vec3(1.0, 1.0, 1.0), 0.3, vec3(1.0, 1.0, -0.4), normal));";
+        glsl += "vec3 ambient = vec3(0.5, 0.5, 0.5);";
         
+        
+        //glsl += "gl_FragColor.rgb *= component1 + component2);";
+        glsl += "gl_FragColor.rgb *= (ambient + component1 + component2);";
+
+
         glsl += "}";
         return glsl;
     }
