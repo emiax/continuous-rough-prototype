@@ -2,234 +2,237 @@
 @import url(http://fonts.googleapis.com/css?family=Asap:400,400italic,700,700italic);
 
 body, html {
-	padding : 0;
-	margin: 0;
-	height: 100%;
-	width: 100%;
-	overflow: hidden;
+    padding : 0;
+    margin: 0;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
 }
 
 sup {
-	font-size:xx-small;
-	vertical-align:top;
-} 
+    font-size:xx-small;
+    vertical-align:top;
+}
 
 #application {
-	font-family: 'Asap';
-	padding : 0;
-	margin: 0;
-	height: 100%;
-	width: 100%;
+    font-family: 'Asap';
+    padding : 0;
+    margin: 0;
+    height: 100%;
+    width: 100%;
 
-  	display : -moz-box;
-	display : -webkit-box;
-	display : box;
+    display : -moz-box;
+    display : -webkit-box;
+    display : box;
 
-	-moz-box-orient : vertical;
-	-moz-box-flex : 1;
-	
-	-webkit-box-orient : vertical;
-	-webkit-box-flex : 1;
-	
-	box-orient : vertical;
-	box-flex : 1;
+    -moz-box-orient : vertical;
+    -moz-box-flex : 1;
+
+    -webkit-box-orient : vertical;
+    -webkit-box-flex : 1;
+
+    box-orient : vertical;
+    box-flex : 1;
 }
 
 #visualization {
-	width: 100%;
+    width: 100%;
 
-  	display : -moz-box;
-	display : -webkit-box;
-	display : box;
-	
-	-moz-box-orient : vertical;
-	-moz-box-flex : 1;
-	
-	-webkit-box-orient : vertical;
-	-webkit-box-flex : 1;
-	
-	box-orient : vertical;
-	box-flex : 1;
+    display : -moz-box;
+    display : -webkit-box;
+    display : box;
+
+    -moz-box-orient : vertical;
+    -moz-box-flex : 1;
+
+    -webkit-box-orient : vertical;
+    -webkit-box-flex : 1;
+
+    box-orient : vertical;
+    box-flex : 1;
 }
 #main-row {
 
-	width: 100%;
-  	display : -moz-box;
-	display : -webkit-box;
-	display : box;
+    width: 100%;
+    display : -moz-box;
+    display : -webkit-box;
+    display : box;
 
-	-moz-box-orient : horizontal;
-	-moz-box-flex : 1;
-	
-	-webkit-box-orient : horizontal;
-	-webkit-box-flex : 1;
-	
-	box-orient : horizontal;
-	box-flex : 1;
+    -moz-box-orient : horizontal;
+    -moz-box-flex : 1;
+
+    -webkit-box-orient : horizontal;
+    -webkit-box-flex : 1;
+
+    box-orient : horizontal;
+    box-flex : 1;
 }
 
 #navigation-panel {
-	background-color: #454545;
-	position: relative;
+    background-color: #454545;
+    position: relative;
 
-	font-size: 1em;
-	color: #000;
-	padding: 10px;
+    font-size: 1em;
+    color: #000;
+    padding: 10px;
 
-	width: 100%;
-	height: 30px;
+    width: 100%;
+    height: 30px;
 
-	box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.7);
+    box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.7);
     -moz-box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.7);
     -webkit-box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.7);
 }
 
 #navigation-panel .visualization-step {
-	padding: 0 20px;
-	border-right: 2px solid #000;
+    padding: 0 20px;
+    border-right: 2px solid #000;
 }
 
 #navigation-panel .visualization-step.active {
-	color: #fff;
+    color: #fff;
 }
 
 
 
 header {
-	background-color: #91948e;
-	position: relative;
+    /*background-color: #91948e;*/
+    background-color: #111;
+    border-bottom: 1px solid #222;
+    position: relative;
 
-	font-size: 1em;
-	color: #3a3c38;
-	font-weight: bold;
-	padding: 10px;
+    font-size: 1em;
+    /*    color: #3a3c38;*/
+    color: #888;
+    font-weight: bold;
+    padding: 10px;
 
-	box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.7);
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.7);
     -moz-box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.7);
     -webkit-box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.7);
 }
 
 #visualization-menu {
-	float: right;
+    float: right;
 }
 
-	#visualization-menu a, #visualization-menu a:link, #visualization-menu a:active, #visualization-menu a:visited {
-		margin-left: 20px;
-		color: #3A3C38;
-		text-decoration: none;
-	}
+#visualization-menu a, #visualization-menu a:link, #visualization-menu a:active, #visualization-menu a:visited {
+    margin-left: 20px;
+    color: #3A3C38;
+    text-decoration: none;
+}
 
-	#visualization-menu a:hover {
-		color: #555;
-	}
+#visualization-menu a:hover {
+    color: #555;
+}
 
-	#visualization-menu a.active {
-		color: #fff;
-	}
+#visualization-menu a.active {
+    color: #fff;
+}
 
 #graphics-panel {
-	background-color: #252525;
+    background-color: #252525;
 
-	-moz-box-flex : 1;	
-	-webkit-box-flex : 1;
-	box-flex: 1;
+    -moz-box-flex : 1;
+    -webkit-box-flex : 1;
+    box-flex: 1;
 }
 
 .label3D {
-	position: absolute;
-	
-	line-height: 1.3em;
-	font-size: 0.9em;
-	color: white;
-	cursor: default;
-	background: black;
-	border-radius: 5px;
-	padding: 5px;
-	
-/* 	background-color: #fff;
-	padding: 10px;
-    border-radius: 2px;
+    position: absolute;
 
-	box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.7);
-    -moz-box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.7);
-    -webkit-box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.7); */
+    line-height: 1.3em;
+    font-size: 0.9em;
+    color: white;
+    cursor: default;
+    background: black;
+    border-radius: 5px;
+    padding: 5px;
+
+/*      background-color: #fff;
+        padding: 10px;
+        border-radius: 2px;
+
+box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.7);
+-moz-box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.7);
+-webkit-box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.7); */
 
 }
 
 canvas {
-	position: absolute;
+    position: absolute;
 }
 
 #text-panel {
-	padding-top: 5px;
-	background-color: #202020;
-	width: 400px;
+    padding-top: 5px;
+    background-color: #202020;
+    width: 400px;
 }
 
 .text-box {
-	border-radius: 2px;
-	line-height: 1.3em;
-	font-size: 0.9em;
-	background-color: #fff;
-	margin: 10px;
-	padding: 20px;
+    border-radius: 2px;
+    line-height: 1.3em;
+    font-size: 0.9em;
+    background-color: #fff;
+    margin: 10px;
+    padding: 20px;
 
-	box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.7);
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.7);
     -moz-box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.7);
     -webkit-box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.7);
 }
 
 
 .text-box p {
-	margin-bottom: 20px;
+    margin-bottom: 20px;
 }
 
 .action-button {
-	
-	border-radius: 2px;
-	margin-right: 10px;
-	text-decoration: none;
-	color: #fff;
-	padding: 10px;
-	background: #7db9e8;
-	background: -moz-linear-gradient(top, #7db9e8 0%, #1e5799 100%);
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#7db9e8), color-stop(100%,#1e5799));
-	background: -webkit-linear-gradient(top, #7db9e8 0%,#1e5799 100%);
-	background: -o-linear-gradient(top, #7db9e8 0%,#1e5799 100%);
-	background: -ms-linear-gradient(top, #7db9e8 0%,#1e5799 100%);
-	background: linear-gradient(top, #7db9e8 0%,#1e5799 100%);
+
+    border-radius: 2px;
+    margin-right: 10px;
+    text-decoration: none;
+    color: #fff;
+    padding: 10px;
+    background: #7db9e8;
+    background: -moz-linear-gradient(top, #7db9e8 0%, #1e5799 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#7db9e8), color-stop(100%,#1e5799));
+    background: -webkit-linear-gradient(top, #7db9e8 0%,#1e5799 100%);
+    background: -o-linear-gradient(top, #7db9e8 0%,#1e5799 100%);
+    background: -ms-linear-gradient(top, #7db9e8 0%,#1e5799 100%);
+    background: linear-gradient(top, #7db9e8 0%,#1e5799 100%);
 }
 
 .next-button {
-	
-	border-radius: 2px;
-	text-decoration: none;
-	color: #fff;
-	padding: 10px;
-	margin-right: 10px;
-	background: #c9de96;
-	background: -moz-linear-gradient(top, #c9de96 0%, #398235 100%);
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#c9de96), color-stop(100%,#398235));
-	background: -webkit-linear-gradient(top, #c9de96 0%,#398235 100%);
-	background: -o-linear-gradient(top, #c9de96 0%,#398235 100%);
-	background: -ms-linear-gradient(top, #c9de96 0%,#398235 100%);
-	background: linear-gradient(top, #c9de96 0%,#398235 100%);
+
+    border-radius: 2px;
+    text-decoration: none;
+    color: #fff;
+    padding: 10px;
+    margin-right: 10px;
+    background: #c9de96;
+    background: -moz-linear-gradient(top, #c9de96 0%, #398235 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#c9de96), color-stop(100%,#398235));
+    background: -webkit-linear-gradient(top, #c9de96 0%,#398235 100%);
+    background: -o-linear-gradient(top, #c9de96 0%,#398235 100%);
+    background: -ms-linear-gradient(top, #c9de96 0%,#398235 100%);
+    background: linear-gradient(top, #c9de96 0%,#398235 100%);
 }
 
 #loading {
-	position: fixed;
-	top: 50%;
-	left: 50%;
-	z-index: 1000;
-	color: #fff;
-	font-family: Asap;
-	font-size: 1em;
-	margin-left: -40px;
-	margin-top: -10px;
-	display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    z-index: 1000;
+    color: #fff;
+    font-family: Asap;
+    font-size: 1em;
+    margin-left: -40px;
+    margin-top: -10px;
+    display: none;
 }
 
 ::selection {
-	background: white;
-	color: black;
+    background: white;
+    color: black;
 }
