@@ -32,6 +32,8 @@
 
     uniforms = {opacity: {type: 'f', value: 1.0}, len: {type: 'f', value: 1.0}, size: {type: 'f', value: 0.02}, color: {type: 'c', value: new THREE.Color(color)}};
 
+    // Todo: lighting model is not correct, because the vertices are transformed at shader level. Fix this.
+
     cylVertexShader = [
         'varying vec3 pos;',
         'varying vec3 n;',
@@ -41,7 +43,7 @@
         'uniform vec3 color;',
         'void main() {',
         'pos = position;',
-        'n = normal;',
+        'n = (modelViewMatrix * vec4(normal, 1.0)).xyz;',
         'vec4 mvPosition = modelViewMatrix * vec4( size*position.x, step(0.00001, position.y)*(position.y*len-6.0*size), size*position.z, 1.0 );',
         'vColor = color;',
         'gl_Position = projectionMatrix * mvPosition;',
