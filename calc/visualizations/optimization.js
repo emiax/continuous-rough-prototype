@@ -538,7 +538,7 @@
 
         function setVectorState(index) {
             arrowRotation.abort();
-            rotateArrows(Math.atan2(points[index].y, points[index].x), 800, CALC.interpolations.sinusodial);
+            rotateArrows(Math.atan2(points[index].y, points[index].x), 1500, CALC.interpolations.sinusodial);
         }
         
         function showIntersection() {

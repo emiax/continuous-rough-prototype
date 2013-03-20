@@ -28,6 +28,11 @@
     setOpacity: function(opacity) {
         this.opacity = opacity;
         this.domElement.css('opacity', this.opacity);
+        if (this.opacity < 0.001) {
+            this.domElement.css('display', 'none');
+        } else {
+            this.domElement.css('display', 'block');
+        }
     },
 
 
