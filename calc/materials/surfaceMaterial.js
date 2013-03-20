@@ -392,9 +392,9 @@
 */
        //glsl += "vec4 faceColor = gl_FragColor.rgb;";
 
-        glsl += "vec3 component1 = (applyLight(vec3(1.0, 1.0, 1.0), 0.3, vec3(-1.0, -1.0, -0.4), normal));";
+        glsl += "vec3 component1 = (applyLight(vec3(1.0, 1.0, 1.0), 0.8, vec3(-1.0, -1.0, -0.4), normal));";
         glsl += "vec3 component2 = (applyLight(vec3(1.0, 1.0, 1.0), 0.3, vec3(1.0, 1.0, -0.4), normal));";
-        glsl += "vec3 ambient = vec3(0.5, 0.5, 0.5);";
+        glsl += "vec3 ambient = vec3(0.3, 0.3, 0.3);";
         
         
         //glsl += "gl_FragColor.rgb *= component1 + component2);";

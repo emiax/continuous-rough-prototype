@@ -50,6 +50,8 @@ sup {
 
     box-orient : vertical;
     box-flex : 1;
+    
+    position: relative;
 }
 #main-row {
 
@@ -101,10 +103,10 @@ header {
     border-bottom: 1px solid #222;
     position: relative;
 
-    font-size: 1em;
+    font-size: 1.3em;
     /*    color: #3a3c38;*/
-    color: #888;
-    font-weight: bold;
+    color: #eee;
+
     padding: 10px;
 
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.7);
@@ -112,12 +114,31 @@ header {
     -webkit-box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.7);
 }
 
+#bigLogo {
+    font-family: 'Leckerli One', cursive;
+    margin-right: 10px;
+    font-size: 4em;
+    margin: 100px auto 0;
+    text-align: center;
+}
+
+#logo {
+    font-family: 'Leckerli One', cursive;
+    margin-right: 10px;
+}
+
+#logo sup {
+    font-family: Asap;
+}
+
+
 #visualization-menu {
-    float: right;
+
+    font-size: 0.8em;
 }
 
 #visualization-menu a, #visualization-menu a:link, #visualization-menu a:active, #visualization-menu a:visited {
-    margin-left: 20px;
+    margin-left: 10px;
     color: #3A3C38;
     text-decoration: none;
 }
@@ -138,26 +159,35 @@ header {
     box-flex: 1;
 }
 
-.label3D {
+.label3D, .axisLabel3D {
     position: absolute;
 
     line-height: 1.3em;
     font-size: 0.9em;
     color: white;
     cursor: default;
+
+
+}
+
+.axisLabel3D {
+    font-style: italic;
+}
+
+.label3D {
     background: black;
     border-radius: 5px;
     padding: 5px;
-
-/*      background-color: #fff;
-        padding: 10px;
-        border-radius: 2px;
-
-box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.7);
--moz-box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.7);
--webkit-box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.7); */
-
 }
+
+.button3D {
+    position: absolute;
+    border-radius: 6px;
+    width: 12px;
+    height: 12px;
+    background-color: #ff0;
+}
+
 
 canvas {
     position: absolute;

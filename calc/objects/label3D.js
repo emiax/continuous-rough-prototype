@@ -1,7 +1,9 @@
 'use strict';
 /*global CALC, THREE, $ */
 
-(CALC.Label3D = function (renderer, $content) {
+(CALC.Label3D = function (renderer, $content, leftOffset, topOffset) {
+    if (!renderer) { return; }
+
     THREE.Object3D.call(this);
 
     this.domElement = $('<div class="label3D"></div>');
@@ -10,28 +12,31 @@
     this.domX = -1;
     this.domY = 0;
 
+    this.leftOffset = leftOffset || 0;
+    this.topOffset = topOffset || 0;
+
     $(renderer.domElement).parent().append(this.domElement);
 
-//    console.log(this.domElement);
-    
+    //    console.log(this.domElement);
+
     this.domElement.css({opacity: 0.6}).hover(function() {$(this).css('opacity', 1)}, function() {$(this).css('opacity', 0.6)});
     this.projector = new THREE.Projector();
     // add dom element
 }).extends(THREE.Object3D, {
     prepareFrame: function (renderer, force) {
-        var camera = renderer.camera, vect, $renderer, h, w, left, top;
+        var scope = this, camera = renderer.camera, vect, $renderer, h, w, left, top;
 
         camera.updateMatrix();
         camera.updateMatrixWorld();
-        
+
         this.updateMatrix();
         this.updateMatrixWorld();
 
         vect = this.projector.projectVector(this.matrixWorld.getPosition(), camera);
-//        console.log(camera.rotation);
-        
-        
-        
+        //        console.log(camera.rotation);
+
+
+
         if (force || vect.x !== this.domX || vect.y !== this.domY) {
             $renderer = $(renderer.domElement);
             h = $renderer.innerHeight();
@@ -40,22 +45,18 @@
             this.domX = vect.x;
             this.domY = vect.y;
 
-            //console.log(vect);
             if (this.domX > 1 || this.domX < -1 || this.domY > 1 || this.domY < -1) {
                 this.domElement.css({visibility: 'hidden'});
-//                console.log("hidden");
-                //console.log(this.domX + " " + this.domY);
             } else {
                 this.domElement.css({visibility: 'visible'});
-//                console.log("hidden");
             }
 
-			left = w/2 * (1 + vect.x);
+            left = w/2 * (1 + vect.x);
             top = h/2 * (1 - vect.y);
 
             this.domElement.css({
-                left: left,
-                top: top
+                left: left + scope.leftOffset,
+                top: top + scope.topOffset
             });
         }
         //console.log(vect);
