@@ -19,10 +19,18 @@
 
     //    console.log(this.domElement);
 
-    this.domElement.css({opacity: 0.6}).hover(function() {$(this).css('opacity', 1)}, function() {$(this).css('opacity', 0.6)});
+    this.opacity = 0.6;
+
+    this.domElement.css({opacity: this.opacity/2}).hover(function() {$(this).css('opacity', this.opacity)}, function() {$(this).css('opacity', this.opacity/2)});
     this.projector = new THREE.Projector();
     // add dom element
 }).extends(THREE.Object3D, {
+    setOpacity: function(opacity) {
+        this.opacity = opacity;
+        this.domElement.css('opacity', this.opacity);
+    },
+
+
     prepareFrame: function (renderer, force) {
         var scope = this, camera = renderer.camera, vect, $renderer, h, w, left, top;
 

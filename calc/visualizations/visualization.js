@@ -119,13 +119,25 @@ CALC.visualizations = {};
         $panel.html($content);
     },
     standardVisualizationSetup: function () {
-        var renderer, camera, scene, origin, light;
+        var renderer, camera, scene, origin, light, scope = this;
 
-        this.dom = $('<div id="visualization">' +
-                     '<div id="main-row">' +
-                     '<div id="graphics-panel"></div>' +
-                     '<div id="text-panel"></div>' +
-                     '</div>');
+        this.nextButton = $('<a class="next-button" href="#">Gå vidare</a>');
+        this.dom = $('<div id="visualization"></div>');
+        var mainRow = $('<div id="main-row"></div>');
+        
+        this.dom.append(mainRow);
+        mainRow.append($('<div id="graphics-panel"></div>'));
+        var sidePanel = $('<div id="side-panel"></div>');
+        mainRow.append(sidePanel);
+        var textPanel = $('<div id="text-panel"></div>');
+
+        sidePanel.append(textPanel);
+        sidePanel.append(this.nextButton);
+        
+        this.nextButton.click(function() {
+            scope.visitNextStep();
+        });
+
 
         this.panels = {
             graphics: $("#graphics-panel", this.dom),
@@ -135,7 +147,7 @@ CALC.visualizations = {};
 
 
         var $textPanel = this.panels.text;
-        $textPanel.append($("<div>Gå vidare</div>"));
+//        $textPanel.append($("<div>Gå vidare</div>"));
         
         renderer = new THREE.WebGLRenderer({ antialias: true });
 
@@ -202,6 +214,17 @@ CALC.visualizations = {};
             step.visit();
             this.stepLinks[i].addClass("active");
             this.currentStep = i;
+        }
+        if (i+1 === this.steps.length) {
+            this.nextButton.remove();
+        }
+    },
+
+
+    visitNextStep: function() {
+        var next = this.currentStep + 1;
+        if (this.steps.length > next) {
+            this.visitStep(next);
         }
     }
 });

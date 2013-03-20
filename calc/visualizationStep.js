@@ -1,9 +1,10 @@
 'use strict';
 /*global CALC */
 
-(CALC.VisualizationStep = function (title, actions) {
+(CALC.VisualizationStep = function (title, actions, callback) {
     this.title = title;
     this.actions = actions;
+    this.callback = callback || function() {};
 }).extend({
     getTitle: function () {
         return this.title;
@@ -14,6 +15,7 @@
         for (i = 0; i < this.actions.length; i++) {
             this.actions[i].perform();
         }
+        this.callback();
     },
 
     leave: function () {
@@ -67,7 +69,7 @@
         //console.log("perform!");
         //this.elem.stop().hide();
         this.panel.append(this.elem);
-        //this.elem.slideDown('slow');
+//        this.elemx.slideDown('slow');
     },
 
     unperform: function () {

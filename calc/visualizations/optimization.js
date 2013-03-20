@@ -50,15 +50,15 @@
             resolution: resolution,
             appearance: {
                 checkerPattern: {
-                    opacity: 0.3,
+                    opacity: 0.1,
                     color: new CALC.Color(0, 0, 0),
                     x: 0.2,
                     y: 0.2
                 },
                 colorGradientParameter: 'z',
                 colorGradient: {
-                    '-2.5': new CALC.Color(0x00, 0xcc, 0x00, 0xff),
-                    '5.0': new CALC.Color(0x00, 0x00, 0xcc, 0xff)
+                    '-2.5': new CALC.Color(0x00, 0x00, 0xcc, 0xff),
+                    '5.0': new CALC.Color(0x00, 0xcc, 0xcc, 0xff)
                 }
             }
         });
@@ -124,22 +124,37 @@
 
         
         var sqrt = Math.sqrt;
-        var points = [{}, {}, {}, {}], buttons = [];
+        var points = [{}, {}, {}, {}], buttons = [], pointLabels = [], pointLabelTexts = [];
         
         
+        points[0] = new THREE.Vector3(2/13*(3*sqrt(3)-1), 1/13*(-3 - 4*sqrt(3)), 0);
+        points[1] = new THREE.Vector3(-2/13*(1 + 3*sqrt(3)), 1/13*(4*sqrt(3) - 3), 0);
+        points[2] = new THREE.Vector3(-2/sqrt(13), -3/sqrt(13), 0);
+        points[3] = new THREE.Vector3(2/sqrt(13), 3/sqrt(13), 0);
 
-        points[0].x = 2/13*(3*sqrt(3)-1); points[0].y = 1/13*(-3 - 4*sqrt(3));
-        points[1].x = -2/13*(1 + 3*sqrt(3)); points[1].y = 1/13*(4*sqrt(3) - 3);
-        points[2].x = -2/sqrt(13); points[2].y = -3/sqrt(13);
-        points[3].x = 2/sqrt(13); points[3].y = 3/sqrt(13);
+//        pointLabelTexts[0] = $('<math><msub><mi>x</mi><mn>0</mn></msub></math>');
+        pointLabelTexts[0] = $('<p>Lokalt minima</p>');
+        pointLabelTexts[1] = $('<p>Lokalt minima</p>');
+        pointLabelTexts[2] = $('<p>Lokalt maxmia</p>');
+        pointLabelTexts[3] = $('<p>Globalt maxima,</p><math><mi>z</mi><mo>=</mo><mn>50</mn></math>');
+
 
         for (var i = 0; i < 4; i++) {
             points[i].z = expr2.evaluate({x: points[i].x, y: points[i].y});
             (function (j) {
                 var button = new CALC.Button3D(scope.renderers["std"], $("<p></p>"), function() {setVectorState(j);});
-                button.position.set(points[j].x, points[j].y, points[j].z);
+                button.position = points[i];
+                button.setEnabled(false);
+                button.setOpacity(0);
                 objectBranch.add(button);
                 buttons.push(button);
+
+                var pointLabel = new CALC.Label3D(scope.renderers["std"], pointLabelTexts[i], 10, 10);
+                pointLabel.position = points[i];
+                objectBranch.add(pointLabel);
+                pointLabel.setOpacity(0);
+                pointLabels.push(pointLabel);
+
             })(i);
         }
 
@@ -256,7 +271,7 @@
                 },
                 colorGradientParameter: 'z',
                 colorGradient: {
-                    '0.0': new CALC.Color(0xcc, 0x00, 0x00, 0x77)
+                    '0.0': new CALC.Color(0xcc, 0x00, 0x22, 0x88)
                 }
             }
         });
@@ -322,13 +337,77 @@
             new CALC.Addition({
                 left: dy,
                 right: CALC.parse('y/100')
-            }), 0, 0x66ff66);
-        var normal = new CALC.VectorArrow(CALC.parse('x'), CALC.parse('y'), 0, 0xff6666);
+            }), 0, 0x2255cc);
+        var normal = new CALC.VectorArrow(CALC.parse('x'), CALC.parse('y'), 0, 0xff2222);
 
         var arrowRotation;
-        function showArrows() {
-        
+        var pointFade, pointLabelFade;
+        var zoom;
 
+        function showPoints() {
+            pointFade = CALC.animator.animate({
+                milliseconds: 1000,
+                interpolation: CALC.interpolations.linear,
+                begin: function() {
+                    if (pointFade) {
+                        pointFade.abort();
+                    }
+                    for (var i = 0; i < 4; i++) {
+                        buttons[i].setEnabled(true);
+                    }
+                },
+                step: function(t) {
+                    for (var i = 0; i < 4; i++) {
+                        buttons[i].setOpacity(t*0.4);
+                    }
+                },
+                end: function() {}
+            })
+        }
+
+        function showPointLabels() {
+            pointLabelFade = CALC.animator.animate({
+                milliseconds: 1000,
+                interpolation: CALC.interpolations.linear,
+                begin: function() {
+                    if (pointLabelFade) {
+                        pointLabelFade.abort();
+                    }
+                },
+                step: function(t) {
+                    for (var i = 0; i < 4; i++) {
+                        pointLabels[i].setOpacity(t*0.8);
+                    }
+                },
+                end: function() {}
+            })
+        }
+
+
+        function hidePoints() {
+            pointFade = CALC.animator.animate({
+                milliseconds: 1000,
+                interpolation: CALC.interpolation.linear,
+                begin: function() {
+                    if (pointFade) {
+                        pointFade.abort();
+                    }
+
+                    for (var i = 0; i < 4; i++) {
+                        buttons[i].setEnabled(false);
+                    }
+                },
+                step: function(t) {
+                    for (var i = 0; i < 4; i++) {
+                        buttons[i].setOpacity(0.4*(1-t));
+                        pointLabels[i].setOpacity(0.8*(1-t));
+                    }
+                },
+                end: function() {}
+            })
+        }
+
+        function showArrows() {
             objectBranch.add(gradient);
 
             objectBranch.add(normal);
@@ -370,7 +449,32 @@
             });
         }
 
+        function zoomTo(level) {
+            var before = 0, camera = scope.renderers["std"].camera;
+            zoom = CALC.animator.animate({
+                milliseconds: 1000,
+                interpolation: CALC.interpolations.sinusodial,
+                begin: function(){
+                    before = camera.getZoom();
+                },
+                step: function(t) {
+                    camera.zoom(t*level + (1-t)*before, true);                
+                },
+                end: function (){
+                }
+            });
 
+            console.log(objectBranch);
+            CALC.animator.animateProperties({
+                'object': objectBranch.position,
+                parameters: {
+                    x: 0, y: 0, z: 0
+                },
+                milliseconds: 1000,
+                interpolation: CALC.interpolations.sinusodial
+            });
+        };
+        
 
         function removeSurface() {
             surface.animate({
@@ -435,8 +539,6 @@
         function setVectorState(index) {
             arrowRotation.abort();
             rotateArrows(Math.atan2(points[index].y, points[index].x), 800, CALC.interpolations.sinusodial);
-
-
         }
         
         function showIntersection() {
@@ -470,14 +572,6 @@
         var $mml0 = expr2.mathMLElement();
         $infoParagraph0.append($mml0);
 
-        var $next = $('<a href="#" class="next-button">Gå vidare</a>');
-        $fnInfoDiv0.append($next);
-
-        $next.click(function() {
-            scope.visitStep(1);
-            addCylinder();
-        });
-
         var step0 = new CALC.VisualizationStep("Funktionsytan", [
             new CALC.TextPanelAction({
                 panel:          this.panels.text,
@@ -489,59 +583,77 @@
         var $fnInfoDiv1 = $('<div class="text-box"></div>');
         var $infoParagraph1 = $('<p>Vi ritar enhetscirkeln, som i tre dimensioner kan visualiseras som en cylinder </p>');
         $fnInfoDiv1.append($infoParagraph1);
-        //var $mml1 = expr2.mathMLElement();
-        //x$infoParagraph1.append($mml1);
 
         var $next = $('<a href="#" class="next-button">Gå vidare</a>');
-        $fnInfoDiv1.append($next);
-
-        $next.click(function() {
-            scope.visitStep(2);
-            shrink();
-            showArrows();
-            //fadeCylinder();
-        });
 
         var step1 = new CALC.VisualizationStep("Funktionsytan", [
             new CALC.TextPanelAction({
                 panel:          this.panels.text,
                 elem:           $fnInfoDiv1
             })
-        ]);
-
-
+        ], function() {
+            addCylinder();
+        });
+        
 //       Step 2
         var $fnInfoDiv2 = $('<div class="text-box"></div>');
         var $infoParagraph2a = $('<p>Den gröna vektorpilen som cirkulerar representerar ytans gradient, medan den röda pekar i cylinderns normals riktning</p>');
-
         var $infoParagraph2b = $('<p>Det största funktionsvärdet som uppfyller bivillkoret kommer att finnas i en punkt där dessa två vektorer är paralella, dvs då ekvationen BLAH uppfyllsx.</p>');
-
 
         $fnInfoDiv2.append($infoParagraph2a);
         $fnInfoDiv2.append($infoParagraph2b);
-        //var $mml2 = expr2.mathMLElement();
-        //x$infoParagraph2.append($mml2);
 
-        var $next = $('<a href="#" class="next-button">Gå vidare</a>');
-        $fnInfoDiv2.append($next);
-
-        $next.click(function() {
-            scope.visitStep(3);
-            arrowRotation.abort();
-        });
 
         var step2 = new CALC.VisualizationStep("Funktionsytan", [
             new CALC.TextPanelAction({
                 panel:          this.panels.text,
                 elem:           $fnInfoDiv2
-            })
-        ]);
+            })], function() {
+                shrink();
+                showArrows();
+            });
+        
+//       Step 3
+        var $fnInfoDiv3 = $('<div class="text-box"></div>');
+        var $infoParagraph3 = $('<p>Ekvationssystemet ger 4 lösningar, som alla visualiseras med varsina blå cirkar. Klicka på cirklarna för att se hur gradient och cylindernormal pekar just i dessa punkter.</p>');
 
 
+        $fnInfoDiv3.append($infoParagraph3);
+        $fnInfoDiv3.append($infoParagraph3);
+        //var $mml2 = expr2.mathMLElement();
+        //x$infoParagraph2.append($mml2);
+
+        var step3 = new CALC.VisualizationStep("Funktionsytan", [
+            new CALC.TextPanelAction({
+                panel:          this.panels.text,
+                elem:           $fnInfoDiv3
+            })],
+            function() {
+                setVectorState(3);
+                showPoints();
+            });
+
+//       Step 4
+        var $fnInfoDiv4 = $('<div class="text-box"></div>');
+        var $infoParagraph4 = $('<p>Genom att jämföra funktionsvärdet i de olika punkterna går det att hitta de optimala värdena</p>');
 
 
+        $fnInfoDiv4.append($infoParagraph4);
+        $fnInfoDiv4.append($infoParagraph4);
 
-        this.setSteps([step0, step1, step2]);
+        var step4 = new CALC.VisualizationStep("Funktionsytan", [
+            new CALC.TextPanelAction({
+                panel:          this.panels.text,
+                elem:           $fnInfoDiv4
+            })],
+            function() {
+                setVectorState(3);
+                showPointLabels();
+                zoomTo(34);
+            });
+
+
+        this.setSteps([step0, step1, step2, step3, step4]);
         this.visitStep(0);
 
     }

@@ -18,6 +18,7 @@
 			}
 		}
 		else if (event.which == 3) {
+
 			var len = path.length, lon, lat;
 			if (len >= 2) {
 				lon = path[len - 1].x - path[len - 2].x;

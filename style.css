@@ -185,7 +185,7 @@ header {
     border-radius: 6px;
     width: 12px;
     height: 12px;
-    background-color: #ff0;
+    background-color: #4ff;
 }
 
 
@@ -193,13 +193,15 @@ canvas {
     position: absolute;
 }
 
-#text-panel {
+#side-panel {
     padding-top: 5px;
     background-color: #202020;
     width: 400px;
+    text-align: center;
 }
 
 .text-box {
+    text-align: left;
     border-radius: 2px;
     line-height: 1.3em;
     font-size: 0.9em;
@@ -234,7 +236,9 @@ canvas {
 }
 
 .next-button {
-
+    
+    display: block;
+    margin: 10px;
     border-radius: 2px;
     text-decoration: none;
     color: #fff;

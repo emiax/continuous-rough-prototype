@@ -26,17 +26,20 @@ CALC.Camera.prototype = new THREE.Camera();
 CALC.Camera.prototype.constructor = CALC.Camera;
 
 CALC.Camera.prototype.zoom = function(relativeZoom, absolute) {
-
-	if (absolute) {
-		this.fov = 45 - relativeZoom;
-	}
-	else {
-		this.fov -= relativeZoom;
-	}
-	
-	this.fov = this.fov < 5 ? 5 : (this.fov > 175 ? 175 : this.fov);
+    if (absolute) {
+	this.fov = 45 - relativeZoom;
+    }
+    else {
+	this.fov -= relativeZoom;
+    }
+    
+    this.fov = this.fov < 5 ? 5 : (this.fov > 175 ? 175 : this.fov);
     this.updateProjectionMatrix();
 };
+
+CALC.Camera.prototype.getZoom = function() {
+    return -this.fov + 45;
+}
 
 CALC.Camera.prototype.updateProjectionMatrix = function () {
 
