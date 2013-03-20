@@ -124,39 +124,26 @@
 
         
         var sqrt = Math.sqrt;
-        var x0 = 2/13*(3*sqrt(3)-1), y0 = 1/13*(-3 - 4*sqrt(3)),
-            x1 = -2/13*(1 + 3*sqrt(3)), y1 = 1/13*(4*sqrt(3) - 3),
-            x2 = -2/sqrt(13), y2 = -3/sqrt(13),
-            x3 = 2/sqrt(13), y3 = 3/sqrt(13);
-
-
-        var z0 = expr2.evaluate({x: x0, y: y0});
-        var z1 = expr2.evaluate({x: x1, y: y1});
-        var z2 = expr2.evaluate({x: x2, y: y2});
-        var z3 = expr2.evaluate({x: x3, y: y3});
-           
-
-        //x = 2/13 (3 sqrt(3)-1),   y = 1/13 (-3-4 sqrt(3))
-        var button0 = new CALC.Button3D(this.renderers["std"], $("<p></p>"), function(){});
-        button0.position.set(x0, y0, z0);
-        objectBranch.add(button0);
-
-        var button1 = new CALC.Button3D(this.renderers["std"], $("<p></p>"), function(){});
-        button1.position.set(x1, y1, z1);
-        objectBranch.add(button1);
-
-        var button2 = new CALC.Button3D(this.renderers["std"], $("<p></p>"), function(){});
-        button2.position.set(x2, y2, z2);
-        objectBranch.add(button2);
-
-        var button3 = new CALC.Button3D(this.renderers["std"], $("<p></p>"), function(){});
-        button3.position.set(x3, y3, z3);
-        objectBranch.add(button3);
-
-
-
+        var points = [{}, {}, {}, {}], buttons = [];
+        
         
 
+        points[0].x = 2/13*(3*sqrt(3)-1); points[0].y = 1/13*(-3 - 4*sqrt(3));
+        points[1].x = -2/13*(1 + 3*sqrt(3)); points[1].y = 1/13*(4*sqrt(3) - 3);
+        points[2].x = -2/sqrt(13); points[2].y = -3/sqrt(13);
+        points[3].x = 2/sqrt(13); points[3].y = 3/sqrt(13);
+
+        for (var i = 0; i < 4; i++) {
+            points[i].z = expr2.evaluate({x: points[i].x, y: points[i].y});
+            (function (j) {
+                var button = new CALC.Button3D(scope.renderers["std"], $("<p></p>"), function() {setVectorState(j);});
+                button.position.set(points[j].x, points[j].y, points[j].z);
+                objectBranch.add(button);
+                buttons.push(button);
+            })(i);
+        }
+
+        
         var xAxis = new THREE.Line(xGeo, lineMat);
         var yAxis = new THREE.Line(yGeo, lineMat);
         var zAxis = new THREE.Line(zGeo, lineMat);
@@ -284,15 +271,69 @@
         
         objectBranch.add(surface);
         
+        function rotateArrows(toAngle, milliseconds, interpolation) {
+            if (arrowRotation) { arrowRotation.abort(); }
+            var gradientAngle, normalAngle;
+            
+            toAngle %= 2*Math.PI;
+            if (toAngle > Math.PI) {
+                toAngle -= 2*Math.PI;
+            }
+            if (toAngle < -Math.PI) {
+                toAngle += 2*Math.PI;
+            }
+
+            arrowRotation = CALC.animator.animate({
+                milliseconds: milliseconds,
+                interpolation: interpolation,
+                begin: function() {
+                    gradientAngle = Math.atan2(gradient.position.y, gradient.position.x);
+                    normalAngle = Math.atan2(normal.position.y, normal.position.x);
+                    
+                    if (gradientAngle - toAngle > Math.PI) {
+                        gradientAngle -= 2*Math.PI;
+                    }
+                    if (toAngle - gradientAngle > Math.PI) {
+                        gradientAngle += 2*Math.PI;
+                    }
+                },
+                step: function(t) { 
+                    var ga = toAngle*t + gradientAngle*(1-t);
+                    gradient.position.x = Math.cos(ga);
+                    gradient.position.y = Math.sin(ga);
+                    gradient.position.z = expr2.evaluate({x: Math.cos(ga), y: Math.sin(ga)});
+
+                    var na = toAngle*t + normalAngle*(1-t);
+                    normal.position.x = Math.cos(ga);
+                    normal.position.y = Math.sin(ga);
+                    normal.position.z = expr2.evaluate({x: Math.cos(ga), y: Math.sin(ga)}) - 0.05;
+                },
+                end: function() {}
+            });
+
+
+        }
+
+        var gradient = new CALC.VectorArrow(
+            new CALC.Addition({
+                left: dx,
+                right: CALC.parse('x/100')
+            }),
+            new CALC.Addition({
+                left: dy,
+                right: CALC.parse('y/100')
+            }), 0, 0x66ff66);
+        var normal = new CALC.VectorArrow(CALC.parse('x'), CALC.parse('y'), 0, 0xff6666);
+
         var arrowRotation;
         function showArrows() {
         
-            var gradient = new CALC.VectorArrow(dx, dy, 0, 0x66ff66);
+
             objectBranch.add(gradient);
-            var normal = new CALC.VectorArrow(CALC.parse('x'), CALC.parse('y'), 0, 0xff6666);
+
             objectBranch.add(normal);
             
-            function rotateArrows() {
+            function rArrows() {
                 arrowRotation = CALC.animator.animate({
                     milliseconds: 10000,
                     interpolation: CALC.interpolations.linear,
@@ -305,14 +346,14 @@
                         
                         normal.position.x = Math.cos(ang);
                         normal.position.y = Math.sin(ang);
-                        normal.position.z = expr2.evaluate({x: Math.cos(ang), y: Math.sin(ang)});                
+                        normal.position.z = expr2.evaluate({x: Math.cos(ang), y: Math.sin(ang)}) - 0.05;                
                     },
                     end: function (){
-                        rotateArrows();
+                        rArrows();
                     }
                 });
             }
-            rotateArrows();
+            rArrows();
         }
         
         function shrink() {
@@ -388,10 +429,15 @@
                     }
                 });
             }, 0);
-               
-
         }
 
+
+        function setVectorState(index) {
+            arrowRotation.abort();
+            rotateArrows(Math.atan2(points[index].y, points[index].x), 800, CALC.interpolations.sinusodial);
+
+
+        }
         
         function showIntersection() {
         }
