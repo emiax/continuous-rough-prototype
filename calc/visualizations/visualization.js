@@ -133,6 +133,10 @@ CALC.visualizations = {};
             navigation: $("#navigation-panel", this.dom)
         };
 
+
+        var $textPanel = this.panels.text;
+        $textPanel.append($("<div>Gå vidare</div>"));
+        
         renderer = new THREE.WebGLRenderer({ antialias: true });
 
 

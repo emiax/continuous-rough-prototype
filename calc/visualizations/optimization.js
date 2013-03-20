@@ -25,6 +25,11 @@
 
         var expr = CALC.parse('(2*u + 3*v + 1)^2 / 25');
 
+        var expr2 = expr.replace({u: 'x', v: 'y'});
+        var dx = expr2.differentiate('x');
+        var dy = expr2.differentiate('y');
+
+
         var surface = new CALC.ParametricSurface({
             x: CALC.parse('u'),
             y: CALC.parse('v'),
@@ -58,38 +63,107 @@
             }
         });
 
-        var surface2 = new CALC.ParametricSurface({
+/*        var xyPlane = new CALC.ParametricSurface({
             x: CALC.parse('u'),
             y: CALC.parse('v'),
-            z: expr,
+            z: CALC.parse('0'),
             domain: {
-                u: [-1.2, 1.2],
-                v: [-1.2, 1.2]
+                u: [-1000, 1000],
+                v: [-1000, 1000],
             },
-            attributes: {
-                r: CALC.parse('x^2 + y^2')
-            },
-            constraints: {
-                r: {
-                    upper: 1
-                }
-            },
-            resolution: resolution,
+            attributes: {},
+            constraints: {},
+            resolution: 1000,
             appearance: {
                 checkerPattern: {
-                    opacity: 0.3,
+                    opacity: 0.05, 
                     color: new CALC.Color(0, 0, 0),
-                    x: 0.2,
-                    y: 0.2
+                    x: 1,
+                    y: 1
                 },
                 colorGradientParameter: 'z',
                 colorGradient: {
-                    '-5.0': new CALC.Color(0xcc, 0x00, 0x00, 0xff),
-                    '0.0': new CALC.Color(0x00, 0xcc, 0x00, 0xff),
-                    '5.0': new CALC.Color(0x00, 0x00, 0xcc, 0xff)
+                    '0.0': new CALC.Color(0x40, 0x40, 0x40, 0x70)
                 }
             }
         });
+        objectBranch.add(xyPlane);*/
+
+        var axisLength = 3;
+        
+        var xGeo = new THREE.Geometry();
+        xGeo.vertices.push(new THREE.Vector3(-axisLength, 0, 0));
+        xGeo.vertices.push(new THREE.Vector3(axisLength, 0, 0));
+
+        var yGeo = new THREE.Geometry();
+        yGeo.vertices.push(new THREE.Vector3(0, -axisLength, 0));
+        yGeo.vertices.push(new THREE.Vector3(0, axisLength, 0));
+
+
+        var zGeo = new THREE.Geometry();
+        zGeo.vertices.push(new THREE.Vector3(0, 0, -axisLength));
+        zGeo.vertices.push(new THREE.Vector3(0, 0, axisLength));
+
+
+        var lineMat = new THREE.LineBasicMaterial({
+            color: 0x444444
+        });
+
+        var xLabel = new CALC.AxisLabel3D(this.renderers["std"], $('<p>x</p>'));
+        xLabel.position.set(axisLength, 0, 0);
+        objectBranch.add(xLabel);
+
+        var yLabel = new CALC.AxisLabel3D(this.renderers["std"], $('<p>y</p>'));
+        yLabel.position.set(0, axisLength, 0);
+        objectBranch.add(yLabel);
+
+        var zLabel = new CALC.AxisLabel3D(this.renderers["std"], $('<p>z</p>'));
+        zLabel.position.set(0, 0, axisLength);
+        objectBranch.add(zLabel);
+
+
+        
+        var sqrt = Math.sqrt;
+        var x0 = 2/13*(3*sqrt(3)-1), y0 = 1/13*(-3 - 4*sqrt(3)),
+            x1 = -2/13*(1 + 3*sqrt(3)), y1 = 1/13*(4*sqrt(3) - 3),
+            x2 = -2/sqrt(13), y2 = -3/sqrt(13),
+            x3 = 2/sqrt(13), y3 = 3/sqrt(13);
+
+
+        var z0 = expr2.evaluate({x: x0, y: y0});
+        var z1 = expr2.evaluate({x: x1, y: y1});
+        var z2 = expr2.evaluate({x: x2, y: y2});
+        var z3 = expr2.evaluate({x: x3, y: y3});
+           
+
+        //x = 2/13 (3 sqrt(3)-1),   y = 1/13 (-3-4 sqrt(3))
+        var button0 = new CALC.Button3D(this.renderers["std"], $("<p></p>"), function(){});
+        button0.position.set(x0, y0, z0);
+        objectBranch.add(button0);
+
+        var button1 = new CALC.Button3D(this.renderers["std"], $("<p></p>"), function(){});
+        button1.position.set(x1, y1, z1);
+        objectBranch.add(button1);
+
+        var button2 = new CALC.Button3D(this.renderers["std"], $("<p></p>"), function(){});
+        button2.position.set(x2, y2, z2);
+        objectBranch.add(button2);
+
+        var button3 = new CALC.Button3D(this.renderers["std"], $("<p></p>"), function(){});
+        button3.position.set(x3, y3, z3);
+        objectBranch.add(button3);
+
+
+
+        
+
+        var xAxis = new THREE.Line(xGeo, lineMat);
+        var yAxis = new THREE.Line(yGeo, lineMat);
+        var zAxis = new THREE.Line(zGeo, lineMat);
+        objectBranch.add(xAxis);
+        objectBranch.add(yAxis);
+        objectBranch.add(zAxis);
+        
 
         var upperLine = new CALC.ParametricSurface({
             x: CALC.parse('u'),
@@ -201,9 +275,6 @@
         });
 
 
-        var expr2 = expr.replace({u: 'x', v: 'y'});
-        var dx = expr2.differentiate('x');
-        var dy = expr2.differentiate('y');
 
         cylinder.material.transparent = true;
         cylinder.position.z = 0.5;
@@ -395,8 +466,10 @@
 
 //       Step 2
         var $fnInfoDiv2 = $('<div class="text-box"></div>');
-        var $infoParagraph2a = $('<p>Det största funktionsvärdet som uppfyller bivillkoret kommer att finnas i en punkt där ytans gradient är paralell med cylinderns normal.</p>');
-        var $infoParagraph2b = $('<p>Den gröna vektorpilen som cirkulerar representerar ytans gradient, medan den röda pekar i normalens riktning</p>');
+        var $infoParagraph2a = $('<p>Den gröna vektorpilen som cirkulerar representerar ytans gradient, medan den röda pekar i cylinderns normals riktning</p>');
+
+        var $infoParagraph2b = $('<p>Det största funktionsvärdet som uppfyller bivillkoret kommer att finnas i en punkt där dessa två vektorer är paralella, dvs då ekvationen BLAH uppfyllsx.</p>');
+
 
         $fnInfoDiv2.append($infoParagraph2a);
         $fnInfoDiv2.append($infoParagraph2b);
