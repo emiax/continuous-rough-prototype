@@ -21,7 +21,7 @@ CALC.Application = function ($container, developMode) {
     });
 
 
-    if (developMode !== undefined) {
+    if (developMode) {
         this.stats = new Stats();
         this.stats.domElement.style.position = 'absolute';
         this.stats.domElement.style.bottom = '0px';

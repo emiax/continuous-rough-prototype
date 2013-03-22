@@ -24,10 +24,26 @@
         var resolution = 0.1;
 
         var expr = CALC.parse('(2*u + 3*v + 1)^2 / 25');
-
         var expr2 = expr.replace({u: 'x', v: 'y'});
-        var dx = expr2.differentiate('x');
-        var dy = expr2.differentiate('y');
+        var r2 = CALC.parse('x^2 + y^2');
+        
+
+        var dx = CALC.parse('(8*x + 12*y + 4) / 25'); //expr2.differentiate('x');
+        var dy = CALC.parse('(12*x + 18*y + 6) / 25');
+//        var dy = expr2.differentiate('y');
+        
+        var dxMml = dx.mathML();
+        var dyMml = dx.mathML();
+
+
+        var exprMmlNum = CALC.parse('(2*x + 3*y + 1)^2').mathML();
+        var dxMmlNum = CALC.parse('4*(2*x + 3*y + 1)').mathML();
+        var dyMmlNum = CALC.parse('6*(2*x + 3*y + 1').mathML();
+        
+        var fxyMml = '<mi>f</mi><mfenced open="(" close=")"><mrow><mi>x</mi><mo>,</mo><mi>y</mi></mrow></mfenced>'
+        var gxyMml = '<mi>g</mi><mfenced open="(" close=")"><mrow><mi>x</mi><mo>,</mo><mi>y</mi></mrow></mfenced>'
+        var r2Mml = r2.mathML();
+
 
 
         var surface = new CALC.ParametricSurface({
@@ -39,7 +55,7 @@
                 v: [-2, 2]
             },
             attributes: {
-                r: CALC.parse('x^2 + y^2')
+                r: r2
             },
             constraints: {
                 r: {
@@ -109,15 +125,15 @@
             color: 0x444444
         });
 
-        var xLabel = new CALC.AxisLabel3D(this.renderers["std"], $('<p>x</p>'));
+        var xLabel = new CALC.AxisLabel3D(this.renderers["std"], $('<math><mi>x</mi></math>'));
         xLabel.position.set(axisLength, 0, 0);
         objectBranch.add(xLabel);
 
-        var yLabel = new CALC.AxisLabel3D(this.renderers["std"], $('<p>y</p>'));
+        var yLabel = new CALC.AxisLabel3D(this.renderers["std"], $('<math><mi>y</mi></math>'));
         yLabel.position.set(0, axisLength, 0);
         objectBranch.add(yLabel);
 
-        var zLabel = new CALC.AxisLabel3D(this.renderers["std"], $('<p>z</p>'));
+        var zLabel = new CALC.AxisLabel3D(this.renderers["std"], $('<math><mi>z</mi></math>'));
         zLabel.position.set(0, 0, axisLength);
         objectBranch.add(zLabel);
 
@@ -133,16 +149,28 @@
         points[3] = new THREE.Vector3(2/sqrt(13), 3/sqrt(13), 0);
 
 //        pointLabelTexts[0] = $('<math><msub><mi>x</mi><mn>0</mn></msub></math>');
-        pointLabelTexts[0] = $('<p>Lokalt minima</p>');
-        pointLabelTexts[1] = $('<p>Lokalt minima</p>');
-        pointLabelTexts[2] = $('<p>Lokalt maxmia</p>');
-        pointLabelTexts[3] = $('<p>Globalt maxima,</p><math><mi>z</mi><mo>=</mo><mn>50</mn></math>');
+//        pointLabelTexts[0] = $('<p>Lokalt min</p>');
+ //       pointLabelTexts[1] = $('<p>Lokalt min</p>');
+        pointLabelTexts[0] = $('Lokalt min, <math><mi>f</mi><mfenced open="(" close=")"><mrow><msub><mi>x</mi><mn>0</mn></msub><mo>,</mo><msub><mi>y</mi><mn>0</mn></msub></mrow></mfenced><mo>=</mo><mn>0</mn></math>');
 
+        pointLabelTexts[1] = $('Lokalt min, <math><mi>f</mi><mfenced open="(" close=")"><mrow><msub><mi>x</mi><mn>1</mn></msub><mo>,</mo><msub><mi>y</mi><mn>1</mn></msub></mrow></mfenced><mo>=</mo><mn>0</mn></math>');
+
+
+        pointLabelTexts[2] = $('Lokalt max, <math><mi>f</mi><mfenced open="(" close=")"><mrow><msub><mi>x</mi><mn>2</mn></msub><mo>,</mo><msub><mi>y</mi><mn>2</mn></msub></mrow></mfenced><mo>=</mo><msup><mrow><mfenced open="(" close=")"><mrow><msqrt><mn>13</mn></msqrt><mo>-</mo><mn>1</mn></mrow></mfenced></mrow><mn>2</mn></msup></math>');
+        pointLabelTexts[3] = $('Globalt max, <math><mi>f</mi><mfenced open="(" close=")"><mrow><msub><mi>x</mi><mn>3</mn></msub><mo>,</mo><msub><mi>y</mi><mn>3</mn></msub></mrow></mfenced><mo>=</mo><msup><mrow><mfenced open="(" close=")"><mrow><msqrt><mn>13</mn></msqrt><mo>+</mo><mn>1</mn></mrow></mfenced></mrow><mn>2</mn></msup></math>');
+            
 
         for (var i = 0; i < 4; i++) {
             points[i].z = expr2.evaluate({x: points[i].x, y: points[i].y});
             (function (j) {
-                var button = new CALC.Button3D(scope.renderers["std"], $("<p></p>"), function() {setVectorState(j);});
+                var button = new CALC.Button3D(scope.renderers["std"], $("<p></p>"), function() {
+                    setVectorState(j);
+                }, function() {
+                    $("#sol" + j).addClass('hover');
+                }, function() {
+                    $("#sol" + j).removeClass('hover');
+                });
+
                 button.position = points[i];
                 button.setEnabled(false);
                 button.setOpacity(0);
@@ -271,7 +299,7 @@
                 },
                 colorGradientParameter: 'z',
                 colorGradient: {
-                    '0.0': new CALC.Color(0xcc, 0x00, 0x22, 0x88)
+                    '0.0': new CALC.Color(0xcc, 0x00, 0x22, 0x44)
                 }
             }
         });
@@ -408,15 +436,22 @@
         }
 
         function showArrows() {
-            objectBranch.add(gradient);
+            gradient.position.set(1, 0, expr2.evaluate({x: 0, y: 1}));
+            normal.position.set(1, 0, expr2.evaluate({x: 0, y: 1}) - 0.05);
 
+
+
+            objectBranch.add(gradient);
             objectBranch.add(normal);
             
             function rArrows() {
                 arrowRotation = CALC.animator.animate({
                     milliseconds: 10000,
                     interpolation: CALC.interpolations.linear,
-                    begin: function(){},
+                    begin: function(){
+                        
+
+                    },
                     step: function(t) {
                         var ang = t * 2 * Math.PI;
                         gradient.position.x = Math.cos(ang);
@@ -539,6 +574,14 @@
         function setVectorState(index) {
             arrowRotation.abort();
             rotateArrows(Math.atan2(points[index].y, points[index].x), 1500, CALC.interpolations.sinusodial);
+            
+            $(".boxbutton").removeClass('selected');
+            $("#sol" + index).addClass('selected');
+/*            buttons.forEach(function (button) {
+                button.setOpacity(0.4);
+            });
+            buttons[index].setOpacity(0.9);*/
+
         }
         
         function showIntersection() {
@@ -567,10 +610,16 @@
 
         // Step 0
         var $fnInfoDiv0 = $('<div class="text-box"></div>');
-        var $infoParagraph0 = $('<p>Betrakta funktionsytan</p>');
-        $fnInfoDiv0.append($infoParagraph0);
-        var $mml0 = expr2.mathMLElement();
-        $infoParagraph0.append($mml0);
+        var $infoParagraph0a = $('<p>Optimering med bivillkor innebär att hitta extremvärden hos en funktion givet att vissa begränsningar gäller. Här är en förklaring med hjälp av ett exempel, där vi ska hitta största värdet i en funktionsytas skärning med enhetscirkeln.</p>');
+        var $infoParagraph0b = $('<p>Betrakta funktionsytan </p>');
+        $fnInfoDiv0.append($infoParagraph0a);
+        $fnInfoDiv0.append($infoParagraph0b);
+
+
+
+//        var fxy = '<mi>f</mi><mo>(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo>)</mo>';
+        var $mml0 = $('<math>' + fxyMml + '<mo>=</mo>' +  exprMmlNum + '</math>');
+        $infoParagraph0b.append($mml0);
 
         var step0 = new CALC.VisualizationStep("Funktionsytan", [
             new CALC.TextPanelAction({
@@ -581,10 +630,14 @@
 
 //       Step 1
         var $fnInfoDiv1 = $('<div class="text-box"></div>');
-        var $infoParagraph1 = $('<p>Vi ritar enhetscirkeln, som i tre dimensioner kan visualiseras som en cylinder </p>');
-        $fnInfoDiv1.append($infoParagraph1);
+        var $infoParagraph1a = $('<p>Vi ritar vårt bivillkor - enhetscirkeln, <math>' + r2Mml + '<mo>=</mo><mn>1</mn>' + '</math> som i tre dimensioner kan visualiseras som en cylinder.</p>');
 
-        var $next = $('<a href="#" class="next-button">Gå vidare</a>');
+        var $infoParagraph1b = $('<p>Vi söker alltså det största värdet som <math>' + fxyMml + '</math> antar på skärningen av cylindern.</p>');
+
+
+        $fnInfoDiv1.append($infoParagraph1a);
+        $fnInfoDiv1.append($infoParagraph1b);
+
 
         var step1 = new CALC.VisualizationStep("Funktionsytan", [
             new CALC.TextPanelAction({
@@ -595,13 +648,41 @@
             addCylinder();
         });
         
+
+        var nablaMml = '<mo mathvariant="bold">&nabla;</mo>';
+//        var nMml = '<mi mathvariant="bold">n</mi>';
+
 //       Step 2
         var $fnInfoDiv2 = $('<div class="text-box"></div>');
-        var $infoParagraph2a = $('<p>Den gröna vektorpilen som cirkulerar representerar ytans gradient, medan den röda pekar i cylinderns normals riktning</p>');
-        var $infoParagraph2b = $('<p>Det största funktionsvärdet som uppfyller bivillkoret kommer att finnas i en punkt där dessa två vektorer är paralella, dvs då ekvationen BLAH uppfyllsx.</p>');
+        var $infoParagraph2a = $('<p>Det största funktionsvärdet som uppfyller bivillkoret kommer att finnas i en punkt där gradienten till <math>' + fxyMml + '</math> är parallell med gradienten till <math><mi>g</mi><mfenced open="(" close=")"><mrow><mi>x</mi><mo>,</mo><mi>y</mi></mrow></mfenced><mo>=</mo>' + r2Mml + '</math>. Det går att se att</p><math style="color: #800">' + nablaMml + gxyMml + '<mo>=</mo><mfenced><mtable><mtr><mtd><mn>2</mn><mi>x</mi></mtd></mtr><mtr><mtd><mn>2</mn><mi>y</mi></mtd></mtr></mtable></mfenced></math> <p>är parallell med enhetscirkelns normal. Vi kan även beräkna </p>');
+
+        var $infoParagraph2b = $('<p><math style="color: #008">' + nablaMml + fxyMml + '<mo>=</mo><mfenced><mtable><mtr><mtd>' + dxMmlNum + '</mtd></mtr><mtr><mtd>' + dyMmlNum + '</mtd></mtr></mtable></mfenced></math>');
+
+        var $infoParagraph2c = $('<p>Den blå vektorpilen som cirkulerar representerar ytans gradient, medan den röda pekar i cylinderns normals riktning.</p>');
+
+/*        var $infoParagraph2d = $('<p>Potentiella max- och min-punkter finns där följande ekvationssystem uppfylls.</p>');
+
+        var eq1Mml = '<mtr><mtd columnalign="right"><mi>&lambda;</mi><mi>x</mi></mtd><mo>=</mo><mtd columnalign="left">' + dxMmlNum + '</mtd></mtr>';
+        var eq2Mml = '<mtr><mtd columnalign="right"><mi>&lambda;</mi><mi>y</mi></mtd><mo>=</mo><mtd columnalign="left">' + dyMmlNum + '</mtd></mtr>';
+        var eq3Mml = '<mtr><mtd columnalign="right"><mn>1</mn></mtd><mo>=</mo><mtd columnalign="left">' + r2Mml + '</mtd></mtr>';
+*/
+
+        var $infoParagraph2d = $('<p>De två vektorerna är paralella då och endast då</p><math><mfenced open="|" close="|"><mtable><mtr><mtd>' + dxMmlNum  + '</mtd><mtd>' + dyMmlNum + '</mtd></mtr><mtr><mtd><mn>2</mn><mi>x</mi></mtd><mtd><mn>2</mn><mi>y</mi></mtd></mtr></mtable></mfenced><mo>=</mo><mn>0</mn></math>');
+
+
+        //var $infoParagraph2e = $('<p><math><mrow><mo>{</mo><mtable>' + eq1Mml + eq2Mml + eq3Mml + '</mtable></math></p>');
+
+
+
+
+
+
 
         $fnInfoDiv2.append($infoParagraph2a);
         $fnInfoDiv2.append($infoParagraph2b);
+        $fnInfoDiv2.append($infoParagraph2c);
+        $fnInfoDiv2.append($infoParagraph2d);
+        //$fnInfoDiv2.append($infoParagraph2e);
 
 
         var step2 = new CALC.VisualizationStep("Funktionsytan", [
@@ -613,12 +694,27 @@
                 showArrows();
             });
         
+        var sol0 = '<msub><mi>x</mi><mn>0</mn></msub><mo>=</mo><mfrac><mn>2</mn><mn>13</mn></mfrac><mfenced open="(" close=")"><mrow><mn>3</mn><msqrt><mn>3</mn></msqrt><mo>-</mo><mn>1</mn></mrow></mfenced><mo>,</mo>' + 
+                   '<msub><mi>y</mi><mn>0</mn></msub><mo>=</mo><mo>-</mo><mfrac><mn>1</mn><mn>13</mn></mfrac><mfenced open="(" close=")"><mrow><mn>4</mn><msqrt><mn>3</mn></msqrt><mo>+</mo><mn>3</mn></mrow></mfenced>';
+
+        var sol1 = '<msub><mi>x</mi><mn>1</mn></msub><mo>=</mo><mo>-</mo><mfrac><mn>2</mn><mn>13</mn></mfrac><mfenced open="(" close=")"><mrow><mn>3</mn><msqrt><mn>3</mn></msqrt><mo>+</mo><mn>1</mn></mrow></mfenced><mo>,</mo>' + 
+                   '<msub><mi>y</mi><mn>1</mn></msub><mo>=</mo><mfrac><mn>1</mn><mn>13</mn></mfrac><mfenced open="(" close=")"><mrow><mn>4</mn><msqrt><mn>3</mn></msqrt><mo>-</mo><mn>3</mn></mrow></mfenced>';
+
+        var sol2 = '<msub><mi>x</mi><mn>2</mn></msub><mo>=</mo><mo>-</mo><mfrac><mn>2</mn><msqrt><mn>13</mn></msqrt></mfrac><mo>,</mo>' + 
+                   '<msub><mi>y</mi><mn>2</mn></msub><mo>=</mo><mo>-</mo><mfrac><mn>3</mn><msqrt><mn>13</mn></msqrt></mfrac>';
+
+        var sol3 = '<msub><mi>x</mi><mn>3</mn></msub><mo>=</mo><mfrac><mn>2</mn><msqrt><mn>13</mn></msqrt></mfrac><mo>,</mo>' + 
+                   '<msub><mi>y</mi><mn>3</mn></msub><mo>=</mo><mfrac><mn>3</mn><msqrt><mn>13</mn></msqrt></mfrac>';
+
+
+
+
 //       Step 3
         var $fnInfoDiv3 = $('<div class="text-box"></div>');
-        var $infoParagraph3 = $('<p>Ekvationssystemet ger 4 lösningar, som alla visualiseras med varsina blå cirkar. Klicka på cirklarna för att se hur gradient och cylindernormal pekar just i dessa punkter.</p>');
+        var $infoParagraph3 = $('<p>Determinantekvationen ger tillsammans med bivillkoret lösningarna</p><a class="boxbutton" id="sol0"><div class="smallButton"></div><math>' + sol0 + '</math></a><a class="boxbutton" id="sol1"><div class="smallButton"></div><math>' + sol1 + '</math></a><a class="boxbutton" id="sol2"><div class="smallButton"></div><math>' + sol2 + '</math></a><a class="boxbutton" id="sol3"><div class="smallButton"></div><math>' + sol3 + '</math></a>De fyra lösningarna visualiseras med varsina vita cirkar. Klicka på cirklarna eller på lösningarna ovan för att se hur gradient och cylindernormal pekar just i dessa punkter.</p>');
 
+        
 
-        $fnInfoDiv3.append($infoParagraph3);
         $fnInfoDiv3.append($infoParagraph3);
         //var $mml2 = expr2.mathMLElement();
         //x$infoParagraph2.append($mml2);
@@ -629,14 +725,71 @@
                 elem:           $fnInfoDiv3
             })],
             function() {
-                setVectorState(3);
+                setVectorState(0);
                 showPoints();
+                $('#sol0').click(function() {
+                    setVectorState(0);                    
+                });
+                $('#sol1').click(function() {
+                    setVectorState(1);
+                });
+                $('#sol2').click(function() {
+                    setVectorState(2);
+                });
+                $('#sol3').click(function() {
+                    setVectorState(3);
+                });
+
+                $('#sol0').hover(function() {
+                    buttons.forEach(function (button) {
+                        button.setOpacity(0.4);
+                    });
+                    buttons[0].setOpacity(0.9);
+                }, function () {
+                    buttons.forEach(function (button) {
+                        button.setOpacity(0.4);
+                    });
+                });
+                $('#sol1').hover(function() {
+                    buttons.forEach(function (button) {
+                        button.setOpacity(0.4);
+                    });
+                    buttons[1].setOpacity(0.9);
+                }, function () {
+                    buttons.forEach(function (button) {
+                        button.setOpacity(0.4);
+                    });
+                });
+
+                $('#sol2').hover(function() {
+                    buttons.forEach(function (button) {
+                        button.setOpacity(0.4);
+                    });
+                    buttons[2].setOpacity(0.9);
+                }, function () {
+                    buttons.forEach(function (button) {
+                        button.setOpacity(0.4);
+                    });
+                });
+
+                $('#sol3').hover(function() {
+                    buttons.forEach(function (button) {
+                        button.setOpacity(0.4);
+                    });
+                    buttons[3].setOpacity(0.9);
+                }, function () {
+                    buttons.forEach(function (button) {
+                        button.setOpacity(0.4);
+                    });
+                });
+
+
+
             });
 
 //       Step 4
         var $fnInfoDiv4 = $('<div class="text-box"></div>');
-        var $infoParagraph4 = $('<p>Genom att jämföra funktionsvärdet i de olika punkterna går det att hitta de optimala värdena</p>');
-
+        var $infoParagraph4 = $('<p>Genom att jämföra funktionsvärdet i de olika punkterna går det att hitta det största värdet: <math><mi>f</mi><mfenced open="(" close=")"><mrow><msub><mi>x</mi><mn>3</mn></msub><mo>,</mo><msub><mi>y</mi><mn>3</mn></msub></mrow></mfenced><mo>=</mo><msup><mrow><mfenced open="(" close=")"><mrow><msqrt><mn>13</mn></msqrt><mo>+</mo><mn>1</mn></mrow></mfenced></mrow><mn>2</mn></msup></math></p>');
 
         $fnInfoDiv4.append($infoParagraph4);
         $fnInfoDiv4.append($infoParagraph4);

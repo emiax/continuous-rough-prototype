@@ -1,7 +1,7 @@
 'use strict';
 /*global CALC, THREE, $ */
 
-(CALC.Button3D = function (renderer, $content, callback, leftOffset, topOffset) {
+(CALC.Button3D = function (renderer, $content, clickCallback, enterCallback, leaveCallback, leftOffset, topOffset) {
     THREE.Object3D.call(this);
     var scope = this;
 
@@ -11,10 +11,23 @@
 
     this.domElement.click(function() {
         if (scope.enabled) {
-//            this.domElement.addClass();
-            callback();
+            clickCallback();
         }
     });
+
+    this.domElement.hover(function() {
+        if (scope.enabled) {
+            enterCallback();
+        }
+    }, function() {
+        if (scope.enabled) {
+            leaveCallback();
+        }
+    });
+
+
+
+
 
     this.domX = -1;
     this.domY = 0;

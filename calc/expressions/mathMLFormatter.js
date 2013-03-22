@@ -48,19 +48,22 @@ CALC.Node.extend({
             right = node.right.mathML(),
             explicit = false;
 
-        if (left instanceof CALC.Addition || left instanceof CALC.Subtraction) {
+        if (node.left instanceof CALC.Addition || node.left instanceof CALC.Subtraction) {
             left = this.parenthesize(left);
-            explicit = true;
+//            explicit = true;
         }
-        if (right instanceof CALC.Addition || right instanceof CALC.Subtraction) {
+        if (node.right instanceof CALC.Addition || node.right instanceof CALC.Subtraction) {
             right = this.parenthesize(right);
-            explicit = true;
+//            explicit = true;
+//            alert(right);
         }
 
+        
+
         if (explicit) {
-            return node.left.mathML() + '<mo>&times;</mo>' + node.right.mathML();
+            return left + '<mo>&times;</mo>' + right;
         }
-        return node.left.mathML() + '<mo>&InvisibleTimes;</mo>' + node.right.mathML();
+        return left + '<mo>&InvisibleTimes;</mo>' + right;
 
     },
 

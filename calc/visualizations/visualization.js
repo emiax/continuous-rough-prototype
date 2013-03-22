@@ -87,8 +87,8 @@ CALC.visualizations = {};
             if (renderers.hasOwnProperty(r)) {
                 renderer = renderers[r];
                 $panel = $(renderer.domElement).parent();
-                w = $panel.innerWidth();
-                h = $panel.innerHeight();
+                w = $panel.innerWidth() - 400;
+                h = $panel.innerHeight();;
                 if (w && h) {
                     renderer.setSize(w, h);
                     renderer.camera.aspect = w/h;
@@ -129,10 +129,14 @@ CALC.visualizations = {};
         mainRow.append($('<div id="graphics-panel"></div>'));
         var sidePanel = $('<div id="side-panel"></div>');
         mainRow.append(sidePanel);
+
+        
         var textPanel = $('<div id="text-panel"></div>');
 
+        
         sidePanel.append(textPanel);
         sidePanel.append(this.nextButton);
+
         
         this.nextButton.click(function() {
             scope.visitNextStep();

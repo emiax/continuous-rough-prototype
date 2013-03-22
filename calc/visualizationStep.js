@@ -16,6 +16,7 @@
             this.actions[i].perform();
         }
         this.callback();
+        MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
     },
 
     leave: function () {

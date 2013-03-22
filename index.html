@@ -13,6 +13,8 @@
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script> 
     <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js" type="text/javascript"></script>
 
+
+    
     <script type="text/javascript"
 	    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
     </script>
@@ -21,6 +23,8 @@
     <script src="lib/Detector.js"></script>
     <script src="lib/Stats.js"></script>
     <script src="lib/jquery.mousewheel.js"></script>
+    <script src="lib/jquery.slimscroll.min.js"></script>
+
 
     <script src="calc/calc.js"></script>
     <script src="calc/exceptions.js"></script>
@@ -83,10 +87,10 @@
     <script>
       var app;
       $(document).ready(function() {
-      app = new CALC.Application($("#application"), /*developMode*/ true);
+      app = new CALC.Application($("#application"), /*developMode*/ false);
 
 
-      var optimization = new CALC.visualizations.Optimization("Optimering under ett bivillkor med hjälp av Lagranges multiplikator");
+      var optimization = new CALC.visualizations.Optimization("Optimering med bivillkor");
       app.addVisualization(optimization);
 
 //      var mobiusStrip = new CALC.visualizations.MobiusStrip("Möbius Strip");

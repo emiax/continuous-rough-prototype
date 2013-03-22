@@ -57,6 +57,8 @@ sup {
 }
 #main-row {
 
+    position: relative;
+
     width: 100%;
     display : -moz-box;
     display : -webkit-box;
@@ -151,6 +153,7 @@ header {
 
 #graphics-panel {
     background-color: #252525;
+    /*background-color: #cdd;*/
 
     -moz-box-flex : 1;
     -webkit-box-flex : 1;
@@ -183,7 +186,8 @@ header {
     border-radius: 6px;
     width: 12px;
     height: 12px;
-    background-color: #4ff;
+    background-color: #fff;
+    cursor: pointer;
 }
 
 
@@ -192,10 +196,15 @@ canvas {
 }
 
 #side-panel {
-    padding-top: 5px;
+    position: absolute;
     background-color: #202020;
     width: 400px;
+    height: 100%;
     text-align: center;
+    position:absolute;
+    right: 0;
+    overflow: auto;
+
 }
 
 canvas, #side-panel {
@@ -203,6 +212,8 @@ canvas, #side-panel {
     -moz-box-shadow: inset 0px 7px 6px -6px rgba(0, 0, 0, 0.7);
     -webkit-box-shadow: inset 0px 7px 6px -6px rgba(0, 0, 0, 0.7);
 }
+
+
 
 .text-box {
     text-align: left;
@@ -273,4 +284,41 @@ canvas, #side-panel {
 ::selection {
     background: white;
     color: black;
+}
+
+.smallButton {
+    float: left;
+/*    border-radius: 6px;*/
+/*    width: 12px;
+    height: 12px;*/
+    background-color: #dd0;
+    margin: 0.5em;
+
+}
+
+.boxbutton {
+    display: block;
+    cursor: pointer;
+    border-radius: 4px;
+    background-color: #ddd;
+    margin-bottom: 0.5em;
+    padding: 6px 2px;
+}
+
+
+
+.boxbutton.selected{
+    background-color: #333;
+    color: #fff;
+}
+
+.boxbutton:hover, .boxbutton.hover {
+    background-color: #c9de96;
+    color: #000;
+}
+
+
+boxbutton.selected:hover, boxbutton.selected:hover {
+    background-color: #398235;
+    color: #fff;
 }
