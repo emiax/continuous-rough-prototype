@@ -43,7 +43,7 @@
         'uniform vec3 color;',
         'void main() {',
         'pos = position;',
-        'n = (modelViewMatrix * vec4(normal, 1.0)).xyz;',
+        'n = normal;',
         'vec4 mvPosition = modelViewMatrix * vec4( size*position.x, step(0.00001, position.y)*(position.y*len-6.0*size), size*position.z, 1.0 );',
         'vColor = color;',
         'gl_Position = projectionMatrix * mvPosition;',

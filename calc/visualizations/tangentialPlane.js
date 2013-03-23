@@ -16,208 +16,241 @@
         
         scene.add(objectBranch);
 
-        var label = new CALC.Label3D(this.renderers["std"], $('<p>f(x, y)</p>'));
-        label.position.x = -5;
-        label.position.y = -5;
-        objectBranch.add(label);
+        var label;
 
-        var label2 = new CALC.Label3D(this.renderers["std"], $('<p>g(x, y)</p>'));
-        label2.position.x = 5.5;
-        label2.position.y = 5.5;
-		label2.position.z = 1.5;
-        objectBranch.add(label2);
+
+
         
         var boundingBox = [-10, -10, 10, 10];
         var resolution = 0.2;
 
-        var expr = CALC.parse('sin(x)*cos(y)');
+        var expr, tgExpr;
         
-        var surface = new CALC.FunctionSurface({
-            z: CALC.parse('sin(x)*cos(y)'),
-            domain: {
-                x: [-10, 10],
-                y: [-10, 10]
-            },
-            attributes: {
-                r: CALC.parse('((x+3)^2 + y^2)^(1/2)'),
-                d: expr.differentiate(),
-            },
-            constraints: {
-                /*r: {
-                    lower: 7,
-                    upper: 8,
-                    upperFeather: 0.2
-                }*/
-            },
-            resolution: resolution,
-            appearance: {
-                checkerPattern: {
-                    opacity: 0.3,
-                    color: new CALC.Color(255, 255, 255),
-                    x: 1,
-                    y: 1
-                    
-                },
-                colorGradientParameter: 'd',
-                colorGradient: {
-                    '-1': new CALC.Color(0xbb, 0x00, 0x00),
-                    '1': new CALC.Color(0x00, 0x99, 0x00)
-                }
+        var surface, plane, tangentButton;
+        
+        function createFunctionSurface(expr) {
+            if (surface) {
+                objectBranch.remove(surface);
+            } 
+            if (plane) {
+                objectBranch.remove(plane);
             }
-        });
-        
-        objectBranch.add(surface);
 
-        var surface2 = new CALC.FunctionSurface({
-            z: CALC.parse('sin(x)*cos(y) + y/3'),
-            domain: {
-                x: [-10, 10],
-                y: [-10, 10]
-            },
-            attributes: {
-                r: CALC.parse('((x-3)^2 + y^2)^(1/2)'),
-                d: expr.differentiate(),
-            },
-            constraints: {
-                r: {
-                    lower: 6,
-                    upper: 7,
-                    upperFeather: 0.2
-                }
-            },
-            resolution: resolution,
-            appearance: {
-                checkerPattern: {
-                    opacity: 0.3,
-                    color: new CALC.Color(255, 255, 255),
-                    x: {
-                        distance: 0.4,
-                        offset: 2
-                    },
-                    y: {
-                        distance: 0.4,
-                        offset: 1
-                    }
-                    
-                },
-                colorGradientParameter: 'r',
-                colorGradient: {
-                    '3': new CALC.Color(0xbb, 0x00, 0x00),
-                    '5': new CALC.Color(0x00, 0xbb, 0x00),
-                    '7': new CALC.Color(0x00, 0x80, 0xbb)
-                }
+            if (tangentButton) {
+                tangentButton.detach();
+                objectBranch.remove(tangentButton);
             }
-        });
-        
-        objectBranch.add(surface2);
-        
-        
-        this.animate1 = function() {
-			
-            CALC.animator.animateProperties({
-                object: scope.renderers["std"].camera,
-                milliseconds: 1000,
-                parameters: {
-                    perspective: 0
-                },
-                interpolation: CALC.interpolations.cubic,
-				afterStep: function() {scope.renderers["std"].camera.updateProjectionMatrix.call(scope.renderers["std"].camera)},
-                end: scope.animate2
-            });
-			
-			
-            /*CALC.animator.animateProperties({
-                object: surface2.rotation,
-                frames: 100,
-                parameters: {
-                    x: 1,
-                    y: 1
-                },          
-                end: scope.animate2,
-                interpolation: CALC.interpolations.sinusodial
-            });*/
 
-            /*surface2.animate({
-                frames: 100,
-                interpolation: CALC.interpolations.sinusodial,
-                checkerOpacity: 0.3,
+
+            surface = new CALC.FunctionSurface({
+                z: expr,
+                domain: {
+                    x: [-10, 10],
+                    y: [-10, 10]
+                },
+                attributes: {
+                    r: CALC.parse('(x^2 + y^2)^(1/2)'),
+                    d: expr.differentiate(),
+                },
                 constraints: {
                     r: {
-                        upper: 8,
-                        lower: 7
+                        lower: 0,
+                        upper: -5,
+                        upperFeather: 10
+                    }
+                },
+                resolution: resolution,
+                appearance: {
+                    checkerPattern: {
+                        opacity: 0.1,
+                        color: new CALC.Color(0x22, 0x00, 0x00),
+                        x: 1,
+                        y: 1
                         
+                    },
+                    colorGradientParameter: 'z',
+                    colorGradient: {
+                        '-3': new CALC.Color(0xdd, 0x55, 0x00, 0xff),
+                        '2': new CALC.Color(0xff, 0xbb, 0x00, 0xff)
                     }
                 }
             });
-
-            surface.animate({
-                frames: 100,
-                interpolation: CALC.interpolations.sinusodial,
-                constraints: {
-                    r: {
-                        lower: 4,
-                        upper: 6
-                    }
-                }
-            });*/
-
-        };
-
+            objectBranch.add(surface);
+        }
         
-        this.animate2 = function () {
-			
-            CALC.animator.animateProperties({
-                object: scope.renderers["std"].camera,
-                milliseconds: 1000,
-                parameters: {
-                    perspective: 1
-                },
-                interpolation: CALC.interpolations.cubic,
-				afterStep: function() {scope.renderers["std"].camera.updateProjectionMatrix.call(scope.renderers["std"].camera)},
-                end: scope.animate1
-            });	
-			
-			
-            /*CALC.animator.animateProperties({
-                object: surface2.rotation,
-                frames: 100,
-                parameters: {
-                    x: 0,
-                    y: 0
-                },
-                interpolation: CALC.interpolations.sinusodial,
-                end: scope.animate1
-            });*/	
+        function createTangentialPlane(expr) {
+            if (plane) {
+                objectBranch.remove(plane);
+            }
+            if (tangentButton) {
+                tangentButton.detach();
+                objectBranch.remove(tangentButton);
+            }
 
-            /*surface2.animate({
-                frames: 100,
-                interpolation: CALC.interpolations.sinusodial,
-                checkerOpacity: 1,
+            plane = new CALC.FunctionSurface({
+                z: expr,
+                domain: {
+                    x: [-10, 10],
+                    y: [-10, 10]
+                },
+                attributes: {
+                    r: CALC.parse('(x^2 + y^2)^(1/2)'),
+                    d: expr.differentiate(),
+                },
                 constraints: {
                     r: {
-                        lower: 6,
-                        upper: 7
+                        lower: 0,
+                        upper: -5,
+                        upperFeather: 10
+                    }
+                },
+                resolution: 10,
+                appearance: {
+                    checkerPattern: {
+                        opacity: 0.1,
+                        color: new CALC.Color(0x22, 0x00, 0x00),
+                        x: 1,
+                        y: 1
+                        
+                    },
+                    colorGradientParameter: 'z',
+                    colorGradient: {
+                        '-5': new CALC.Color(0x00, 0x22, 0xaa, 0x85),
+                        '5': new CALC.Color(0x00, 0x66, 0xff, 0x85)
                     }
                 }
             });
+            plane.material.transparent = true;
+            objectBranch.add(plane);
+        }
+        
 
+        var tgx =  Math.PI;
+        var tgy = -Math.PI;
+
+
+
+        function showSurface() {
             surface.animate({
-                frames: 100,
-                interpolation: CALC.interpolations.sinusodial,
+                milliseconds: 3000,
+                interpolation: CALC.interpolations.easeOut,
                 constraints: {
                     r: {
-                        lower: 6,
-                        upper: 8
+                        upper: 20
+                    }
+                },
+                end: function() {
+                    if (!plane) {
+                        createTangentialPlane(tgExpr);
                     }
                 }
-            });*/
-        };
+            });
+            if (!label) {
+                label = new CALC.Label3D(scope.renderers["std"], $('<math><mi>f</mi><mfenced open="(" close=")"><mrow><mi>x</mi><mo>,</mo><mi>y</mi></mwrow></mfenced></math>'));
+                label.position.x = -5;
+                label.position.y = -5;
+                objectBranch.add(label);
+            }
             
+        }
 
-        this.animate1();
+
+        function showTangentialPlane() {
+            plane.animate({
+                milliseconds: 3000,
+                interpolation: CALC.interpolations.easeOut,
+                constraints: {
+                    r: {
+                        upper: 20
+                    }
+                }
+            });
+            
+            
+            tangentButton = new CALC.Button3D(scope.renderers["std"], $("<p></p>"), function() {});
+            tangentButton.position.set(tgx, tgy, expr.evaluate({x: tgx, y: tgy}));
+            objectBranch.add(tangentButton);
+
+        }
+        
+        
         
         this.renderers["std"].mouseStrategy = new CALC.NavigationStrategy(this.renderers["std"], objectBranch);
+        
 
+        var $fnInputDiv = $('<div class="text-box"></div>');
+        var $desc = $('<p>Välj en funktion av två variabler.</p>');
+        var $input = $('<input class="function-input" value="cos(x)*sin(y)"></input>');
+        var $createSurfaceButton = $('<a class="action-button">Rita ytan</a>');
+
+        $createSurfaceButton.click(function() {
+            expr = CALC.parse($input.val());
+            tgExpr = CALC.tangentialPlane(expr, tgx, tgy);
+            
+            createFunctionSurface(expr);
+            showSurface();
+        });
+
+
+        $fnInputDiv.append($desc);
+
+        $fnInputDiv.append($input);
+        $fnInputDiv.append($createSurfaceButton);
+
+
+        var $tgDiv = $('<div class="text-box"></div>');
+        var $descTg = $('<p>Välj en punkt där du vill räkna ut ett tangentplan</p>');
+        var $inputX = $('<input class="scalar-input" value="0"></input>');
+        var $inputY = $('<input class="scalar-input" value="0"></input>');
+        var $createPlaneButton = $('<a class="action-button">Rita tangentplanet</a>');
+        
+        $createPlaneButton.click(function () {
+            tgx = parseFloat($inputX.val());
+            tgy = parseFloat($inputY.val());
+            
+            tgExpr = CALC.tangentialPlane(expr, tgx, tgy);
+            
+            createTangentialPlane(tgExpr);
+
+            showTangentialPlane();
+
+        });
+
+        $tgDiv.append($descTg);
+        $tgDiv.append($inputX);
+        $tgDiv.append($inputY);
+        $tgDiv.append($createPlaneButton);
+
+
+        var step0 = new CALC.VisualizationStep("", [
+            new CALC.TextPanelAction({
+                panel: this.panels.text,
+                elem: $fnInputDiv
+            })
+        ]);
+        
+        
+        var step1 = new CALC.VisualizationStep("", [
+            new CALC.TextPanelAction({
+                panel: this.panels.text,
+                elem: $tgDiv
+            })
+        ], function() {
+            if (!expr) {
+                expr = CALC.parse($input.val());
+
+                createFunctionSurface(expr);
+                showSurface();
+            }
+        });
+
+
+
+        this.setSteps([step0, step1]);
+        this.visitStep(0);
+
+        
+        
     }
     
 

@@ -35,6 +35,10 @@
         }
     },
 
+    detach: function () {
+        this.domElement.remove();
+    },
+
 
     prepareFrame: function (renderer, force) {
         var scope = this, camera = renderer.camera, vect, $renderer, h, w, left, top;
