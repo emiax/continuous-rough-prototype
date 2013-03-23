@@ -215,6 +215,7 @@ canvas, #side-panel {
 
 
 .text-box {
+    overflow: hidden;
     text-align: left;
     border-radius: 2px;
     line-height: 1.3em;
@@ -235,6 +236,8 @@ canvas, #side-panel {
 
 .action-button {
 
+    display: block;
+    float: left;
     border-radius: 2px;
     margin-right: 10px;
     text-decoration: none;
@@ -247,6 +250,32 @@ canvas, #side-panel {
     background: -o-linear-gradient(top, #7db9e8 0%,#1e5799 100%);
     background: -ms-linear-gradient(top, #7db9e8 0%,#1e5799 100%);
     background: linear-gradient(top, #7db9e8 0%,#1e5799 100%);
+    font-size: 1em;
+    cursor: pointer;
+
+}
+
+.function-input, .scalar-input {
+    padding: 10px;
+
+    float: left;
+    border: none;
+    border-radius: 2px;
+    margin-right: 10px;
+    
+    text-decoration: none;
+    color: #000;
+
+    background: #eee;
+    font-size: 1em;
+}
+
+.function-input {
+    width: 10em;
+}
+
+.scalar-input {
+    width: 4em;
 }
 
 .next-button {
