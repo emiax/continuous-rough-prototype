@@ -35,6 +35,7 @@ CALC.Camera.prototype.zoom = function(relativeZoom, absolute) {
     
     this.fov = this.fov < 5 ? 5 : (this.fov > 175 ? 175 : this.fov);
     this.updateProjectionMatrix();
+	return this;
 };
 
 CALC.Camera.prototype.getZoom = function() {

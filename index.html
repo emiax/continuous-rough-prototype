@@ -3,7 +3,7 @@
   <head>
     <title>Visualisering, analys i flera variabler</title>
 
-    <link href="http://fonts.googleapis.com/css?family=Leckerli+One&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=Pacifico&subset=latin,latin-ext" rel="stylesheet" type="text/css">
     <link rel="stylesheet" type="text/css" href="style.css"></link>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
@@ -85,29 +85,15 @@
 
 
     <script>
-      var app;
+		var app;
       $(document).ready(function() {
-      app = new CALC.Application($("#application"), /*developMode*/ false);
+		  app = new CALC.Application($("#application"), false);
 
-
-      var optimization = new CALC.visualizations.Optimization("Optimering med bivillkor");
-      app.addVisualization(optimization);
-
-//      var mobiusStrip = new CALC.visualizations.MobiusStrip("Möbius Strip");
-//      app.addVisualization(mobiusStrip);
-      
-      //var tangentialPlane = new CALC.visualizations.TangentialPlane("String Theory");
-     // app.addVisualization(tangentialPlane);
-      
-     // var tangentialPlaneInteractive = new CALC.visualizations.TangentialPlaneInteractive("Tangentplan (interaktiv)");
-     // app.addVisualization(tangentialPlaneInteractive);
-
-      //var vectorTest = new CALC.visualizations.VectorTest("Vektortest");
-     // app.addVisualization(vectorTest);
-      
-
-
+		  var optimization = new CALC.visualizations.Optimization("Optimering med bivillkor");
+		  app.addVisualization(optimization);
       });
+	  
+	  
     </script>
   </head>
   <body>

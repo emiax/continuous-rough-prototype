@@ -96,8 +96,6 @@ sup {
     color: #fff;
 }
 
-
-
 header {
     /*background-color: #91948e;*/
     background-color: #111;
@@ -115,7 +113,7 @@ header {
 }
 
 #bigLogo {
-    font-family: 'Leckerli One', cursive;
+    font-family: 'Pacifico';
     margin-right: 10px;
     font-size: 4em;
     margin: 100px auto 0;
@@ -123,7 +121,8 @@ header {
 }
 
 #logo {
-    font-family: 'Leckerli One', cursive;
+    font-family: 'Pacifico';
+	font-size: 1.2em;
     margin-right: 10px;
 }
 
