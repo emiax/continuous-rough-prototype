@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Continuous - Matematisk Visualisering</title>
+
+    <link href="http://fonts.googleapis.com/css?family=Pacifico&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" type="text/css" href="style.css"></link>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    
+
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script> 
+    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js" type="text/javascript"></script>
+
+
+    
+    <script type="text/javascript"
+	    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
+
+    <script src="lib/Three.js"></script>
+    <script src="lib/Detector.js"></script>
+    <script src="lib/Stats.js"></script>
+    <script src="lib/jquery.mousewheel.js"></script>
+    <script src="lib/jquery.slimscroll.min.js"></script>
+
+
+    <script src="calc/calc.js"></script>
+    <script src="calc/exceptions.js"></script>
+
+    <script src="calc/expressions/node.js"></script>
+    <script src="calc/expressions/nodeVisitor.js"></script>
+    <script src="calc/expressions/evaluator.js"></script>
+    <script src="calc/expressions/simplifier.js"></script>
+    <script src="calc/expressions/differentiator.js"></script>
+    <script src="calc/expressions/replacer.js"></script>
+    <script src="calc/expressions/mathMLFormatter.js"></script>
+    <script src="calc/expressions/GLSLFormatter.js"></script>
+    <script src="calc/expressions/parser.js"></script>
+    <script src="calc/expressions/tangent.js"></script>
+
+    <script src="calc/time/scheduler.js"></script>
+    <script src="calc/time/animation.js"></script>
+    <script src="calc/time/animator.js"></script>
+    <script src="calc/time/interpolations.js"></script>
+    <script src="calc/mouseHandler.js"></script>
+
+    <script src="calc/mouseStrategies/mouseStrategy.js"></script>
+    <script src="calc/mouseStrategies/navigationStrategy.js"></script>
+
+
+    <script src="calc/objects/screenCamera.js"></script>
+    <script src="calc/objects/camera.js"></script>
+    <script src="calc/objects/vectorArrow.js"></script>
+    <script src="calc/objects/multiSortObject.js"></script>
+    <script src="calc/objects/label3D.js"></script>
+    <script src="calc/objects/axisLabel3D.js"></script>
+    <script src="calc/objects/button3D.js"></script>
+
+    <script src="calc/geometries/ParametricSurfaceGeometryBuilder.js"></script>
+    <script src="calc/geometries/ParametricCurveGeometry.js"></script>
+    <script src="calc/geometries/ParametricSurfaceGeometry.js"></script>
+    <script src="calc/geometries/FunctionSurfaceGeometry.js"></script>
+
+    <script src="calc/objects/parametricSurface.js"></script>
+    <script src="calc/objects/functionSurface.js"></script>
+
+    <script src="calc/materials/color.js"></script>
+    <script src="calc/materials/checkerPattern.js"></script>
+    <script src="calc/materials/colorGradient.js"></script>
+
+    <script src="calc/materials/surfaceMaterial.js"></script>
+
+
+    <script src="calc/application.js"></script>
+    <script src="calc/visualizationStep.js"></script>
+    <script src="calc/visualizations/visualization.js"></script>
+    <script src="calc/visualizations/tangentialPlane.js"></script>
+    <script src="calc/visualizations/tangentialPlaneInteractive.js"></script>
+    <script src="calc/visualizations/vectorTest.js"></script>
+    <script src="calc/visualizations/mobius.js"></script>
+    <script src="calc/visualizations/optimization.js"></script>
+    <script src="calc/visualizations/vectorField.js"></script>
+
+
+
+    <script>
+		var app;
+      $(document).ready(function() {
+		  app = new CALC.Application($("#application"), false);
+
+		  var vectorField = new CALC.visualizations.VectorField("Vektorfält");
+		  app.addVisualization(vectorField);
+      });
+	  
+	  
+    </script>
+  </head>
+  <body>
+    <div id="application"></div>
+  </body>
+</html>
+
+
+
