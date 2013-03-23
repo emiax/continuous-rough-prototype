@@ -28,6 +28,7 @@
 		var x = CALC.parse('0-0.3*y');
 		var y = CALC.parse('0.3*x');
 		var maxRadius = 9;
+		var i = 0;
 		for (var h = -2; h < 3; ++h) {
 			for (var t = 0; t < 2*Math.PI; t += Math.PI/8) {
 				for (var r = 0.5; r < maxRadius; r += 1) {
@@ -40,10 +41,11 @@
 					
 					var vector = new CALC.VectorArrow(x, y, 0, color);
 					
-					vector.position.set(Math.cos(t+0.5*r)*r, Math.sin(t+0.5*r)*r, h);
+					vector.position.set(Math.cos(t+0.5*r)*r, Math.sin(t+0.5*r)*r, h - (i%3)*0.33);
 					vectorBranch.add(vector);
 					vectors.push(vector);
 				}
+				++i;
 			}
 		}
 		
