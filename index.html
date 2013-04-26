@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <title>Visualisering, analys i flera variabler</title>
+    <title>Continuous - Preview</title>
 
     <link href="http://fonts.googleapis.com/css?family=Pacifico&subset=latin,latin-ext" rel="stylesheet" type="text/css">
     <link rel="stylesheet" type="text/css" href="style.css"></link>
@@ -81,6 +81,7 @@
     <script src="calc/visualizations/vectorTest.js"></script>
     <script src="calc/visualizations/mobius.js"></script>
     <script src="calc/visualizations/optimization.js"></script>
+    <script src="calc/visualizations/optimizationEN.js"></script>
 
 
 
@@ -89,7 +90,7 @@
 		$(document).ready(function() {
 			app = new CALC.Application($("#application"), /*developMode*/ false);
       
-			var optimization = new CALC.visualizations.Optimization("Optimering med bivillkor");
+			var optimization = new CALC.visualizations.OptimizationEN("Optimization with equality constraints");
 			app.addVisualization(optimization);
 		});
 	  

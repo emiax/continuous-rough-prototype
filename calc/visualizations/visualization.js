@@ -121,7 +121,7 @@ CALC.visualizations = {};
     standardVisualizationSetup: function () {
         var renderer, camera, scene, origin, light, scope = this;
 
-        this.nextButton = $('<a class="next-button" href="#">Gå vidare</a>');
+        this.nextButton = $('<a class="next-button" href="#">Continue</a>');
         this.dom = $('<div id="visualization"></div>');
         var mainRow = $('<div id="main-row"></div>');
         
